@@ -234,6 +234,29 @@ body { box-sizing: border-box; }
   z-index: 4;
 }
 
+.hero-bottle-wrap {
+  width: min(420px, 90%);
+  height: 560px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 24px;
+  background: radial-gradient(circle at 50% 30%, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0) 62%);
+}
+
+.hero-bottle-image {
+  width: auto;
+  height: 100%;
+  max-height: 560px;
+  object-fit: contain;
+  filter: drop-shadow(0 25px 30px rgba(0, 0, 0, 0.45));
+  transition: transform 0.4s ease;
+}
+
+.hero-bottle-image:hover {
+  transform: translateY(-4px);
+}
+
 .admin-editable-target {
   outline: 1px dashed rgba(114, 47, 55, 0.3);
   outline-offset: 2px;
