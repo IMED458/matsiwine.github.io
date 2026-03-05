@@ -640,7 +640,8 @@
         red: ['#3d1219', '#5a1f29'],
         white: ['#4a5d23', '#5d7a2e'],
         amber: ['#6b4423', '#8b5a2b'],
-        rose: ['#8b4557', '#a55568']
+        rose: ['#8b4557', '#a55568'],
+        chocolate: ['#4a2c1f', '#6b3f2a']
       };
       return colors[type]?.[index] || colors.red[index];
     }
@@ -650,7 +651,8 @@
         red: ['#722f37', '#5a1f29'],
         white: ['#e8d5a3', '#c9b896'],
         amber: ['#c9a227', '#a68b1f'],
-        rose: ['#e8a0b0', '#d48a9a']
+        rose: ['#e8a0b0', '#d48a9a'],
+        chocolate: ['#5c3524', '#3f2418']
       };
       return colors[type]?.[index] || colors.red[index];
     }
