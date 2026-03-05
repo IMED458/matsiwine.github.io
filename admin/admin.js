@@ -926,7 +926,32 @@ function setAuthMessage(message) {
 }
 
 async function uploadFile(file, folder) {
-  if (!storage) throw new Error('Storage არ არის ჩართული');
+  const cloudName = (state.siteMeta.cloudinary_cloud_name || '').trim();
+  const uploadPreset = (state.siteMeta.cloudinary_upload_preset || '').trim();
+
+  if (cloudName && uploadPreset) {
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('upload_preset', uploadPreset);
+    formData.append('folder', `matsi-admin/${folder}`);
+
+    const response = await fetch(`https://api.cloudinary.com/v1_1/${encodeURIComponent(cloudName)}/image/upload`, {
+      method: 'POST',
+      body: formData
+    });
+
+    const result = await response.json().catch(() => ({}));
+    if (!response.ok || !result.secure_url) {
+      throw new Error(result.error?.message || 'Cloudinary ატვირთვა ვერ მოხერხდა');
+    }
+
+    return {
+      url: result.secure_url,
+      path: result.public_id ? `cloudinary:${result.public_id}` : ''
+    };
+  }
+
+  if (!storage) throw new Error('Storage არ არის ჩართული და Cloudinary პარამეტრებიც არაა შევსებული');
   const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, '-');
   const path = `${STORAGE_ROOT}/${folder}/${Date.now()}-${safeName}`;
   const ref = storage.ref(path);
@@ -937,6 +962,7 @@ async function uploadFile(file, folder) {
 
 async function safeDeleteFile(path) {
   if (!path || !storage) return;
+  if (String(path).startsWith('cloudinary:')) return;
   try {
     await storage.ref(path).delete();
   } catch {
