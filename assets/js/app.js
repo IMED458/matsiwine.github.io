@@ -2320,16 +2320,16 @@ ${itemsText}`
         name: (adminRefs.productName.value || '').trim(),
         year: parseInt(adminRefs.productYear.value || '0', 10) || new Date().getFullYear(),
         type: adminRefs.productType.value || 'red',
-        category: (adminRefs.productCategory.value || '').trim() || 'სპეციალური',
+        category: (adminRefs.productCategory.value || '').trim(),
         price: parseFloat(adminRefs.productPrice.value || '0') || 0,
-        grape: (adminRefs.productGrape.value || '').trim() || 'საფერავი',
-        region: (adminRefs.productRegion.value || '').trim() || 'კახეთი',
-        description: (adminRefs.productDescription.value || '').trim() || 'აღწერა არ არის დამატებული.',
-        aroma: (adminRefs.productAroma.value || '').trim() || 'არომატი',
-        taste: (adminRefs.productTaste.value || '').trim() || 'გემო',
-        pairing: (adminRefs.productPairing.value || '').trim() || 'შეხამება',
-        alcohol: (adminRefs.productAlcohol.value || '').trim() || '13%',
-        temperature: (adminRefs.productTemperature.value || '').trim() || '12-14°C'
+        grape: (adminRefs.productGrape.value || '').trim(),
+        region: (adminRefs.productRegion.value || '').trim(),
+        description: (adminRefs.productDescription.value || '').trim(),
+        aroma: (adminRefs.productAroma.value || '').trim(),
+        taste: (adminRefs.productTaste.value || '').trim(),
+        pairing: (adminRefs.productPairing.value || '').trim(),
+        alcohol: (adminRefs.productAlcohol.value || '').trim(),
+        temperature: (adminRefs.productTemperature.value || '').trim()
       };
     }
 
@@ -2371,8 +2371,8 @@ ${itemsText}`
 
     function addAdminProduct() {
       const product = readAdminProductForm();
-      if (!product.name || product.price <= 0) {
-        showToast('სახელი და ფასი აუცილებელია', 'error');
+      if (!product.name) {
+        showToast('სახელი აუცილებელია', 'error');
         return;
       }
       products.push(product);
