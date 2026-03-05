@@ -228,6 +228,8 @@
     let firebaseDb = null;
     let firebaseAuth = null;
     let firebaseAuthReadyPromise = null;
+    let firebasePollIntervalId = null;
+    let lastCloudVersion = 0;
 
     function getCartItemKey(item) {
       return item?.__backendId || item?.id || item?.localId || item?.productId || '';
@@ -2348,7 +2350,9 @@ Order ID: ${orderId}
         await ensurePublicFirebaseAuth();
         const cloudSnap = await firebaseStateRef.get();
         if (cloudSnap.exists) {
-          applyAdminPayload(cloudSnap.data(), true);
+          const data = cloudSnap.data();
+          lastCloudVersion = Number(data?.updatedAtClient || 0);
+          applyAdminPayload(data, true);
         }
       } catch (error) {
         console.error(error);
@@ -2358,10 +2362,31 @@ Order ID: ${orderId}
         await ensurePublicFirebaseAuth();
         firebaseStateUnsubscribe = firebaseStateRef.onSnapshot((snap) => {
           if (!snap.exists) return;
-          applyAdminPayload(snap.data(), true);
+          const data = snap.data();
+          lastCloudVersion = Number(data?.updatedAtClient || 0);
+          applyAdminPayload(data, true);
         }, (error) => {
           console.error(error);
         });
+      }
+
+      if (!firebasePollIntervalId) {
+        firebasePollIntervalId = setInterval(async () => {
+          try {
+            if (!firebaseStateRef) return;
+            await ensurePublicFirebaseAuth();
+            const snap = await firebaseStateRef.get();
+            if (!snap.exists) return;
+            const data = snap.data();
+            const cloudVersion = Number(data?.updatedAtClient || 0);
+            if (cloudVersion > lastCloudVersion) {
+              lastCloudVersion = cloudVersion;
+              applyAdminPayload(data, true);
+            }
+          } catch (error) {
+            console.error(error);
+          }
+        }, 7000);
       }
     }
 

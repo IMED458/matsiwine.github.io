@@ -212,6 +212,7 @@ const homeStat1ImagePreview = document.getElementById('home-stat1-image-preview'
 const homeStat2ImagePreview = document.getElementById('home-stat2-image-preview');
 const homeStat3ImagePreview = document.getElementById('home-stat3-image-preview');
 const homeStat4ImagePreview = document.getElementById('home-stat4-image-preview');
+const saveStatus = document.getElementById('save-status');
 
 boot();
 
@@ -400,20 +401,35 @@ function saveStateToLocal() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
 }
 
+function setSaveStatus(message, isError = false) {
+  if (!saveStatus) return;
+  saveStatus.textContent = message;
+  saveStatus.style.color = isError ? '#b91c1c' : '#14532d';
+}
+
 async function saveState(message = 'შენახულია') {
   saveStateToLocal();
+  const nowText = new Date().toLocaleString('ka-GE');
   settingsMsg.textContent = message;
   sectionsMsg.textContent = message;
   productsMsg.textContent = message;
   homeMsg.textContent = message;
   if (aboutMsg) aboutMsg.textContent = message;
+  setSaveStatus(`✅ ${message} (${nowText})`);
   refreshRawEditor();
 
   if (!docRef) return;
 
   const payload = JSON.parse(JSON.stringify(state));
   payload.updatedAt = window.firebase.firestore.FieldValue.serverTimestamp();
-  await docRef.set(payload, { merge: true });
+  payload.updatedAtClient = Date.now();
+  try {
+    await docRef.set(payload, { merge: true });
+    setSaveStatus(`✅ მონაცემები შენახულია Firebase-ში (${nowText})`);
+  } catch (error) {
+    setSaveStatus(`⚠️ ლოკალურად შენახულია, Firebase sync ვერ შესრულდა: ${error.message}`, true);
+    throw error;
+  }
 }
 
 async function loadCloudState(applyToUi = false) {
