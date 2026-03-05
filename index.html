@@ -385,7 +385,7 @@
             </div>
             <div>
              <p class="font-medium text-wine-900">მისამართი</p>
-             <p class="text-wine-600/70">კახეთი, თელავის რაიონი<br>
+             <p id="contact-address" class="text-wine-600/70">კახეთი, თელავის რაიონი<br>
               სოფ. წინანდალი</p>
             </div>
            </div>
@@ -396,7 +396,7 @@
             </div>
             <div>
              <p class="font-medium text-wine-900">ელ.ფოსტა</p>
-             <p class="text-wine-600/70">info@matsiwine.ge</p>
+             <p id="contact-email" class="text-wine-600/70">info@matsiwine.ge</p>
             </div>
            </div>
            <div class="flex items-start gap-4">
@@ -406,14 +406,14 @@
             </div>
             <div>
              <p class="font-medium text-wine-900">ტელეფონი</p>
-             <p class="text-wine-600/70">+995 555 123 456</p>
+             <p id="contact-phone" class="text-wine-600/70">+995 555 123 456</p>
             </div>
            </div>
           </div>
          </div><!-- Social Links -->
          <div class="bg-white rounded-2xl p-8 shadow-lg">
           <h2 class="font-display text-xl font-bold text-wine-900 mb-4">გამოგვყევით</h2>
-          <div class="flex gap-4"><a href="https://instagram.com/matsi_wine_" target="_blank" rel="noopener noreferrer" class="w-12 h-12 rounded-full bg-wine-100 flex items-center justify-center hover:bg-wine-200 transition-colors">
+          <div class="flex gap-4"><a id="social-instagram" href="https://instagram.com/matsi_wine_" target="_blank" rel="noopener noreferrer" class="w-12 h-12 rounded-full bg-wine-100 flex items-center justify-center hover:bg-wine-200 transition-colors">
             <svg class="w-6 h-6 text-wine-700" fill="currentColor" viewbox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z" />
             </svg></a> <a href="#" target="_blank" rel="noopener noreferrer" class="w-12 h-12 rounded-full bg-wine-100 flex items-center justify-center hover:bg-wine-200 transition-colors">
             <svg class="w-6 h-6 text-wine-700" fill="currentColor" viewbox="0 0 24 24"><path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z" />
@@ -534,29 +534,23 @@
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
        <div class="mb-8">
         <h1 class="font-display text-4xl md:text-5xl font-bold text-wine-900 mb-3">ადმინ პანელი</h1>
-        <p class="text-wine-600/80">საიტის ტექსტების, სტილების, პროდუქტებისა და ფერების სრული რედაქტირება. ცვლილებები ინახება ბრაუზერში.</p>
+        <p class="text-wine-600/80">Matsi Wine-ზე მორგებული სრული მართვა: კონტენტი, სექციები, პროდუქტები, ვიზუალი, ექსპორტი/იმპორტი.</p>
        </div>
-       <div class="grid lg:grid-cols-2 gap-6 items-start">
-        <div class="space-y-5">
-         <div class="bg-white rounded-2xl p-5 shadow-lg">
-          <h2 class="font-display text-2xl text-wine-900 mb-3">ვიზუალური რედაქტორი</h2>
-          <p class="text-sm text-wine-600 mb-4">ჩართე რეჟიმი, დააწკაპე ნებისმიერ ტექსტურ ელემენტზე საიტზე და შეცვალე ტექსტი/კლასები/inline-style.</p>
-          <div class="flex flex-wrap gap-2 mb-3">
-           <button id="admin-toggle-edit" class="px-4 py-2 rounded-full bg-wine-700 text-cream-50 hover:bg-wine-800">Enable Edit Mode</button>
-           <button id="admin-apply-selected" class="px-4 py-2 rounded-full bg-cream-200 text-wine-800 hover:bg-cream-300">Apply Selected</button>
-          </div>
-          <label class="block text-sm text-wine-700 mb-2">Selected Text/HTML
-           <textarea id="admin-selected-text" rows="3" class="w-full mt-1 px-3 py-2 rounded-lg border border-wine-200"></textarea>
-          </label>
-          <label class="block text-sm text-wine-700 mb-2">Selected Class List
-           <input id="admin-selected-class" type="text" class="w-full mt-1 px-3 py-2 rounded-lg border border-wine-200">
-          </label>
-          <label class="block text-sm text-wine-700">Selected Inline Style
-           <input id="admin-selected-style" type="text" class="w-full mt-1 px-3 py-2 rounded-lg border border-wine-200">
-          </label>
+       <div class="grid lg:grid-cols-[280px_1fr] gap-6 items-start">
+        <aside class="bg-wine-900 rounded-2xl p-4 shadow-lg sticky top-24">
+         <p class="text-cream-200/70 text-xs tracking-widest mb-3">ADMIN NAVIGATION</p>
+         <div class="admin-tabs">
+          <button class="admin-tab-btn active" type="button" data-admin-tab="content">კონტენტი</button>
+          <button class="admin-tab-btn" type="button" data-admin-tab="theme">თემა/ფერი</button>
+          <button class="admin-tab-btn" type="button" data-admin-tab="sections">სექციები</button>
+          <button class="admin-tab-btn" type="button" data-admin-tab="products">პროდუქტები</button>
+          <button class="admin-tab-btn" type="button" data-admin-tab="visual">Visual Edit</button>
+          <button class="admin-tab-btn" type="button" data-admin-tab="data">Backup/Data</button>
          </div>
-         <div class="bg-white rounded-2xl p-5 shadow-lg">
-          <h2 class="font-display text-2xl text-wine-900 mb-3">თემა და ტექსტები</h2>
+        </aside>
+        <div class="space-y-5">
+         <div id="admin-panel-content" class="admin-panel bg-white rounded-2xl p-5 shadow-lg">
+          <h2 class="font-display text-2xl text-wine-900 mb-3">კონტენტის მართვა</h2>
           <div class="grid sm:grid-cols-2 gap-3">
            <label class="text-sm text-wine-700">Hero Title
             <input id="admin-hero-title" type="text" class="w-full mt-1 px-3 py-2 rounded-lg border border-wine-200">
@@ -567,6 +561,24 @@
            <label class="text-sm text-wine-700 sm:col-span-2">Hero Subtitle
             <input id="admin-hero-subtitle" type="text" class="w-full mt-1 px-3 py-2 rounded-lg border border-wine-200">
            </label>
+           <label class="text-sm text-wine-700">Email
+            <input id="admin-contact-email" type="email" class="w-full mt-1 px-3 py-2 rounded-lg border border-wine-200">
+           </label>
+           <label class="text-sm text-wine-700">Phone
+            <input id="admin-contact-phone" type="text" class="w-full mt-1 px-3 py-2 rounded-lg border border-wine-200">
+           </label>
+           <label class="text-sm text-wine-700 sm:col-span-2">Address
+            <input id="admin-contact-address" type="text" class="w-full mt-1 px-3 py-2 rounded-lg border border-wine-200">
+           </label>
+           <label class="text-sm text-wine-700 sm:col-span-2">Instagram Link
+            <input id="admin-instagram-link" type="url" class="w-full mt-1 px-3 py-2 rounded-lg border border-wine-200">
+           </label>
+          </div>
+          <button id="admin-apply-content" class="mt-4 px-4 py-2 rounded-full bg-wine-700 text-cream-50 hover:bg-wine-800">კონტენტის განახლება</button>
+         </div>
+         <div id="admin-panel-theme" class="admin-panel hidden bg-white rounded-2xl p-5 shadow-lg">
+          <h2 class="font-display text-2xl text-wine-900 mb-3">თემა და ფერები</h2>
+          <div class="grid sm:grid-cols-2 gap-3">
            <label class="text-sm text-wine-700">Primary Color
             <input id="admin-primary-color" type="color" class="w-full mt-1 h-10 rounded-lg border border-wine-200">
            </label>
@@ -576,9 +588,19 @@
           </div>
           <button id="admin-apply-theme" class="mt-4 px-4 py-2 rounded-full bg-wine-700 text-cream-50 hover:bg-wine-800">Apply Theme</button>
          </div>
-        </div>
-        <div class="space-y-5">
-         <div class="bg-white rounded-2xl p-5 shadow-lg">
+         <div id="admin-panel-sections" class="admin-panel hidden bg-white rounded-2xl p-5 shadow-lg">
+          <h2 class="font-display text-2xl text-wine-900 mb-3">სექციების მართვა</h2>
+          <div class="grid sm:grid-cols-2 gap-3">
+           <label class="flex items-center gap-2 text-wine-800"><input id="admin-show-home" type="checkbox" checked> მთავარი</label>
+           <label class="flex items-center gap-2 text-wine-800"><input id="admin-show-shop" type="checkbox" checked> მაღაზია</label>
+           <label class="flex items-center gap-2 text-wine-800"><input id="admin-show-about" type="checkbox" checked> ჩვენს შესახებ</label>
+           <label class="flex items-center gap-2 text-wine-800"><input id="admin-show-contact" type="checkbox" checked> კონტაქტი</label>
+           <label class="flex items-center gap-2 text-wine-800"><input id="admin-show-designer" type="checkbox" checked> შექმენი შენი დიზაინი</label>
+           <label class="flex items-center gap-2 text-wine-800"><input id="admin-show-cart" type="checkbox" checked> კალათა</label>
+          </div>
+          <button id="admin-apply-sections" class="mt-4 px-4 py-2 rounded-full bg-wine-700 text-cream-50 hover:bg-wine-800">სექციების შენახვა</button>
+         </div>
+         <div id="admin-panel-products" class="admin-panel hidden bg-white rounded-2xl p-5 shadow-lg">
           <h2 class="font-display text-2xl text-wine-900 mb-3">პროდუქტები (CRUD)</h2>
           <div class="grid sm:grid-cols-2 gap-3 mb-4">
            <input id="admin-product-name" type="text" placeholder="სახელი" class="px-3 py-2 rounded-lg border border-wine-200">
@@ -607,7 +629,24 @@
           </div>
           <div id="admin-product-list" class="space-y-2 max-h-[320px] overflow-auto"></div>
          </div>
-         <div class="bg-wine-900 rounded-2xl p-5 shadow-lg">
+         <div id="admin-panel-visual" class="admin-panel hidden bg-white rounded-2xl p-5 shadow-lg">
+          <h2 class="font-display text-2xl text-wine-900 mb-3">ვიზუალური რედაქტორი</h2>
+          <p class="text-sm text-wine-600 mb-4">ჩართე რეჟიმი, დააწკაპე ნებისმიერ ტექსტურ ელემენტზე საიტზე და შეცვალე ტექსტი/კლასები/inline-style.</p>
+          <div class="flex flex-wrap gap-2 mb-3">
+           <button id="admin-toggle-edit" class="px-4 py-2 rounded-full bg-wine-700 text-cream-50 hover:bg-wine-800">Enable Edit Mode</button>
+           <button id="admin-apply-selected" class="px-4 py-2 rounded-full bg-cream-200 text-wine-800 hover:bg-cream-300">Apply Selected</button>
+          </div>
+          <label class="block text-sm text-wine-700 mb-2">Selected Text/HTML
+           <textarea id="admin-selected-text" rows="3" class="w-full mt-1 px-3 py-2 rounded-lg border border-wine-200"></textarea>
+          </label>
+          <label class="block text-sm text-wine-700 mb-2">Selected Class List
+           <input id="admin-selected-class" type="text" class="w-full mt-1 px-3 py-2 rounded-lg border border-wine-200">
+          </label>
+          <label class="block text-sm text-wine-700">Selected Inline Style
+           <input id="admin-selected-style" type="text" class="w-full mt-1 px-3 py-2 rounded-lg border border-wine-200">
+          </label>
+         </div>
+         <div id="admin-panel-data" class="admin-panel hidden bg-wine-900 rounded-2xl p-5 shadow-lg">
           <h2 class="font-display text-2xl text-cream-50 mb-3">შენახვა / იმპორტი</h2>
           <div class="flex flex-wrap gap-2 mb-3">
            <button id="admin-save" class="px-4 py-2 rounded-full bg-cream-50 text-wine-800 hover:bg-cream-100">Save Changes</button>
@@ -666,8 +705,8 @@
       </div>
      </div>
      <div class="border-t border-wine-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
-      <p class="text-cream-200/50 text-sm">© 2024 MATSI WINE. ყველა უფლება დაცულია.</p>
-      <p class="text-cream-200/50 text-sm">🍷 პასუხისმგებლობით მოიხმარეთ</p>
+      <p id="footer-copyright" class="text-cream-200/50 text-sm">© 2024 MATSI WINE. ყველა უფლება დაცულია.</p>
+      <p id="footer-drink" class="text-cream-200/50 text-sm">🍷 პასუხისმგებლობით მოიხმარეთ</p>
      </div>
     </div>
    </footer>

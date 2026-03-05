@@ -18,6 +18,21 @@
     let currentPage = 'home';
     let currentFilter = 'all';
     let isLoading = false;
+    const defaultSiteMeta = {
+      contact_email: 'info@matsiwine.ge',
+      contact_phone: '+995 555 123 456',
+      contact_address: 'კახეთი, თელავის რაიონი, სოფ. წინანდალი',
+      instagram_link: 'https://instagram.com/matsi_wine_',
+      sections: {
+        home: true,
+        shop: true,
+        about: true,
+        contact: true,
+        designer: true,
+        cart: true
+      }
+    };
+    let siteMeta = JSON.parse(JSON.stringify(defaultSiteMeta));
     
     // Products data
     let products = [
@@ -209,6 +224,18 @@
       document.documentElement.style.setProperty('--admin-text', config.text_color || defaultConfig.text_color);
       document.body.style.color = config.text_color || defaultConfig.text_color;
     }
+
+    function applySiteMeta() {
+      const contactEmailEl = document.getElementById('contact-email');
+      const contactPhoneEl = document.getElementById('contact-phone');
+      const contactAddressEl = document.getElementById('contact-address');
+      const instagramEl = document.getElementById('social-instagram');
+
+      if (contactEmailEl) contactEmailEl.textContent = siteMeta.contact_email || defaultSiteMeta.contact_email;
+      if (contactPhoneEl) contactPhoneEl.textContent = siteMeta.contact_phone || defaultSiteMeta.contact_phone;
+      if (contactAddressEl) contactAddressEl.innerHTML = (siteMeta.contact_address || defaultSiteMeta.contact_address).replace(', ', '<br>');
+      if (instagramEl && (siteMeta.instagram_link || '').trim()) instagramEl.href = siteMeta.instagram_link.trim();
+    }
     
     // =====================================================
     // NAVIGATION
@@ -222,6 +249,11 @@
     }
 
     function navigateTo(page, data = null, updateHash = true) {
+      if (siteMeta.sections && Object.prototype.hasOwnProperty.call(siteMeta.sections, page) && !siteMeta.sections[page]) {
+        showToast('ეს სექცია დროებით გამორთულია ადმინიდან', 'info');
+        page = 'home';
+      }
+
       document.querySelectorAll('.page-section').forEach(section => {
         section.classList.add('hidden');
       });
@@ -1080,30 +1112,49 @@
     // ADMIN PANEL
     // =====================================================
 
-    const ADMIN_STORAGE_KEY = 'matsi_admin_state_v1';
+    const ADMIN_STORAGE_KEY = 'matsi_admin_state_v2';
     const adminState = {
       initialized: false,
       editMode: false,
       selectedElement: null,
       selectedProductIndex: null,
-      suppressEditableClick: false
+      activeTab: 'content'
     };
     const adminRefs = {};
 
     function initAdminPanel() {
       if (adminState.initialized) return;
 
+      adminRefs.tabButtons = Array.from(document.querySelectorAll('.admin-tab-btn'));
+      adminRefs.panels = Array.from(document.querySelectorAll('.admin-panel'));
+
       adminRefs.toggleEdit = document.getElementById('admin-toggle-edit');
       adminRefs.applySelected = document.getElementById('admin-apply-selected');
       adminRefs.selectedText = document.getElementById('admin-selected-text');
       adminRefs.selectedClass = document.getElementById('admin-selected-class');
       adminRefs.selectedStyle = document.getElementById('admin-selected-style');
+
       adminRefs.heroTitle = document.getElementById('admin-hero-title');
       adminRefs.heroSubtitle = document.getElementById('admin-hero-subtitle');
       adminRefs.aboutTitle = document.getElementById('admin-about-title');
+      adminRefs.contactEmail = document.getElementById('admin-contact-email');
+      adminRefs.contactPhone = document.getElementById('admin-contact-phone');
+      adminRefs.contactAddress = document.getElementById('admin-contact-address');
+      adminRefs.instagramLink = document.getElementById('admin-instagram-link');
+      adminRefs.applyContent = document.getElementById('admin-apply-content');
+
       adminRefs.primaryColor = document.getElementById('admin-primary-color');
       adminRefs.textColor = document.getElementById('admin-text-color');
       adminRefs.applyTheme = document.getElementById('admin-apply-theme');
+
+      adminRefs.showHome = document.getElementById('admin-show-home');
+      adminRefs.showShop = document.getElementById('admin-show-shop');
+      adminRefs.showAbout = document.getElementById('admin-show-about');
+      adminRefs.showContact = document.getElementById('admin-show-contact');
+      adminRefs.showDesigner = document.getElementById('admin-show-designer');
+      adminRefs.showCart = document.getElementById('admin-show-cart');
+      adminRefs.applySections = document.getElementById('admin-apply-sections');
+
       adminRefs.productList = document.getElementById('admin-product-list');
       adminRefs.productName = document.getElementById('admin-product-name');
       adminRefs.productYear = document.getElementById('admin-product-year');
@@ -1121,6 +1172,7 @@
       adminRefs.productAdd = document.getElementById('admin-product-add');
       adminRefs.productUpdate = document.getElementById('admin-product-update');
       adminRefs.productClear = document.getElementById('admin-product-clear');
+
       adminRefs.save = document.getElementById('admin-save');
       adminRefs.load = document.getElementById('admin-load');
       adminRefs.resetAll = document.getElementById('admin-reset-all');
@@ -1129,9 +1181,16 @@
 
       if (!adminRefs.toggleEdit) return;
 
+      adminRefs.tabButtons.forEach((button) => {
+        button.addEventListener('click', () => setAdminTab(button.dataset.adminTab));
+      });
+      setAdminTab(adminState.activeTab);
+
       adminRefs.toggleEdit.addEventListener('click', toggleAdminEditMode);
       adminRefs.applySelected.addEventListener('click', applyAdminSelectedChanges);
+      adminRefs.applyContent.addEventListener('click', applyAdminContentChanges);
       adminRefs.applyTheme.addEventListener('click', applyAdminThemeChanges);
+      adminRefs.applySections.addEventListener('click', applyAdminSectionVisibilityChanges);
       adminRefs.productAdd.addEventListener('click', addAdminProduct);
       adminRefs.productUpdate.addEventListener('click', updateAdminProduct);
       adminRefs.productClear.addEventListener('click', clearAdminProductForm);
@@ -1150,6 +1209,16 @@
       renderAdminPanelValues();
       renderAdminProductList();
       adminState.initialized = true;
+    }
+
+    function setAdminTab(tab) {
+      adminState.activeTab = tab;
+      adminRefs.tabButtons.forEach((button) => {
+        button.classList.toggle('active', button.dataset.adminTab === tab);
+      });
+      adminRefs.panels.forEach((panel) => {
+        panel.classList.toggle('hidden', panel.id !== `admin-panel-${tab}`);
+      });
     }
 
     function getAdminEditableElements() {
@@ -1229,9 +1298,6 @@
     }
 
     function applyAdminThemeChanges() {
-      config.hero_title = adminRefs.heroTitle.value || defaultConfig.hero_title;
-      config.hero_subtitle = adminRefs.heroSubtitle.value || defaultConfig.hero_subtitle;
-      config.about_title = adminRefs.aboutTitle.value || defaultConfig.about_title;
       config.primary_action_color = adminRefs.primaryColor.value || defaultConfig.primary_action_color;
       config.background_color = adminRefs.primaryColor.value || defaultConfig.background_color;
       config.text_color = adminRefs.textColor.value || defaultConfig.text_color;
@@ -1239,13 +1305,78 @@
       showToast('თემა განახლდა', 'success');
     }
 
+    function applyAdminContentChanges() {
+      config.hero_title = adminRefs.heroTitle.value || defaultConfig.hero_title;
+      config.hero_subtitle = adminRefs.heroSubtitle.value || defaultConfig.hero_subtitle;
+      config.about_title = adminRefs.aboutTitle.value || defaultConfig.about_title;
+      siteMeta.contact_email = adminRefs.contactEmail.value || defaultSiteMeta.contact_email;
+      siteMeta.contact_phone = adminRefs.contactPhone.value || defaultSiteMeta.contact_phone;
+      siteMeta.contact_address = adminRefs.contactAddress.value || defaultSiteMeta.contact_address;
+      siteMeta.instagram_link = adminRefs.instagramLink.value || defaultSiteMeta.instagram_link;
+      applyConfig();
+      applySiteMeta();
+      showToast('კონტენტი განახლდა', 'success');
+    }
+
+    function applyAdminSectionVisibilityChanges() {
+      siteMeta.sections.home = !!adminRefs.showHome.checked;
+      siteMeta.sections.shop = !!adminRefs.showShop.checked;
+      siteMeta.sections.about = !!adminRefs.showAbout.checked;
+      siteMeta.sections.contact = !!adminRefs.showContact.checked;
+      siteMeta.sections.designer = !!adminRefs.showDesigner.checked;
+      siteMeta.sections.cart = !!adminRefs.showCart.checked;
+      applySectionVisibility();
+      showToast('სექციები განახლდა', 'success');
+    }
+
+    function applySectionVisibility() {
+      const set = (page, visible) => {
+        const section = document.getElementById(`page-${page}`);
+        if (!section) return;
+        section.dataset.adminVisible = visible ? '1' : '0';
+      };
+      const setNav = (page, visible) => {
+        document.querySelectorAll(`[onclick*="navigateTo('${page}')"]`).forEach((el) => {
+          if (el.closest('#page-admin')) return;
+          el.style.display = visible ? '' : 'none';
+        });
+      };
+      set('home', siteMeta.sections.home);
+      set('shop', siteMeta.sections.shop);
+      set('about', siteMeta.sections.about);
+      set('contact', siteMeta.sections.contact);
+      set('designer', siteMeta.sections.designer);
+      set('cart', siteMeta.sections.cart);
+      setNav('home', siteMeta.sections.home);
+      setNav('shop', siteMeta.sections.shop);
+      setNav('about', siteMeta.sections.about);
+      setNav('contact', siteMeta.sections.contact);
+      setNav('designer', siteMeta.sections.designer);
+      setNav('cart', siteMeta.sections.cart);
+
+      const hiddenPages = Object.keys(siteMeta.sections).filter((key) => !siteMeta.sections[key]);
+      if (hiddenPages.includes(currentPage)) {
+        navigateTo('home');
+      }
+    }
+
     function renderAdminPanelValues() {
       if (!adminRefs.heroTitle) return;
       adminRefs.heroTitle.value = config.hero_title || defaultConfig.hero_title;
       adminRefs.heroSubtitle.value = config.hero_subtitle || defaultConfig.hero_subtitle;
       adminRefs.aboutTitle.value = config.about_title || defaultConfig.about_title;
+      adminRefs.contactEmail.value = siteMeta.contact_email || defaultSiteMeta.contact_email;
+      adminRefs.contactPhone.value = siteMeta.contact_phone || defaultSiteMeta.contact_phone;
+      adminRefs.contactAddress.value = siteMeta.contact_address || defaultSiteMeta.contact_address;
+      adminRefs.instagramLink.value = siteMeta.instagram_link || defaultSiteMeta.instagram_link;
       adminRefs.primaryColor.value = config.primary_action_color || defaultConfig.primary_action_color;
       adminRefs.textColor.value = config.text_color || defaultConfig.text_color;
+      adminRefs.showHome.checked = !!siteMeta.sections.home;
+      adminRefs.showShop.checked = !!siteMeta.sections.shop;
+      adminRefs.showAbout.checked = !!siteMeta.sections.about;
+      adminRefs.showContact.checked = !!siteMeta.sections.contact;
+      adminRefs.showDesigner.checked = !!siteMeta.sections.designer;
+      adminRefs.showCart.checked = !!siteMeta.sections.cart;
       renderAdminProductList();
     }
 
@@ -1400,6 +1531,7 @@
     function saveAdminState() {
       const payload = {
         config,
+        siteMeta,
         products,
         contentEdits: collectAdminContentEdits()
       };
@@ -1415,10 +1547,22 @@
         if (data.config && typeof data.config === 'object') {
           config = { ...defaultConfig, ...data.config };
         }
+        if (data.siteMeta && typeof data.siteMeta === 'object') {
+          siteMeta = {
+            ...defaultSiteMeta,
+            ...data.siteMeta,
+            sections: {
+              ...defaultSiteMeta.sections,
+              ...(data.siteMeta.sections || {})
+            }
+          };
+        }
         if (Array.isArray(data.products)) {
           products = data.products;
         }
         applyConfig();
+        applySiteMeta();
+        applySectionVisibility();
         renderProducts();
         if (currentPage === 'shop') renderProducts();
         if (currentPage === 'cart') renderCart();
@@ -1433,8 +1577,11 @@
     function resetAdminState() {
       localStorage.removeItem(ADMIN_STORAGE_KEY);
       config = { ...defaultConfigSnapshot };
+      siteMeta = JSON.parse(JSON.stringify(defaultSiteMeta));
       products = JSON.parse(JSON.stringify(initialProducts));
       applyConfig();
+      applySiteMeta();
+      applySectionVisibility();
       renderProducts();
       clearAdminProductForm();
       renderAdminProductList();
@@ -1444,6 +1591,7 @@
     function exportAdminJson() {
       const payload = {
         config,
+        siteMeta,
         products,
         contentEdits: collectAdminContentEdits()
       };
@@ -1643,6 +1791,8 @@
 
       // Render UI immediately
       applyConfig();
+      applySiteMeta();
+      applySectionVisibility();
       renderProducts();
 
       const initialPage = getPageFromLocation();

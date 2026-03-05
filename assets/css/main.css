@@ -259,3 +259,30 @@ body { box-sizing: border-box; }
   border-color: rgba(114, 47, 55, 0.75);
   background: rgba(252, 231, 235, 0.5);
 }
+
+.admin-tabs {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.admin-tab-btn {
+  width: 100%;
+  text-align: left;
+  padding: 10px 12px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #f9f1e4;
+  border: 1px solid transparent;
+  transition: all 0.2s ease;
+}
+
+.admin-tab-btn:hover {
+  background: rgba(255, 255, 255, 0.16);
+}
+
+.admin-tab-btn.active {
+  background: #f9f1e4;
+  color: #5a1f29;
+  border-color: rgba(139, 115, 85, 0.45);
+}
