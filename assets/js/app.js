@@ -925,7 +925,7 @@
       const bankRows = BANK_ACCOUNTS.map((item, idx) => `
         <div class="bg-cream-100 rounded-xl p-3 flex items-start justify-between gap-3">
           <div class="flex items-start gap-2">
-            <span class="w-7 h-7 rounded-full bg-white border border-wine-200 flex items-center justify-center flex-shrink-0">${getBankIconSvg(item.bank)}</span>
+            <span class="w-7 h-7 rounded-full bg-white border border-wine-200 flex items-center justify-center flex-shrink-0">${getBankIconMarkup(item.bank)}</span>
             <div>
             <p class="text-xs text-wine-500">${item.bank}</p>
             <p id="checkout-iban-${idx}" class="font-mono text-sm text-wine-900 break-all">${item.iban}</p>
@@ -1055,17 +1055,15 @@
 
     function getBankIconSvg(bank) {
       if (bank === 'ბოგ') {
-        return `
-          <svg viewBox="0 0 24 24" class="w-4 h-4 text-[#e11d48]" fill="currentColor" aria-hidden="true">
-            <path d="M12 2a10 10 0 100 20 10 10 0 000-20Zm0 3.2a2.8 2.8 0 110 5.6 2.8 2.8 0 010-5.6Zm0 13.6c-2.7 0-5.1-1.4-6.5-3.6.1-2.2 4.4-3.4 6.5-3.4 2.1 0 6.4 1.2 6.5 3.4-1.4 2.2-3.8 3.6-6.5 3.6Z"/>
-          </svg>
-        `;
+        return '<svg viewBox="0 0 24 24" class="w-4 h-4 text-[#e11d48]" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 100 20 10 10 0 000-20Zm0 3.2a2.8 2.8 0 110 5.6 2.8 2.8 0 010-5.6Zm0 13.6c-2.7 0-5.1-1.4-6.5-3.6.1-2.2 4.4-3.4 6.5-3.4 2.1 0 6.4 1.2 6.5 3.4-1.4 2.2-3.8 3.6-6.5 3.6Z"/></svg>';
       }
-      return `
-        <svg viewBox="0 0 24 24" class="w-4 h-4 text-[#2563eb]" fill="currentColor" aria-hidden="true">
-          <path d="M3 5h18v2H3V5Zm2 4h14v10H5V9Zm3 2v6h2v-2h4v2h2v-6H8Zm2 2v-1h4v1h-4Z"/>
-        </svg>
-      `;
+      return '<svg viewBox="0 0 24 24" class="w-4 h-4 text-[#2563eb]" fill="currentColor" aria-hidden="true"><path d="M3 5h18v2H3V5Zm2 4h14v10H5V9Zm3 2v6h2v-2h4v2h2v-6H8Zm2 2v-1h4v1h-4Z"/></svg>';
+    }
+
+    function getBankIconMarkup(bank) {
+      const iconPath = bank === 'ბოგ' ? 'assets/images/bog.png' : 'assets/images/tbc.png';
+      const fallback = getBankIconSvg(bank).replace(/"/g, '&quot;');
+      return `<img src="${iconPath}" alt="${bank}" class="w-4 h-4 object-contain" onerror="this.outerHTML='${fallback}'">`;
     }
 
     async function clearCartAfterOrder() {
