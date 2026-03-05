@@ -106,6 +106,7 @@
       contact_address: 'კახეთი, თელავის რაიონი, სოფ. წინანდალი',
       instagram_link: 'https://instagram.com/matsi_wine_',
       order_notify_email: DEFAULT_ORDER_EMAIL,
+      custom_label_price: 45,
       cloudinary_cloud_name: 'dlth7j0i6',
       cloudinary_upload_preset: 'matsi_labels_unsigned',
       logo_url: 'matsiwine.png',
@@ -230,6 +231,7 @@
     let firebaseAuthReadyPromise = null;
     let firebasePollIntervalId = null;
     let lastCloudVersion = 0;
+    let checkoutFormVisible = false;
 
     function getCartItemKey(item) {
       return item?.__backendId || item?.id || item?.localId || item?.productId || '';
@@ -1112,12 +1114,6 @@
       designerRefs.textSize = document.getElementById('designer-text-size');
       designerRefs.exportBtn = document.getElementById('designer-export');
       designerRefs.addToCartBtn = document.getElementById('designer-add-to-cart');
-      designerRefs.orderName = document.getElementById('designer-order-name');
-      designerRefs.orderPhone = document.getElementById('designer-order-phone');
-      designerRefs.orderEmail = document.getElementById('designer-order-email');
-      designerRefs.orderNote = document.getElementById('designer-order-note');
-      designerRefs.orderSubmit = document.getElementById('designer-submit-order');
-      designerRefs.orderStatus = document.getElementById('designer-order-status');
       designerRefs.toggleDraw = document.getElementById('designer-toggle-draw');
       designerRefs.drawStatus = document.getElementById('designer-draw-status');
 
@@ -1185,7 +1181,6 @@
       designerRefs.backText.addEventListener('click', sendSelectedTextToBack);
       designerRefs.exportBtn.addEventListener('click', exportDesignerPng);
       designerRefs.addToCartBtn.addEventListener('click', addDesignerToCart);
-      designerRefs.orderSubmit.addEventListener('click', submitDesignerOrder);
 
       designerRefs.drawCanvas.addEventListener('pointerdown', startDesignerDrawing);
       designerRefs.drawCanvas.addEventListener('pointermove', moveDesignerDrawing);
@@ -1716,7 +1711,28 @@
       return result.secure_url;
     }
 
-    async function sendDesignerOrderEmail(payload) {
+    async function uploadFileToCloudinary(file, folder = 'matsi-orders') {
+      const cloudName = (siteMeta.cloudinary_cloud_name || '').trim();
+      const uploadPreset = (siteMeta.cloudinary_upload_preset || '').trim();
+      if (!cloudName || !uploadPreset) throw new Error('Cloudinary პარამეტრები არ არის შევსებული ადმინში');
+
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('upload_preset', uploadPreset);
+      formData.append('folder', folder);
+
+      const response = await fetch(`https://api.cloudinary.com/v1_1/${encodeURIComponent(cloudName)}/image/upload`, {
+        method: 'POST',
+        body: formData
+      });
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok || !result.secure_url) {
+        throw new Error(result.error?.message || 'Cloudinary ატვირთვა ვერ მოხერხდა');
+      }
+      return result.secure_url;
+    }
+
+    async function sendFormSubmitEmail(payload) {
       const recipient = (siteMeta.order_notify_email || DEFAULT_ORDER_EMAIL || 'matsiwine@gmail.com').trim();
       const endpoint = `https://formsubmit.co/ajax/${encodeURIComponent(recipient)}`;
       const formData = new FormData();
@@ -1745,61 +1761,6 @@
       const result = await response.json().catch(() => ({}));
       if (!response.ok || result.success === 'false' || result.success === false) {
         throw new Error(result.message || 'მეილის გაგზავნა ვერ მოხერხდა');
-      }
-    }
-
-    async function submitDesignerOrder() {
-      const name = (designerRefs.orderName?.value || '').trim();
-      const phone = (designerRefs.orderPhone?.value || '').trim();
-      const email = (designerRefs.orderEmail?.value || '').trim();
-      const note = (designerRefs.orderNote?.value || '').trim();
-      const orderId = `ORD-${Date.now()}`;
-      const nowText = new Date().toLocaleString('ka-GE');
-
-      if (!name || !phone) {
-        showToast('შეავსე სახელი და ტელეფონი', 'error');
-        if (designerRefs.orderStatus) designerRefs.orderStatus.textContent = 'შეცდომა: სახელი და ტელეფონი სავალდებულოა.';
-        return;
-      }
-
-      const submitBtn = designerRefs.orderSubmit;
-      const statusEl = designerRefs.orderStatus;
-      if (submitBtn) submitBtn.disabled = true;
-      if (statusEl) statusEl.textContent = 'იტვირთება Cloudinary-ზე...';
-
-      try {
-        const canvas = buildDesignerExportCanvas();
-        const blob = await canvasToBlob(canvas);
-        const fileName = `matsi-label-${Date.now()}.png`;
-        const imageUrl = await uploadDesignerToCloudinary(blob, fileName);
-
-        if (statusEl) statusEl.textContent = 'მეილზე იგზავნება...';
-
-        await sendDesignerOrderEmail({
-          _subject: `Matsi Label Order | ${orderId} | ${name} | ${nowText}`,
-          name,
-          phone,
-          email: email || '-',
-          message: `ახალი შეკვეთა:
-Order ID: ${orderId}
-თარიღი: ${nowText}
-სახელი: ${name}
-ტელეფონი: ${phone}
-ელფოსტა: ${email || '-'}
-შენიშვნა: ${note || '-'}
-დიზაინის ლინკი: ${imageUrl}
-გვერდი: ${window.location.href}`
-        });
-
-        showToast('შეკვეთა წარმატებით გაიგზავნა', 'success');
-        if (statusEl) statusEl.textContent = `გაგზავნილია. ლინკი: ${imageUrl}`;
-        if (designerRefs.orderNote) designerRefs.orderNote.value = '';
-      } catch (error) {
-        console.error(error);
-        showToast('გაგზავნა ვერ მოხერხდა', 'error');
-        if (statusEl) statusEl.textContent = `შეცდომა: ${error.message}`;
-      } finally {
-        if (submitBtn) submitBtn.disabled = false;
       }
     }
 
@@ -1870,6 +1831,12 @@ Order ID: ${orderId}
             ...(payload.siteMeta.sections || {})
           }
         };
+        if (!siteMeta.cloudinary_cloud_name || !String(siteMeta.cloudinary_cloud_name).trim()) {
+          siteMeta.cloudinary_cloud_name = defaultSiteMeta.cloudinary_cloud_name;
+        }
+        if (!siteMeta.cloudinary_upload_preset || !String(siteMeta.cloudinary_upload_preset).trim()) {
+          siteMeta.cloudinary_upload_preset = defaultSiteMeta.cloudinary_upload_preset;
+        }
       }
       if (payload.homeContent && typeof payload.homeContent === 'object') {
         homeContent = { ...defaultHomeContent, ...payload.homeContent };

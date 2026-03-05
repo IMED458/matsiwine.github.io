@@ -375,6 +375,13 @@ function deepMerge(base, incoming) {
 
 function normalizeState(input) {
   const merged = deepMerge(defaultState, input || {});
+  if (!merged.siteMeta) merged.siteMeta = structuredClone(defaultState.siteMeta);
+  if (!merged.siteMeta.cloudinary_cloud_name || !String(merged.siteMeta.cloudinary_cloud_name).trim()) {
+    merged.siteMeta.cloudinary_cloud_name = defaultState.siteMeta.cloudinary_cloud_name;
+  }
+  if (!merged.siteMeta.cloudinary_upload_preset || !String(merged.siteMeta.cloudinary_upload_preset).trim()) {
+    merged.siteMeta.cloudinary_upload_preset = defaultState.siteMeta.cloudinary_upload_preset;
+  }
   if (!Array.isArray(merged.products)) {
     merged.products = structuredClone(defaultState.products);
   }
