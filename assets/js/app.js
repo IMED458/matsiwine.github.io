@@ -2318,7 +2318,7 @@ ${itemsText}`
       return {
         id: `custom-${Date.now()}`,
         name: (adminRefs.productName.value || '').trim(),
-        year: parseInt(adminRefs.productYear.value || '0', 10) || new Date().getFullYear(),
+        year: (adminRefs.productYear.value || '').toString().trim() ? parseInt(adminRefs.productYear.value, 10) : '',
         type: adminRefs.productType.value || 'red',
         category: (adminRefs.productCategory.value || '').trim(),
         price: parseFloat(adminRefs.productPrice.value || '0') || 0,

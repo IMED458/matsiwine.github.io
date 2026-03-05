@@ -668,7 +668,7 @@ function bindForms() {
       const product = {
         id: editingProductId || `custom-${Date.now()}`,
         name: (fd.get('name') || '').toString().trim(),
-        year: parseInt(fd.get('year') || '0', 10) || new Date().getFullYear(),
+        year: ((fd.get('year') || '').toString().trim() ? parseInt(fd.get('year'), 10) : ''),
         type: (fd.get('type') || 'red').toString(),
         category: (fd.get('category') || '').toString().trim(),
         price: parseFloat(fd.get('price') || '0') || 0,
