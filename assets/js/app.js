@@ -706,6 +706,7 @@
       color: '#722f37',
       size: 6,
       drawing: false,
+      draggingPhoto: false,
       photoScale: 100,
       photoX: 0,
       photoY: 0,
@@ -714,7 +715,9 @@
       draggingTextId: null,
       dragOffset: { x: 0, y: 0 },
       textColor: '#3d1219',
-      textSize: 28
+      textSize: 28,
+      drawHistory: [],
+      drawHistoryIndex: -1
     };
 
     const designerRefs = {};
@@ -728,11 +731,14 @@
       designerRefs.drawCanvas = document.getElementById('designer-draw-canvas');
       designerRefs.textLayer = document.getElementById('designer-text-layer');
       designerRefs.photo = document.getElementById('designer-photo');
+      designerRefs.photoWrap = document.getElementById('designer-photo-wrap');
       designerRefs.upload = document.getElementById('designer-upload');
       designerRefs.mode = document.getElementById('designer-mode');
       designerRefs.color = document.getElementById('designer-color');
       designerRefs.size = document.getElementById('designer-size');
       designerRefs.clearDrawing = document.getElementById('designer-clear-drawing');
+      designerRefs.undo = document.getElementById('designer-undo');
+      designerRefs.redo = document.getElementById('designer-redo');
       designerRefs.reset = document.getElementById('designer-reset');
       designerRefs.photoScale = document.getElementById('designer-photo-scale');
       designerRefs.photoX = document.getElementById('designer-photo-x');
@@ -753,12 +759,13 @@
       resizeDesignerCanvas();
       bindDesignerEvents();
       window.addEventListener('resize', resizeDesignerCanvas);
+      setDesignerMode(designerState.mode);
       designerState.initialized = true;
     }
 
     function bindDesignerEvents() {
       designerRefs.mode.addEventListener('change', (event) => {
-        designerState.mode = event.target.value;
+        setDesignerMode(event.target.value);
       });
 
       designerRefs.color.addEventListener('input', (event) => {
@@ -794,8 +801,11 @@
 
       designerRefs.clearDrawing.addEventListener('click', () => {
         clearDesignerDrawing();
+        pushDesignerHistory();
         showToast('ნახატი გასუფთავდა', 'info');
       });
+      designerRefs.undo.addEventListener('click', undoDesignerDrawing);
+      designerRefs.redo.addEventListener('click', redoDesignerDrawing);
 
       designerRefs.reset.addEventListener('click', resetDesigner);
       designerRefs.addText.addEventListener('click', addDesignerText);
@@ -811,10 +821,15 @@
       designerRefs.drawCanvas.addEventListener('pointermove', moveDesignerDrawing);
       designerRefs.drawCanvas.addEventListener('pointerup', endDesignerDrawing);
       designerRefs.drawCanvas.addEventListener('pointerleave', endDesignerDrawing);
+      designerRefs.photoWrap.addEventListener('pointerdown', startDesignerPhotoDrag);
 
       designerRefs.textLayer.addEventListener('pointerdown', startDesignerTextDrag);
       window.addEventListener('pointermove', moveDesignerTextDrag);
       window.addEventListener('pointerup', endDesignerTextDrag);
+      window.addEventListener('pointermove', moveDesignerPhotoDrag);
+      window.addEventListener('pointerup', endDesignerPhotoDrag);
+      designerRefs.stage.addEventListener('pointerdown', handleDesignerStagePointerDown);
+      window.addEventListener('keydown', handleDesignerHotkeys);
     }
 
     function resizeDesignerCanvas() {
@@ -838,7 +853,19 @@
           designerCtx.drawImage(img, 0, 0, rect.width, rect.height);
         };
         img.src = snapshot;
+      } else {
+        pushDesignerHistory();
       }
+    }
+
+    function setDesignerMode(mode) {
+      designerState.mode = mode;
+      if (designerRefs.mode) designerRefs.mode.value = mode;
+
+      const isSelect = mode === 'select';
+      if (designerRefs.drawCanvas) designerRefs.drawCanvas.style.pointerEvents = isSelect ? 'none' : 'auto';
+      if (designerRefs.textLayer) designerRefs.textLayer.style.pointerEvents = isSelect ? 'auto' : 'none';
+      if (designerRefs.stage) designerRefs.stage.style.cursor = isSelect ? 'grab' : 'crosshair';
     }
 
     function getDesignerPointer(event) {
@@ -850,7 +877,9 @@
     }
 
     function startDesignerDrawing(event) {
+      if (!designerCtx) return;
       if (designerState.mode === 'select') return;
+      if (event.button !== 0) return;
       event.preventDefault();
       designerState.drawing = true;
       const point = getDesignerPointer(event);
@@ -861,6 +890,7 @@
 
     function moveDesignerDrawing(event) {
       if (!designerState.drawing) return;
+      if (!designerCtx) return;
       const point = getDesignerPointer(event);
       designerCtx.lineWidth = designerState.size;
       if (designerState.mode === 'erase') {
@@ -879,11 +909,60 @@
       designerState.drawing = false;
       designerCtx.closePath();
       designerCtx.globalCompositeOperation = 'source-over';
+      pushDesignerHistory();
     }
 
     function clearDesignerDrawing() {
+      if (!designerCtx || !designerRefs.stage) return;
       const rect = designerRefs.stage.getBoundingClientRect();
       designerCtx.clearRect(0, 0, rect.width, rect.height);
+    }
+
+    function pushDesignerHistory() {
+      if (!designerRefs.drawCanvas || !designerCtx) return;
+      const snapshot = designerRefs.drawCanvas.toDataURL('image/png');
+      if (designerState.drawHistoryIndex >= 0 && designerState.drawHistory[designerState.drawHistoryIndex] === snapshot) {
+        return;
+      }
+      designerState.drawHistory = designerState.drawHistory.slice(0, designerState.drawHistoryIndex + 1);
+      designerState.drawHistory.push(snapshot);
+      if (designerState.drawHistory.length > 40) {
+        designerState.drawHistory.shift();
+      }
+      designerState.drawHistoryIndex = designerState.drawHistory.length - 1;
+      syncDesignerHistoryButtons();
+    }
+
+    function applyDesignerCanvasSnapshot(snapshot) {
+      if (!designerCtx || !designerRefs.stage) return;
+      const rect = designerRefs.stage.getBoundingClientRect();
+      designerCtx.clearRect(0, 0, rect.width, rect.height);
+      if (!snapshot) return;
+      const img = new Image();
+      img.onload = () => {
+        designerCtx.clearRect(0, 0, rect.width, rect.height);
+        designerCtx.drawImage(img, 0, 0, rect.width, rect.height);
+      };
+      img.src = snapshot;
+    }
+
+    function syncDesignerHistoryButtons() {
+      if (designerRefs.undo) designerRefs.undo.disabled = designerState.drawHistoryIndex <= 0;
+      if (designerRefs.redo) designerRefs.redo.disabled = designerState.drawHistoryIndex >= designerState.drawHistory.length - 1;
+    }
+
+    function undoDesignerDrawing() {
+      if (designerState.drawHistoryIndex <= 0) return;
+      designerState.drawHistoryIndex -= 1;
+      applyDesignerCanvasSnapshot(designerState.drawHistory[designerState.drawHistoryIndex]);
+      syncDesignerHistoryButtons();
+    }
+
+    function redoDesignerDrawing() {
+      if (designerState.drawHistoryIndex >= designerState.drawHistory.length - 1) return;
+      designerState.drawHistoryIndex += 1;
+      applyDesignerCanvasSnapshot(designerState.drawHistory[designerState.drawHistoryIndex]);
+      syncDesignerHistoryButtons();
     }
 
     function handleDesignerUpload(event) {
@@ -965,6 +1044,13 @@
       event.preventDefault();
     }
 
+    function handleDesignerStagePointerDown(event) {
+      if (designerState.mode !== 'select') return;
+      if (event.target.closest('.designer-text-item')) return;
+      designerState.selectedTextId = null;
+      renderDesignerTextLayers();
+    }
+
     function moveDesignerTextDrag(event) {
       if (!designerState.draggingTextId) return;
       const layer = designerState.textLayers.find((item) => item.id === designerState.draggingTextId);
@@ -977,6 +1063,55 @@
 
     function endDesignerTextDrag() {
       designerState.draggingTextId = null;
+    }
+
+    function startDesignerPhotoDrag(event) {
+      if (designerState.mode !== 'select') return;
+      if (designerRefs.photo.classList.contains('hidden')) return;
+      if (event.target.closest('.designer-text-item')) return;
+      designerState.draggingPhoto = true;
+      designerState.dragOffset = { x: event.clientX, y: event.clientY };
+      if (designerRefs.stage) designerRefs.stage.style.cursor = 'grabbing';
+      event.preventDefault();
+    }
+
+    function moveDesignerPhotoDrag(event) {
+      if (!designerState.draggingPhoto) return;
+      const dx = event.clientX - designerState.dragOffset.x;
+      const dy = event.clientY - designerState.dragOffset.y;
+      designerState.dragOffset = { x: event.clientX, y: event.clientY };
+      designerState.photoX += dx;
+      designerState.photoY += dy;
+      designerRefs.photoX.value = Math.max(-100, Math.min(100, Math.round(designerState.photoX)));
+      designerRefs.photoY.value = Math.max(-100, Math.min(100, Math.round(designerState.photoY)));
+      designerState.photoX = parseInt(designerRefs.photoX.value, 10);
+      designerState.photoY = parseInt(designerRefs.photoY.value, 10);
+      updateDesignerPhotoTransform();
+    }
+
+    function endDesignerPhotoDrag() {
+      if (!designerState.draggingPhoto) return;
+      designerState.draggingPhoto = false;
+      if (designerRefs.stage) designerRefs.stage.style.cursor = 'grab';
+    }
+
+    function handleDesignerHotkeys(event) {
+      if (currentPage !== 'designer') return;
+      if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'z') {
+        event.preventDefault();
+        if (event.shiftKey) {
+          redoDesignerDrawing();
+        } else {
+          undoDesignerDrawing();
+        }
+      }
+      if ((event.key === 'Delete' || event.key === 'Backspace') && designerState.selectedTextId) {
+        const activeTag = (document.activeElement?.tagName || '').toLowerCase();
+        if (!['input', 'textarea', 'select'].includes(activeTag)) {
+          event.preventDefault();
+          deleteSelectedDesignerText();
+        }
+      }
     }
 
     function getSelectedTextLayer() {
@@ -1053,6 +1188,10 @@
       designerRefs.photo.classList.add('hidden');
       updateDesignerPhotoTransform();
       clearDesignerDrawing();
+      designerState.drawHistory = [];
+      designerState.drawHistoryIndex = -1;
+      pushDesignerHistory();
+      setDesignerMode('draw');
       renderDesignerTextLayers();
       showToast('დიზაინერი განულდა', 'info');
     }
