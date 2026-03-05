@@ -26,6 +26,7 @@
     <section class="card">
       <div class="tabs">
         <button class="tab active" data-tab="settings" type="button">ძირითადი პარამეტრები</button>
+        <button class="tab" data-tab="home" type="button">მთავარი გვერდი</button>
         <button class="tab" data-tab="sections" type="button">სექციები</button>
         <button class="tab" data-tab="products" type="button">პროდუქტები</button>
         <button class="tab" data-tab="raw" type="button">RAW JSON</button>
@@ -45,6 +46,53 @@
           <div><label for="text_color">Text ფერი</label><input id="text_color" name="text_color" type="color"></div>
           <button class="primary" type="submit">შენახვა</button>
           <p id="settings-msg" class="small"></p>
+        </form>
+      </section>
+
+      <section id="tab-home" class="tab-panel hidden">
+        <h2>მთავარი გვერდის სრული კონტენტი</h2>
+        <form id="home-form" class="grid">
+          <div><label for="home_hero_kicker">Hero kicker</label><input id="home_hero_kicker" name="home_hero_kicker"></div>
+          <div><label for="home_hero_btn_primary">Hero ღილაკი 1</label><input id="home_hero_btn_primary" name="home_hero_btn_primary"></div>
+          <div><label for="home_hero_btn_secondary">Hero ღილაკი 2</label><input id="home_hero_btn_secondary" name="home_hero_btn_secondary"></div>
+          <div><label for="home_featured_kicker">Featured kicker</label><input id="home_featured_kicker" name="home_featured_kicker"></div>
+          <div><label for="home_featured_title">Featured სათაური</label><input id="home_featured_title" name="home_featured_title"></div>
+          <div><label for="home_featured_cta">Featured CTA</label><input id="home_featured_cta" name="home_featured_cta"></div>
+
+          <div><label for="home_card1_category">Card1 კატეგორია</label><input id="home_card1_category" name="home_card1_category"></div>
+          <div><label for="home_card1_title">Card1 სათაური</label><input id="home_card1_title" name="home_card1_title"></div>
+          <div><label for="home_card1_desc">Card1 აღწერა</label><input id="home_card1_desc" name="home_card1_desc"></div>
+          <div><label for="home_card1_price">Card1 ფასი</label><input id="home_card1_price" name="home_card1_price"></div>
+          <div><label for="home_card1_btn">Card1 ღილაკი</label><input id="home_card1_btn" name="home_card1_btn"></div>
+
+          <div><label for="home_card2_category">Card2 კატეგორია</label><input id="home_card2_category" name="home_card2_category"></div>
+          <div><label for="home_card2_title">Card2 სათაური</label><input id="home_card2_title" name="home_card2_title"></div>
+          <div><label for="home_card2_desc">Card2 აღწერა</label><input id="home_card2_desc" name="home_card2_desc"></div>
+          <div><label for="home_card2_price">Card2 ფასი</label><input id="home_card2_price" name="home_card2_price"></div>
+          <div><label for="home_card2_btn">Card2 ღილაკი</label><input id="home_card2_btn" name="home_card2_btn"></div>
+
+          <div><label for="home_card3_category">Card3 კატეგორია</label><input id="home_card3_category" name="home_card3_category"></div>
+          <div><label for="home_card3_title">Card3 სათაური</label><input id="home_card3_title" name="home_card3_title"></div>
+          <div><label for="home_card3_desc">Card3 აღწერა</label><input id="home_card3_desc" name="home_card3_desc"></div>
+          <div><label for="home_card3_price">Card3 ფასი</label><input id="home_card3_price" name="home_card3_price"></div>
+          <div><label for="home_card3_btn">Card3 ღილაკი</label><input id="home_card3_btn" name="home_card3_btn"></div>
+
+          <div><label for="home_story_kicker">Story kicker</label><input id="home_story_kicker" name="home_story_kicker"></div>
+          <div><label for="home_story_title">Story სათაური</label><input id="home_story_title" name="home_story_title"></div>
+          <div><label for="home_story_text">Story ტექსტი</label><textarea id="home_story_text" name="home_story_text"></textarea></div>
+          <div><label for="home_story_btn">Story ღილაკი</label><input id="home_story_btn" name="home_story_btn"></div>
+
+          <div><label for="home_stat1_value">Stat1 value</label><input id="home_stat1_value" name="home_stat1_value"></div>
+          <div><label for="home_stat1_label">Stat1 label</label><input id="home_stat1_label" name="home_stat1_label"></div>
+          <div><label for="home_stat2_value">Stat2 value</label><input id="home_stat2_value" name="home_stat2_value"></div>
+          <div><label for="home_stat2_label">Stat2 label</label><input id="home_stat2_label" name="home_stat2_label"></div>
+          <div><label for="home_stat3_value">Stat3 value</label><input id="home_stat3_value" name="home_stat3_value"></div>
+          <div><label for="home_stat3_label">Stat3 label</label><input id="home_stat3_label" name="home_stat3_label"></div>
+          <div><label for="home_stat4_value">Stat4 value</label><input id="home_stat4_value" name="home_stat4_value"></div>
+          <div><label for="home_stat4_label">Stat4 label</label><input id="home_stat4_label" name="home_stat4_label"></div>
+
+          <button class="primary" type="submit">შენახვა</button>
+          <p id="home-msg" class="small"></p>
         </form>
       </section>
 

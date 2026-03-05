@@ -12,8 +12,44 @@
       primary_action_color: '#722f37',
       secondary_action_color: '#5a1f29'
     };
+    const defaultHomeContent = {
+      hero_kicker: 'ქართული ღვინის ტრადიცია',
+      hero_btn_primary: 'კოლექციის ნახვა',
+      hero_btn_secondary: 'ჩვენი ისტორია',
+      featured_kicker: 'გამორჩეული კოლექცია',
+      featured_title: 'ჩვენი საუკეთესოები',
+      featured_cta: 'სრული კატალოგი',
+      card1_category: 'წითელი მშრალი',
+      card1_title: 'საფერავი რეზერვი 2019',
+      card1_desc: 'მუხის კასრში დაძველებული, ხავერდოვანი ტანინები',
+      card1_price: '₾85',
+      card1_btn: 'დამატება',
+      card2_category: 'ქვევრის ღვინო',
+      card2_title: 'მწვანე ქვევრი 2021',
+      card2_desc: 'ქვევრში დაყენებული, ქარვისფერი, მდიდარი არომატით',
+      card2_price: '₾65',
+      card2_btn: 'დამატება',
+      card3_category: 'ნახევრად ტკბილი',
+      card3_title: 'კინძმარაული 2020',
+      card3_desc: 'კლასიკური კახური, მაყვლისა და ალუბლის ნოტებით',
+      card3_price: '₾55',
+      card3_btn: 'დამატება',
+      story_kicker: 'ჩვენი ფილოსოფია',
+      story_title: 'მიწიდან სუფრამდე',
+      story_text: 'MATSI WINE — ეს არის ოჯახური მეღვინეობის თანამედროვე გაგრძელება. ჩვენ ვაერთიანებთ ქვევრის უძველეს ტრადიციას ევროპული მეღვინეობის თანამედროვე მიდგომებთან, რათა შევქმნათ ღვინო, რომელიც მოგვითხრობს ქართული მიწის ისტორიას.',
+      story_btn: 'მეტის გაგება',
+      stat1_value: '8000+',
+      stat1_label: 'წლიანი ტრადიცია',
+      stat2_value: '525',
+      stat2_label: 'ქართული ჯიში',
+      stat3_value: '100%',
+      stat3_label: 'ორგანული',
+      stat4_value: '🏆',
+      stat4_label: 'საერთაშორისო ჯილდოები'
+    };
     
     let config = { ...defaultConfig };
+    let homeContent = { ...defaultHomeContent };
     let cartItems = [];
     let currentPage = 'home';
     let currentFilter = 'all';
@@ -235,6 +271,53 @@
       if (contactPhoneEl) contactPhoneEl.textContent = siteMeta.contact_phone || defaultSiteMeta.contact_phone;
       if (contactAddressEl) contactAddressEl.innerHTML = (siteMeta.contact_address || defaultSiteMeta.contact_address).replace(', ', '<br>');
       if (instagramEl && (siteMeta.instagram_link || '').trim()) instagramEl.href = siteMeta.instagram_link.trim();
+    }
+
+    function setTextById(id, value) {
+      const element = document.getElementById(id);
+      if (!element || value === undefined || value === null) return;
+      element.textContent = String(value);
+    }
+
+    function applyHomeContent() {
+      setTextById('home-hero-kicker', homeContent.hero_kicker);
+      setTextById('home-hero-btn-primary', homeContent.hero_btn_primary);
+      setTextById('home-hero-btn-secondary', homeContent.hero_btn_secondary);
+      setTextById('home-featured-kicker', homeContent.featured_kicker);
+      setTextById('home-featured-title', homeContent.featured_title);
+      setTextById('home-featured-cta', homeContent.featured_cta);
+
+      setTextById('home-card1-category', homeContent.card1_category);
+      setTextById('home-card1-title', homeContent.card1_title);
+      setTextById('home-card1-desc', homeContent.card1_desc);
+      setTextById('home-card1-price', homeContent.card1_price);
+      setTextById('home-card1-btn', homeContent.card1_btn);
+
+      setTextById('home-card2-category', homeContent.card2_category);
+      setTextById('home-card2-title', homeContent.card2_title);
+      setTextById('home-card2-desc', homeContent.card2_desc);
+      setTextById('home-card2-price', homeContent.card2_price);
+      setTextById('home-card2-btn', homeContent.card2_btn);
+
+      setTextById('home-card3-category', homeContent.card3_category);
+      setTextById('home-card3-title', homeContent.card3_title);
+      setTextById('home-card3-desc', homeContent.card3_desc);
+      setTextById('home-card3-price', homeContent.card3_price);
+      setTextById('home-card3-btn', homeContent.card3_btn);
+
+      setTextById('home-story-kicker', homeContent.story_kicker);
+      setTextById('home-story-title', homeContent.story_title);
+      setTextById('home-story-text', homeContent.story_text);
+      setTextById('home-story-btn', homeContent.story_btn);
+
+      setTextById('home-stat1-value', homeContent.stat1_value);
+      setTextById('home-stat1-label', homeContent.stat1_label);
+      setTextById('home-stat2-value', homeContent.stat2_value);
+      setTextById('home-stat2-label', homeContent.stat2_label);
+      setTextById('home-stat3-value', homeContent.stat3_value);
+      setTextById('home-stat3-label', homeContent.stat3_label);
+      setTextById('home-stat4-value', homeContent.stat4_value);
+      setTextById('home-stat4-label', homeContent.stat4_label);
     }
     
     // =====================================================
@@ -1686,11 +1769,15 @@
             }
           };
         }
+        if (data.homeContent && typeof data.homeContent === 'object') {
+          homeContent = { ...defaultHomeContent, ...data.homeContent };
+        }
         if (Array.isArray(data.products)) {
           products = data.products;
         }
         applyConfig();
         applySiteMeta();
+        applyHomeContent();
         applySectionVisibility();
         renderProducts();
         if (currentPage === 'shop') renderProducts();
@@ -1707,9 +1794,11 @@
       localStorage.removeItem(ADMIN_STORAGE_KEY);
       config = { ...defaultConfigSnapshot };
       siteMeta = JSON.parse(JSON.stringify(defaultSiteMeta));
+      homeContent = { ...defaultHomeContent };
       products = JSON.parse(JSON.stringify(initialProducts));
       applyConfig();
       applySiteMeta();
+      applyHomeContent();
       applySectionVisibility();
       renderProducts();
       clearAdminProductForm();
@@ -1920,6 +2009,7 @@
       // Render UI immediately
       applyConfig();
       applySiteMeta();
+      applyHomeContent();
       applySectionVisibility();
       renderProducts();
 

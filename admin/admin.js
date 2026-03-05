@@ -25,6 +25,41 @@ const defaultState = {
       cart: true
     }
   },
+  homeContent: {
+    hero_kicker: 'ქართული ღვინის ტრადიცია',
+    hero_btn_primary: 'კოლექციის ნახვა',
+    hero_btn_secondary: 'ჩვენი ისტორია',
+    featured_kicker: 'გამორჩეული კოლექცია',
+    featured_title: 'ჩვენი საუკეთესოები',
+    featured_cta: 'სრული კატალოგი',
+    card1_category: 'წითელი მშრალი',
+    card1_title: 'საფერავი რეზერვი 2019',
+    card1_desc: 'მუხის კასრში დაძველებული, ხავერდოვანი ტანინები',
+    card1_price: '₾85',
+    card1_btn: 'დამატება',
+    card2_category: 'ქვევრის ღვინო',
+    card2_title: 'მწვანე ქვევრი 2021',
+    card2_desc: 'ქვევრში დაყენებული, ქარვისფერი, მდიდარი არომატით',
+    card2_price: '₾65',
+    card2_btn: 'დამატება',
+    card3_category: 'ნახევრად ტკბილი',
+    card3_title: 'კინძმარაული 2020',
+    card3_desc: 'კლასიკური კახური, მაყვლისა და ალუბლის ნოტებით',
+    card3_price: '₾55',
+    card3_btn: 'დამატება',
+    story_kicker: 'ჩვენი ფილოსოფია',
+    story_title: 'მიწიდან სუფრამდე',
+    story_text: 'MATSI WINE — ეს არის ოჯახური მეღვინეობის თანამედროვე გაგრძელება. ჩვენ ვაერთიანებთ ქვევრის უძველეს ტრადიციას ევროპული მეღვინეობის თანამედროვე მიდგომებთან, რათა შევქმნათ ღვინო, რომელიც მოგვითხრობს ქართული მიწის ისტორიას.',
+    story_btn: 'მეტის გაგება',
+    stat1_value: '8000+',
+    stat1_label: 'წლიანი ტრადიცია',
+    stat2_value: '525',
+    stat2_label: 'ქართული ჯიში',
+    stat3_value: '100%',
+    stat3_label: 'ორგანული',
+    stat4_value: '🏆',
+    stat4_label: 'საერთაშორისო ჯილდოები'
+  },
   products: [
     {
       id: 'saperavi-reserve',
@@ -54,6 +89,7 @@ let pendingImageDataUrl = null;
 const tabs = Array.from(document.querySelectorAll('.tab'));
 const panels = {
   settings: document.getElementById('tab-settings'),
+  home: document.getElementById('tab-home'),
   sections: document.getElementById('tab-sections'),
   products: document.getElementById('tab-products'),
   raw: document.getElementById('tab-raw')
@@ -63,6 +99,8 @@ const settingsForm = document.getElementById('settings-form');
 const settingsMsg = document.getElementById('settings-msg');
 const sectionsForm = document.getElementById('sections-form');
 const sectionsMsg = document.getElementById('sections-msg');
+const homeForm = document.getElementById('home-form');
+const homeMsg = document.getElementById('home-msg');
 const productsForm = document.getElementById('products-form');
 const productsMsg = document.getElementById('products-msg');
 const itemsList = document.getElementById('items-list');
@@ -77,6 +115,7 @@ function init() {
   bindTabs();
   bindForms();
   fillSettingsForm();
+  fillHomeForm();
   fillSectionsForm();
   renderProductsList();
   refreshRawEditor();
@@ -158,6 +197,20 @@ function bindForms() {
     state.siteMeta.sections.designer = !!fd.get('designer');
     state.siteMeta.sections.cart = !!fd.get('cart');
     saveState('სექციების პარამეტრები შენახულია');
+  });
+
+  homeForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const fd = new FormData(homeForm);
+    for (const key of Object.keys(defaultState.homeContent)) {
+      const field = `home_${key}`;
+      const value = fd.get(field);
+      if (value !== null) {
+        state.homeContent[key] = value.toString();
+      }
+    }
+    saveState('მთავარი გვერდის კონტენტი შენახულია');
+    homeMsg.textContent = 'მთავარი გვერდის კონტენტი შენახულია';
   });
 
   productsForm.addEventListener('submit', (e) => {
@@ -243,6 +296,14 @@ function fillSettingsForm() {
   settingsForm.instagram_link.value = state.siteMeta.instagram_link || '';
   settingsForm.primary_color.value = state.config.primary_action_color || '#722f37';
   settingsForm.text_color.value = state.config.text_color || '#3d1219';
+}
+
+function fillHomeForm() {
+  const hc = state.homeContent || {};
+  for (const key of Object.keys(defaultState.homeContent)) {
+    const input = homeForm.elements.namedItem(`home_${key}`);
+    if (input) input.value = hc[key] ?? defaultState.homeContent[key];
+  }
 }
 
 function fillSectionsForm() {
