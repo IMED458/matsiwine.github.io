@@ -20,7 +20,7 @@
     let isLoading = false;
     
     // Products data
-    const products = [
+    let products = [
       {
         id: 'saperavi-reserve',
         name: 'საფერავი რეზერვი',
@@ -118,6 +118,8 @@
         temperature: '14-16°C'
       }
     ];
+    const initialProducts = JSON.parse(JSON.stringify(products));
+    const defaultConfigSnapshot = { ...defaultConfig };
     
     // =====================================================
     // DATA SDK INTEGRATION
@@ -202,6 +204,10 @@
       if (aboutTitle) {
         aboutTitle.textContent = config.about_title || defaultConfig.about_title;
       }
+
+      document.documentElement.style.setProperty('--admin-primary', config.primary_action_color || defaultConfig.primary_action_color);
+      document.documentElement.style.setProperty('--admin-text', config.text_color || defaultConfig.text_color);
+      document.body.style.color = config.text_color || defaultConfig.text_color;
     }
     
     // =====================================================
@@ -228,6 +234,9 @@
           renderCart();
         } else if (page === 'designer') {
           initDesigner();
+        } else if (page === 'admin') {
+          initAdminPanel();
+          renderAdminPanelValues();
         }
       }
     }
@@ -1052,6 +1061,404 @@
       link.click();
       showToast('PNG ექსპორტი დასრულდა', 'success');
     }
+
+    // =====================================================
+    // ADMIN PANEL
+    // =====================================================
+
+    const ADMIN_STORAGE_KEY = 'matsi_admin_state_v1';
+    const adminState = {
+      initialized: false,
+      editMode: false,
+      selectedElement: null,
+      selectedProductIndex: null,
+      suppressEditableClick: false
+    };
+    const adminRefs = {};
+
+    function initAdminPanel() {
+      if (adminState.initialized) return;
+
+      adminRefs.toggleEdit = document.getElementById('admin-toggle-edit');
+      adminRefs.applySelected = document.getElementById('admin-apply-selected');
+      adminRefs.selectedText = document.getElementById('admin-selected-text');
+      adminRefs.selectedClass = document.getElementById('admin-selected-class');
+      adminRefs.selectedStyle = document.getElementById('admin-selected-style');
+      adminRefs.heroTitle = document.getElementById('admin-hero-title');
+      adminRefs.heroSubtitle = document.getElementById('admin-hero-subtitle');
+      adminRefs.aboutTitle = document.getElementById('admin-about-title');
+      adminRefs.primaryColor = document.getElementById('admin-primary-color');
+      adminRefs.textColor = document.getElementById('admin-text-color');
+      adminRefs.applyTheme = document.getElementById('admin-apply-theme');
+      adminRefs.productList = document.getElementById('admin-product-list');
+      adminRefs.productName = document.getElementById('admin-product-name');
+      adminRefs.productYear = document.getElementById('admin-product-year');
+      adminRefs.productPrice = document.getElementById('admin-product-price');
+      adminRefs.productType = document.getElementById('admin-product-type');
+      adminRefs.productCategory = document.getElementById('admin-product-category');
+      adminRefs.productGrape = document.getElementById('admin-product-grape');
+      adminRefs.productRegion = document.getElementById('admin-product-region');
+      adminRefs.productAlcohol = document.getElementById('admin-product-alcohol');
+      adminRefs.productTemperature = document.getElementById('admin-product-temperature');
+      adminRefs.productPairing = document.getElementById('admin-product-pairing');
+      adminRefs.productDescription = document.getElementById('admin-product-description');
+      adminRefs.productAroma = document.getElementById('admin-product-aroma');
+      adminRefs.productTaste = document.getElementById('admin-product-taste');
+      adminRefs.productAdd = document.getElementById('admin-product-add');
+      adminRefs.productUpdate = document.getElementById('admin-product-update');
+      adminRefs.productClear = document.getElementById('admin-product-clear');
+      adminRefs.save = document.getElementById('admin-save');
+      adminRefs.load = document.getElementById('admin-load');
+      adminRefs.resetAll = document.getElementById('admin-reset-all');
+      adminRefs.exportJson = document.getElementById('admin-export-json');
+      adminRefs.importJson = document.getElementById('admin-import-json');
+
+      if (!adminRefs.toggleEdit) return;
+
+      adminRefs.toggleEdit.addEventListener('click', toggleAdminEditMode);
+      adminRefs.applySelected.addEventListener('click', applyAdminSelectedChanges);
+      adminRefs.applyTheme.addEventListener('click', applyAdminThemeChanges);
+      adminRefs.productAdd.addEventListener('click', addAdminProduct);
+      adminRefs.productUpdate.addEventListener('click', updateAdminProduct);
+      adminRefs.productClear.addEventListener('click', clearAdminProductForm);
+      adminRefs.save.addEventListener('click', saveAdminState);
+      adminRefs.load.addEventListener('click', () => {
+        loadAdminState();
+        showToast('შენახული ვერსია ჩაიტვირთა', 'success');
+      });
+      adminRefs.resetAll.addEventListener('click', resetAdminState);
+      adminRefs.exportJson.addEventListener('click', exportAdminJson);
+      adminRefs.importJson.addEventListener('change', importAdminJson);
+
+      adminRefs.productList.addEventListener('click', handleAdminProductListClick);
+      document.addEventListener('click', handleAdminEditableClickCapture, true);
+
+      renderAdminPanelValues();
+      renderAdminProductList();
+      adminState.initialized = true;
+    }
+
+    function getAdminEditableElements() {
+      const nodes = Array.from(document.querySelectorAll('#app h1, #app h2, #app h3, #app p, #app span, #app a, #app li, #app button'));
+      let index = 0;
+      return nodes.filter((el) => {
+        if (el.closest('#page-admin')) return false;
+        if (el.closest('#toast-container')) return false;
+        if (el.id && (el.id.startsWith('admin-') || el.id.startsWith('designer-'))) return false;
+        if (el.closest('#page-designer .space-y-4')) return false;
+        if (!el.dataset.adminEditableId) {
+          el.dataset.adminEditableId = `ae-${index}`;
+        }
+        index += 1;
+        return true;
+      });
+    }
+
+    function toggleAdminEditMode() {
+      adminState.editMode = !adminState.editMode;
+      const editableElements = getAdminEditableElements();
+      editableElements.forEach((el) => {
+        el.contentEditable = adminState.editMode ? 'true' : 'false';
+        el.classList.toggle('admin-editable-target', adminState.editMode);
+      });
+
+      if (!adminState.editMode) {
+        clearAdminSelectedElement();
+      }
+
+      adminRefs.toggleEdit.textContent = adminState.editMode ? 'Disable Edit Mode' : 'Enable Edit Mode';
+      showToast(adminState.editMode ? 'Edit mode ჩართულია' : 'Edit mode გამორთულია', 'info');
+    }
+
+    function handleAdminEditableClickCapture(event) {
+      if (!adminState.editMode) return;
+      const target = event.target.closest('.admin-editable-target');
+      if (!target) return;
+      event.preventDefault();
+      event.stopPropagation();
+      selectAdminElement(target);
+    }
+
+    function selectAdminElement(element) {
+      clearAdminSelectedElement();
+      adminState.selectedElement = element;
+      element.classList.add('admin-selected-target');
+      adminRefs.selectedText.value = element.innerHTML;
+      adminRefs.selectedClass.value = element.className;
+      adminRefs.selectedStyle.value = element.getAttribute('style') || '';
+    }
+
+    function clearAdminSelectedElement() {
+      if (adminState.selectedElement) {
+        adminState.selectedElement.classList.remove('admin-selected-target');
+      }
+      adminState.selectedElement = null;
+      adminRefs.selectedText.value = '';
+      adminRefs.selectedClass.value = '';
+      adminRefs.selectedStyle.value = '';
+    }
+
+    function applyAdminSelectedChanges() {
+      if (!adminState.selectedElement) {
+        showToast('ჯერ აირჩიე ელემენტი', 'info');
+        return;
+      }
+      adminState.selectedElement.innerHTML = adminRefs.selectedText.value;
+      adminState.selectedElement.className = adminRefs.selectedClass.value;
+      if (adminRefs.selectedStyle.value.trim()) {
+        adminState.selectedElement.setAttribute('style', adminRefs.selectedStyle.value.trim());
+      } else {
+        adminState.selectedElement.removeAttribute('style');
+      }
+      adminState.selectedElement.classList.add('admin-selected-target');
+      showToast('ელემენტი განახლდა', 'success');
+    }
+
+    function applyAdminThemeChanges() {
+      config.hero_title = adminRefs.heroTitle.value || defaultConfig.hero_title;
+      config.hero_subtitle = adminRefs.heroSubtitle.value || defaultConfig.hero_subtitle;
+      config.about_title = adminRefs.aboutTitle.value || defaultConfig.about_title;
+      config.primary_action_color = adminRefs.primaryColor.value || defaultConfig.primary_action_color;
+      config.background_color = adminRefs.primaryColor.value || defaultConfig.background_color;
+      config.text_color = adminRefs.textColor.value || defaultConfig.text_color;
+      applyConfig();
+      showToast('თემა განახლდა', 'success');
+    }
+
+    function renderAdminPanelValues() {
+      if (!adminRefs.heroTitle) return;
+      adminRefs.heroTitle.value = config.hero_title || defaultConfig.hero_title;
+      adminRefs.heroSubtitle.value = config.hero_subtitle || defaultConfig.hero_subtitle;
+      adminRefs.aboutTitle.value = config.about_title || defaultConfig.about_title;
+      adminRefs.primaryColor.value = config.primary_action_color || defaultConfig.primary_action_color;
+      adminRefs.textColor.value = config.text_color || defaultConfig.text_color;
+      renderAdminProductList();
+    }
+
+    function readAdminProductForm() {
+      return {
+        id: `custom-${Date.now()}`,
+        name: (adminRefs.productName.value || '').trim(),
+        year: parseInt(adminRefs.productYear.value || '0', 10) || new Date().getFullYear(),
+        type: adminRefs.productType.value || 'red',
+        category: (adminRefs.productCategory.value || '').trim() || 'სპეციალური',
+        price: parseFloat(adminRefs.productPrice.value || '0') || 0,
+        grape: (adminRefs.productGrape.value || '').trim() || 'საფერავი',
+        region: (adminRefs.productRegion.value || '').trim() || 'კახეთი',
+        description: (adminRefs.productDescription.value || '').trim() || 'აღწერა არ არის დამატებული.',
+        aroma: (adminRefs.productAroma.value || '').trim() || 'არომატი',
+        taste: (adminRefs.productTaste.value || '').trim() || 'გემო',
+        pairing: (adminRefs.productPairing.value || '').trim() || 'შეხამება',
+        alcohol: (adminRefs.productAlcohol.value || '').trim() || '13%',
+        temperature: (adminRefs.productTemperature.value || '').trim() || '12-14°C'
+      };
+    }
+
+    function fillAdminProductForm(product) {
+      adminRefs.productName.value = product.name || '';
+      adminRefs.productYear.value = product.year || '';
+      adminRefs.productPrice.value = product.price || '';
+      adminRefs.productType.value = product.type || 'red';
+      adminRefs.productCategory.value = product.category || '';
+      adminRefs.productGrape.value = product.grape || '';
+      adminRefs.productRegion.value = product.region || '';
+      adminRefs.productAlcohol.value = product.alcohol || '';
+      adminRefs.productTemperature.value = product.temperature || '';
+      adminRefs.productPairing.value = product.pairing || '';
+      adminRefs.productDescription.value = product.description || '';
+      adminRefs.productAroma.value = product.aroma || '';
+      adminRefs.productTaste.value = product.taste || '';
+    }
+
+    function clearAdminProductForm() {
+      [
+        adminRefs.productName,
+        adminRefs.productYear,
+        adminRefs.productPrice,
+        adminRefs.productCategory,
+        adminRefs.productGrape,
+        adminRefs.productRegion,
+        adminRefs.productAlcohol,
+        adminRefs.productTemperature,
+        adminRefs.productPairing,
+        adminRefs.productDescription,
+        adminRefs.productAroma,
+        adminRefs.productTaste
+      ].forEach((input) => { input.value = ''; });
+      adminRefs.productType.value = 'red';
+      adminState.selectedProductIndex = null;
+      renderAdminProductList();
+    }
+
+    function addAdminProduct() {
+      const product = readAdminProductForm();
+      if (!product.name || product.price <= 0) {
+        showToast('სახელი და ფასი აუცილებელია', 'error');
+        return;
+      }
+      products.push(product);
+      renderProducts();
+      renderAdminProductList();
+      clearAdminProductForm();
+      showToast('პროდუქტი დაემატა', 'success');
+    }
+
+    function updateAdminProduct() {
+      if (adminState.selectedProductIndex === null) {
+        showToast('აირჩიე პროდუქტი სიიდან', 'info');
+        return;
+      }
+      const existing = products[adminState.selectedProductIndex];
+      const updated = readAdminProductForm();
+      updated.id = existing.id;
+      products[adminState.selectedProductIndex] = updated;
+      renderProducts();
+      renderAdminProductList();
+      showToast('პროდუქტი განახლდა', 'success');
+    }
+
+    function deleteAdminProduct(index) {
+      products.splice(index, 1);
+      renderProducts();
+      if (adminState.selectedProductIndex === index) {
+        clearAdminProductForm();
+      }
+      renderAdminProductList();
+      showToast('პროდუქტი წაიშალა', 'success');
+    }
+
+    function renderAdminProductList() {
+      if (!adminRefs.productList) return;
+      adminRefs.productList.innerHTML = products.map((product, index) => `
+        <div class="admin-product-item ${adminState.selectedProductIndex === index ? 'active' : ''}">
+          <div>
+            <p class="text-sm font-semibold text-wine-900">${escapeHtml(product.name)} ${product.year || ''}</p>
+            <p class="text-xs text-wine-600">₾${product.price} • ${escapeHtml(product.type || '')}</p>
+          </div>
+          <div class="flex items-center gap-2">
+            <button data-admin-product-action="select" data-admin-product-index="${index}" class="px-3 py-1 rounded-full bg-cream-200 text-wine-800 text-xs">Edit</button>
+            <button data-admin-product-action="delete" data-admin-product-index="${index}" class="px-3 py-1 rounded-full bg-red-100 text-red-700 text-xs">Delete</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function handleAdminProductListClick(event) {
+      const button = event.target.closest('[data-admin-product-action]');
+      if (!button) return;
+      const index = parseInt(button.dataset.adminProductIndex, 10);
+      const action = button.dataset.adminProductAction;
+      if (Number.isNaN(index)) return;
+
+      if (action === 'select') {
+        adminState.selectedProductIndex = index;
+        fillAdminProductForm(products[index]);
+        renderAdminProductList();
+      } else if (action === 'delete') {
+        deleteAdminProduct(index);
+      }
+    }
+
+    function collectAdminContentEdits() {
+      const edits = {};
+      getAdminEditableElements().forEach((el) => {
+        const id = el.dataset.adminEditableId;
+        edits[id] = {
+          html: el.innerHTML,
+          className: el.className,
+          style: el.getAttribute('style') || ''
+        };
+      });
+      return edits;
+    }
+
+    function applyAdminContentEdits(edits = {}) {
+      getAdminEditableElements().forEach((el) => {
+        const id = el.dataset.adminEditableId;
+        const value = edits[id];
+        if (!value) return;
+        if (typeof value.html === 'string') el.innerHTML = value.html;
+        if (typeof value.className === 'string') el.className = value.className;
+        if (value.style) el.setAttribute('style', value.style);
+      });
+    }
+
+    function saveAdminState() {
+      const payload = {
+        config,
+        products,
+        contentEdits: collectAdminContentEdits()
+      };
+      localStorage.setItem(ADMIN_STORAGE_KEY, JSON.stringify(payload));
+      showToast('ადმინ ცვლილებები შენახულია', 'success');
+    }
+
+    function loadAdminState() {
+      const raw = localStorage.getItem(ADMIN_STORAGE_KEY);
+      if (!raw) return;
+      try {
+        const data = JSON.parse(raw);
+        if (data.config && typeof data.config === 'object') {
+          config = { ...defaultConfig, ...data.config };
+        }
+        if (Array.isArray(data.products)) {
+          products = data.products;
+        }
+        applyConfig();
+        renderProducts();
+        if (currentPage === 'shop') renderProducts();
+        if (currentPage === 'cart') renderCart();
+        applyAdminContentEdits(data.contentEdits || {});
+        renderAdminPanelValues();
+      } catch (error) {
+        console.error(error);
+        showToast('შენახული მონაცემი დაზიანებულია', 'error');
+      }
+    }
+
+    function resetAdminState() {
+      localStorage.removeItem(ADMIN_STORAGE_KEY);
+      config = { ...defaultConfigSnapshot };
+      products = JSON.parse(JSON.stringify(initialProducts));
+      applyConfig();
+      renderProducts();
+      clearAdminProductForm();
+      renderAdminProductList();
+      showToast('ყველაფერი დაბრუნდა საწყის ვერსიაზე', 'info');
+    }
+
+    function exportAdminJson() {
+      const payload = {
+        config,
+        products,
+        contentEdits: collectAdminContentEdits()
+      };
+      const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `matsi-admin-backup-${Date.now()}.json`;
+      link.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function importAdminJson(event) {
+      const file = event.target.files?.[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        try {
+          const parsed = JSON.parse(reader.result);
+          localStorage.setItem(ADMIN_STORAGE_KEY, JSON.stringify(parsed));
+          loadAdminState();
+          showToast('JSON იმპორტი შესრულდა', 'success');
+        } catch (error) {
+          console.error(error);
+          showToast('არასწორი JSON ფაილი', 'error');
+        }
+      };
+      reader.readAsText(file);
+    }
     
     // =====================================================
     // 3D SCENE (Three.js)
@@ -1210,6 +1617,9 @@
     // =====================================================
     
     async function init() {
+      initAdminPanel();
+      loadAdminState();
+
       // Render UI immediately
       applyConfig();
       renderProducts();

@@ -233,3 +233,29 @@ body { box-sizing: border-box; }
   pointer-events: none;
   z-index: 4;
 }
+
+.admin-editable-target {
+  outline: 1px dashed rgba(114, 47, 55, 0.3);
+  outline-offset: 2px;
+  cursor: text;
+}
+
+.admin-selected-target {
+  outline: 2px solid rgba(114, 47, 55, 0.9) !important;
+  outline-offset: 2px;
+}
+
+.admin-product-item {
+  border: 1px solid rgba(114, 47, 55, 0.2);
+  border-radius: 12px;
+  padding: 10px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.admin-product-item.active {
+  border-color: rgba(114, 47, 55, 0.75);
+  background: rgba(252, 231, 235, 0.5);
+}
