@@ -278,12 +278,11 @@ function onAuth() {
         unsubscribeState();
         unsubscribeState = null;
       }
-      authCard.classList.remove('hidden');
-      adminMain.classList.add('hidden');
+      window.location.href = './login.html';
       return;
     }
 
-    authCard.classList.add('hidden');
+    if (authCard) authCard.classList.add('hidden');
     adminMain.classList.remove('hidden');
 
     if (!initialized) {

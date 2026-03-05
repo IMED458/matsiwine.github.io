@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="ka">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MATSI Admin Login</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Georgian:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./admin.css">
+  <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="container row">
+      <div>
+        <h1>MATSI Admin Login</h1>
+        <p class="small">ჯერ ავტორიზაცია, შემდეგ მართვის პანელი</p>
+      </div>
+      <div class="actions">
+        <a class="ghost" href="../index.html#home">საიტზე დაბრუნება</a>
+      </div>
+    </div>
+  </header>
+
+  <section class="container auth-wrap">
+    <div class="card" style="max-width:520px; margin:0 auto;">
+      <h2>ადმინ ავტორიზაცია</h2>
+      <p class="small">შედი Google-ით ან Email/Password-ით.</p>
+      <div class="actions">
+        <button id="google-login" class="primary" type="button">Sign in with Google</button>
+      </div>
+      <form id="email-login-form" class="grid auth-grid">
+        <div><label for="auth-email">Email</label><input id="auth-email" type="email" required></div>
+        <div><label for="auth-password">Password</label><input id="auth-password" type="password" required></div>
+        <div class="actions">
+          <button class="primary" type="submit">Login</button>
+          <button id="signup-btn" class="ghost" type="button">Sign up</button>
+        </div>
+        <p id="auth-msg" class="small"></p>
+      </form>
+    </div>
+  </section>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: 'AIzaSyBRT-iB1FF9I7Wn5FOOFvw-ER0PwsgGpb4',
+      authDomain: 'matsiwine-cfaf4.firebaseapp.com',
+      projectId: 'matsiwine-cfaf4',
+      storageBucket: 'matsiwine-cfaf4.firebasestorage.app',
+      messagingSenderId: '666163321',
+      appId: '1:666163321:web:e98c31b468867184e91ca8',
+      measurementId: 'G-2KY01LMQQZ'
+    };
+
+    if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const msg = document.getElementById('auth-msg');
+
+    function setMsg(text) { msg.textContent = text || ''; }
+    function redirectDashboard() { window.location.href = './dashboard.html'; }
+
+    function mapAuthError(error) {
+      const map = {
+        'auth/invalid-email': 'არასწორი ელფოსტა',
+        'auth/user-not-found': 'მომხმარებელი ვერ მოიძებნა',
+        'auth/wrong-password': 'არასწორი პაროლი',
+        'auth/invalid-credential': 'არასწორი მონაცემები',
+        'auth/too-many-requests': 'ძალიან ბევრი მცდელობა. სცადე მოგვიანებით.',
+        'auth/email-already-in-use': 'ეს ელფოსტა უკვე გამოყენებულია',
+        'auth/weak-password': 'პაროლი ძალიან სუსტია (მინ. 6 სიმბოლო)'
+      };
+      return map[error?.code] || error?.message || 'ავტორიზაციის შეცდომა';
+    }
+
+    auth.onAuthStateChanged((user) => {
+      if (user) redirectDashboard();
+    });
+
+    document.getElementById('google-login').addEventListener('click', async () => {
+      try {
+        setMsg('ავტორიზაცია...');
+        await auth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
+      } catch (error) {
+        setMsg(mapAuthError(error));
+      }
+    });
+
+    document.getElementById('email-login-form').addEventListener('submit', async (event) => {
+      event.preventDefault();
+      const email = document.getElementById('auth-email').value.trim();
+      const password = document.getElementById('auth-password').value;
+      try {
+        setMsg('შესვლა...');
+        await auth.signInWithEmailAndPassword(email, password);
+      } catch (error) {
+        setMsg(mapAuthError(error));
+      }
+    });
+
+    document.getElementById('signup-btn').addEventListener('click', async () => {
+      const email = document.getElementById('auth-email').value.trim();
+      const password = document.getElementById('auth-password').value;
+      if (!email || !password) {
+        setMsg('შეიყვანე email და password');
+        return;
+      }
+      try {
+        setMsg('რეგისტრაცია...');
+        await auth.createUserWithEmailAndPassword(email, password);
+      } catch (error) {
+        setMsg(mapAuthError(error));
+      }
+    });
+  </script>
+</body>
+</html>
