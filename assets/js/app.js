@@ -12,6 +12,19 @@
       primary_action_color: '#722f37',
       secondary_action_color: '#5a1f29'
     };
+    const FIREBASE_CONFIG = {
+      apiKey: 'AIzaSyBRT-iB1FF9I7Wn5FOOFvw-ER0PwsgGpb4',
+      authDomain: 'matsiwine-cfaf4.firebaseapp.com',
+      projectId: 'matsiwine-cfaf4',
+      storageBucket: 'matsiwine-cfaf4.firebasestorage.app',
+      messagingSenderId: '666163321',
+      appId: '1:666163321:web:e98c31b468867184e91ca8',
+      measurementId: 'G-2KY01LMQQZ'
+    };
+    const FIREBASE_STATE_COLLECTION = 'site';
+    const FIREBASE_STATE_DOC = 'main';
+    const DEFAULT_ORDER_EMAIL = 'matsiwine@gmail.com';
+
     const defaultHomeContent = {
       hero_kicker: 'ქართული ღვინის ტრადიცია',
       hero_btn_primary: 'კოლექციის ნახვა',
@@ -47,9 +60,34 @@
       stat4_value: '🏆',
       stat4_label: 'საერთაშორისო ჯილდოები'
     };
+    const defaultAboutContent = {
+      about_kicker: 'ჩვენს შესახებ',
+      about_title_edit: 'ჩვენი ისტორია',
+      about_subtitle: 'MATSI WINE დაარსდა 2018 წელს კახეთში, სადაც ჩვენი ოჯახი თაობების მანძილზე ინახავდა მეღვინეობის საიდუმლოებებს',
+      about_section1_title: 'ფესვები კახეთში',
+      about_section1_text1: 'ჩვენი მეღვინეობა მდებარეობს კახეთის გულში — ალაზნის ველზე, სადაც უნიკალური მიკროკლიმატი და ნაყოფიერი ნიადაგი ქმნის იდეალურ პირობებს საუკეთესო ყურძნის მოსაყვანად.',
+      about_section1_text2: 'ოჯახის მამულში დარგული ვაზები — საფერავი, მწვანე, რქაწითელი — 40 წელზე მეტია ხილს იძლევა და ყოველწლიურად გვაძლევს ღვინოს განსაკუთრებული ხასიათით.',
+      about_photo1_label: 'ვენახის ფოტო',
+      about_section2_title: 'ქვევრის ტრადიცია',
+      about_section2_text1: 'ჩვენ ვიყენებთ ქვევრს — მიწაში ჩაფლულ თიხის ჭურჭელს, რომელშიც ღვინო ფერმენტირდება და მწიფდება ბუნებრივი ტემპერატურის კონტროლით. ეს მეთოდი UNESCO-ს მსოფლიო მემკვიდრეობის ნაწილია.',
+      about_section2_text2: 'ქვევრის ღვინო გამოირჩევა ღრმა, კომპლექსური გემოთი და ხანგრძლივი დამთავრებით, რასაც ვერც ერთი თანამედროვე ტექნოლოგია ვერ იმეორებს.',
+      about_photo2_label: 'ქვევრის ფოტო',
+      about_section3_title: 'ჩვენი გუნდი',
+      about_section3_text1: 'MATSI-ს გუნდში გაერთიანებულია სამი თაობა: ბაბუის ტრადიციული ცოდნა, მამის მეღვინეობის გამოცდილება და შვილების თანამედროვე ხედვა.',
+      about_section3_text2: 'ჩვენ გვჯერა, რომ საუკეთესო ღვინო იბადება ოჯახურ გარემოში, სადაც ყოველი ბოთლი მზადდება სიყვარულით და პატივისცემით ტრადიციისადმი.',
+      about_photo3_label: 'გუნდის ფოტო',
+      about_values_title: 'ჩვენი ღირებულებები',
+      about_value1_title: 'ბუნებრიობა',
+      about_value1_text: '100% ორგანული მეურნეობა, ქიმიკატების გარეშე',
+      about_value2_title: 'ტრადიცია',
+      about_value2_text: '8000 წლიანი მემკვიდრეობის პატივისცემა',
+      about_value3_title: 'ხარისხი',
+      about_value3_text: 'ყოველ ბოთლში — მხოლოდ საუკეთესო'
+    };
     
     let config = { ...defaultConfig };
     let homeContent = { ...defaultHomeContent };
+    let aboutContent = { ...defaultAboutContent };
     let cartItems = [];
     let currentPage = 'home';
     let currentFilter = 'all';
@@ -59,6 +97,11 @@
       contact_phone: '+995 555 123 456',
       contact_address: 'კახეთი, თელავის რაიონი, სოფ. წინანდალი',
       instagram_link: 'https://instagram.com/matsi_wine_',
+      order_notify_email: DEFAULT_ORDER_EMAIL,
+      cloudinary_cloud_name: 'dlth7j0i6',
+      cloudinary_upload_preset: 'matsi_labels_unsigned',
+      logo_url: 'matsiwine.png',
+      hero_bottle_url: 'bottle.png',
       sections: {
         home: true,
         shop: true,
@@ -171,6 +214,10 @@
     ];
     const initialProducts = JSON.parse(JSON.stringify(products));
     const defaultConfigSnapshot = { ...defaultConfig };
+    let firebasePublicReady = false;
+    let firebaseStateRef = null;
+    let firebaseStateUnsubscribe = null;
+    let firebaseDb = null;
     
     // =====================================================
     // DATA SDK INTEGRATION
@@ -266,11 +313,32 @@
       const contactPhoneEl = document.getElementById('contact-phone');
       const contactAddressEl = document.getElementById('contact-address');
       const instagramEl = document.getElementById('social-instagram');
+      const logo = siteMeta.logo_url || defaultSiteMeta.logo_url;
+      const bottleImage = siteMeta.hero_bottle_url || defaultSiteMeta.hero_bottle_url;
 
       if (contactEmailEl) contactEmailEl.textContent = siteMeta.contact_email || defaultSiteMeta.contact_email;
       if (contactPhoneEl) contactPhoneEl.textContent = siteMeta.contact_phone || defaultSiteMeta.contact_phone;
       if (contactAddressEl) contactAddressEl.innerHTML = (siteMeta.contact_address || defaultSiteMeta.contact_address).replace(', ', '<br>');
       if (instagramEl && (siteMeta.instagram_link || '').trim()) instagramEl.href = siteMeta.instagram_link.trim();
+      setImageSource('loader-logo-img', logo);
+      setImageSource('header-logo-img', logo);
+      setImageSource('footer-logo-img', logo);
+      setImageSource('hero-bottle-img', bottleImage);
+    }
+
+    function setImageSource(id, src) {
+      const element = document.getElementById(id);
+      if (!element || !src) return;
+      element.style.display = '';
+      delete element.dataset.fallback;
+      if (id === 'loader-logo-img' || id === 'header-logo-img' || id === 'footer-logo-img') {
+        if (element.nextElementSibling) element.nextElementSibling.style.display = 'none';
+      }
+      if (id === 'hero-bottle-img') {
+        const fallback = document.getElementById('hero-bottle-fallback');
+        if (fallback) fallback.classList.add('hidden');
+      }
+      element.src = src;
     }
 
     function setTextById(id, value) {
@@ -318,6 +386,31 @@
       setTextById('home-stat3-label', homeContent.stat3_label);
       setTextById('home-stat4-value', homeContent.stat4_value);
       setTextById('home-stat4-label', homeContent.stat4_label);
+    }
+
+    function applyAboutContent() {
+      setTextById('about-kicker', aboutContent.about_kicker);
+      setTextById('about-title', aboutContent.about_title_edit || config.about_title || defaultConfig.about_title);
+      setTextById('about-subtitle', aboutContent.about_subtitle);
+      setTextById('about-section1-title', aboutContent.about_section1_title);
+      setTextById('about-section1-text1', aboutContent.about_section1_text1);
+      setTextById('about-section1-text2', aboutContent.about_section1_text2);
+      setTextById('about-photo1-label', aboutContent.about_photo1_label);
+      setTextById('about-section2-title', aboutContent.about_section2_title);
+      setTextById('about-section2-text1', aboutContent.about_section2_text1);
+      setTextById('about-section2-text2', aboutContent.about_section2_text2);
+      setTextById('about-photo2-label', aboutContent.about_photo2_label);
+      setTextById('about-section3-title', aboutContent.about_section3_title);
+      setTextById('about-section3-text1', aboutContent.about_section3_text1);
+      setTextById('about-section3-text2', aboutContent.about_section3_text2);
+      setTextById('about-photo3-label', aboutContent.about_photo3_label);
+      setTextById('about-values-title', aboutContent.about_values_title);
+      setTextById('about-value1-title', aboutContent.about_value1_title);
+      setTextById('about-value1-text', aboutContent.about_value1_text);
+      setTextById('about-value2-title', aboutContent.about_value2_title);
+      setTextById('about-value2-text', aboutContent.about_value2_text);
+      setTextById('about-value3-title', aboutContent.about_value3_title);
+      setTextById('about-value3-text', aboutContent.about_value3_text);
     }
     
     // =====================================================
@@ -836,6 +929,12 @@
       designerRefs.textColor = document.getElementById('designer-text-color');
       designerRefs.textSize = document.getElementById('designer-text-size');
       designerRefs.exportBtn = document.getElementById('designer-export');
+      designerRefs.orderName = document.getElementById('designer-order-name');
+      designerRefs.orderPhone = document.getElementById('designer-order-phone');
+      designerRefs.orderEmail = document.getElementById('designer-order-email');
+      designerRefs.orderNote = document.getElementById('designer-order-note');
+      designerRefs.orderSubmit = document.getElementById('designer-submit-order');
+      designerRefs.orderStatus = document.getElementById('designer-order-status');
 
       if (!designerRefs.stage || !designerRefs.drawCanvas) return;
 
@@ -899,6 +998,7 @@
       designerRefs.frontText.addEventListener('click', bringSelectedTextToFront);
       designerRefs.backText.addEventListener('click', sendSelectedTextToBack);
       designerRefs.exportBtn.addEventListener('click', exportDesignerPng);
+      designerRefs.orderSubmit.addEventListener('click', submitDesignerOrder);
 
       designerRefs.drawCanvas.addEventListener('pointerdown', startDesignerDrawing);
       designerRefs.drawCanvas.addEventListener('pointermove', moveDesignerDrawing);
@@ -1279,7 +1379,7 @@
       showToast('დიზაინერი განულდა', 'info');
     }
 
-    function exportDesignerPng() {
+    function buildDesignerExportCanvas() {
       const rect = designerRefs.stage.getBoundingClientRect();
       const exportWidth = 1080;
       const exportHeight = 1440;
@@ -1313,11 +1413,124 @@
         ctx.fillText(layer.text, layer.x * scale, layer.y * scale);
       });
 
+      return canvas;
+    }
+
+    function exportDesignerPng() {
+      const canvas = buildDesignerExportCanvas();
+
       const link = document.createElement('a');
       link.download = `matsi-label-${Date.now()}.png`;
       link.href = canvas.toDataURL('image/png');
       link.click();
       showToast('PNG ექსპორტი დასრულდა', 'success');
+    }
+
+    function canvasToBlob(canvas) {
+      return new Promise((resolve, reject) => {
+        canvas.toBlob((blob) => {
+          if (!blob) {
+            reject(new Error('PNG გენერაცია ვერ შესრულდა'));
+            return;
+          }
+          resolve(blob);
+        }, 'image/png', 0.95);
+      });
+    }
+
+    async function uploadDesignerToCloudinary(blob, fileName) {
+      const cloudName = (siteMeta.cloudinary_cloud_name || '').trim();
+      const uploadPreset = (siteMeta.cloudinary_upload_preset || '').trim();
+
+      if (!cloudName || !uploadPreset) {
+        throw new Error('Cloudinary პარამეტრები არ არის შევსებული ადმინში');
+      }
+
+      const formData = new FormData();
+      formData.append('file', blob, fileName);
+      formData.append('upload_preset', uploadPreset);
+      formData.append('folder', 'matsi-label-orders');
+
+      const response = await fetch(`https://api.cloudinary.com/v1_1/${encodeURIComponent(cloudName)}/image/upload`, {
+        method: 'POST',
+        body: formData
+      });
+
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok || !result.secure_url) {
+        throw new Error(result.error?.message || 'Cloudinary ატვირთვა ვერ მოხერხდა');
+      }
+
+      return result.secure_url;
+    }
+
+    async function sendDesignerOrderEmail(payload) {
+      const recipient = (siteMeta.order_notify_email || DEFAULT_ORDER_EMAIL || 'matsiwine@gmail.com').trim();
+      const endpoint = `https://formsubmit.co/ajax/${encodeURIComponent(recipient)}`;
+      const response = await fetch(endpoint, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json'
+        },
+        body: JSON.stringify(payload)
+      });
+
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok || result.success === 'false' || result.success === false) {
+        throw new Error(result.message || 'მეილის გაგზავნა ვერ მოხერხდა');
+      }
+    }
+
+    async function submitDesignerOrder() {
+      const name = (designerRefs.orderName?.value || '').trim();
+      const phone = (designerRefs.orderPhone?.value || '').trim();
+      const email = (designerRefs.orderEmail?.value || '').trim();
+      const note = (designerRefs.orderNote?.value || '').trim();
+
+      if (!name || !phone) {
+        showToast('შეავსე სახელი და ტელეფონი', 'error');
+        if (designerRefs.orderStatus) designerRefs.orderStatus.textContent = 'შეცდომა: სახელი და ტელეფონი სავალდებულოა.';
+        return;
+      }
+
+      const submitBtn = designerRefs.orderSubmit;
+      const statusEl = designerRefs.orderStatus;
+      if (submitBtn) submitBtn.disabled = true;
+      if (statusEl) statusEl.textContent = 'იტვირთება Cloudinary-ზე...';
+
+      try {
+        const canvas = buildDesignerExportCanvas();
+        const blob = await canvasToBlob(canvas);
+        const fileName = `matsi-label-${Date.now()}.png`;
+        const imageUrl = await uploadDesignerToCloudinary(blob, fileName);
+
+        if (statusEl) statusEl.textContent = 'მეილზე იგზავნება...';
+
+        await sendDesignerOrderEmail({
+          _subject: `ახალი ეტიკეტის შეკვეთა - ${name}`,
+          name,
+          phone,
+          email: email || '-',
+          message: `ახალი შეკვეთა:
+სახელი: ${name}
+ტელეფონი: ${phone}
+ელფოსტა: ${email || '-'}
+შენიშვნა: ${note || '-'}
+დიზაინის ლინკი: ${imageUrl}
+გვერდი: ${window.location.href}`
+        });
+
+        showToast('შეკვეთა წარმატებით გაიგზავნა', 'success');
+        if (statusEl) statusEl.textContent = `გაგზავნილია. ლინკი: ${imageUrl}`;
+        if (designerRefs.orderNote) designerRefs.orderNote.value = '';
+      } catch (error) {
+        console.error(error);
+        showToast('გაგზავნა ვერ მოხერხდა', 'error');
+        if (statusEl) statusEl.textContent = `შეცდომა: ${error.message}`;
+      } finally {
+        if (submitBtn) submitBtn.disabled = false;
+      }
     }
 
     // =====================================================
@@ -1333,6 +1546,77 @@
       activeTab: 'content'
     };
     const adminRefs = {};
+
+    function initPublicFirebaseState() {
+      if (firebasePublicReady) return true;
+      if (!window.firebase || !window.firebase.apps) return false;
+
+      try {
+        if (!window.firebase.apps.length) {
+          window.firebase.initializeApp(FIREBASE_CONFIG);
+        }
+        firebaseDb = window.firebase.firestore();
+        firebaseStateRef = firebaseDb.collection(FIREBASE_STATE_COLLECTION).doc(FIREBASE_STATE_DOC);
+        firebasePublicReady = true;
+        return true;
+      } catch (error) {
+        console.error('Firebase init failed:', error);
+        return false;
+      }
+    }
+
+    function normalizeAdminPayload(data) {
+      const payload = { ...(data || {}) };
+      delete payload.updatedAt;
+      return payload;
+    }
+
+    function applyAdminPayload(data, persistLocal = false) {
+      const payload = normalizeAdminPayload(data);
+      if (payload.config && typeof payload.config === 'object') {
+        config = { ...defaultConfig, ...payload.config };
+      }
+      if (payload.siteMeta && typeof payload.siteMeta === 'object') {
+        siteMeta = {
+          ...defaultSiteMeta,
+          ...payload.siteMeta,
+          sections: {
+            ...defaultSiteMeta.sections,
+            ...(payload.siteMeta.sections || {})
+          }
+        };
+      }
+      if (payload.homeContent && typeof payload.homeContent === 'object') {
+        homeContent = { ...defaultHomeContent, ...payload.homeContent };
+      }
+      if (payload.aboutContent && typeof payload.aboutContent === 'object') {
+        aboutContent = { ...defaultAboutContent, ...payload.aboutContent };
+      }
+      if (Array.isArray(payload.products)) {
+        products = payload.products;
+      }
+      applyConfig();
+      applySiteMeta();
+      applyHomeContent();
+      applyAboutContent();
+      applySectionVisibility();
+      renderProducts();
+      if (currentPage === 'shop') renderProducts();
+      if (currentPage === 'cart') renderCart();
+      applyAdminContentEdits(payload.contentEdits || {});
+      renderAdminPanelValues();
+
+      if (persistLocal) {
+        const localPayload = {
+          config,
+          siteMeta,
+          homeContent,
+          products,
+          contentEdits: payload.contentEdits || collectAdminContentEdits()
+        };
+        localStorage.setItem(ADMIN_STORAGE_KEY, JSON.stringify(localPayload));
+      }
+    }
 
     function initAdminPanel() {
       if (adminState.initialized) return;
@@ -1407,8 +1691,8 @@
       adminRefs.productUpdate.addEventListener('click', updateAdminProduct);
       adminRefs.productClear.addEventListener('click', clearAdminProductForm);
       adminRefs.save.addEventListener('click', saveAdminState);
-      adminRefs.load.addEventListener('click', () => {
-        loadAdminState();
+      adminRefs.load.addEventListener('click', async () => {
+        await loadAdminState();
         showToast('შენახული ვერსია ჩაიტვირთა', 'success');
       });
       adminRefs.resetAll.addEventListener('click', resetAdminState);
@@ -1744,49 +2028,53 @@
       const payload = {
         config,
         siteMeta,
+        homeContent,
         products,
         contentEdits: collectAdminContentEdits()
       };
       localStorage.setItem(ADMIN_STORAGE_KEY, JSON.stringify(payload));
+      if (initPublicFirebaseState() && firebaseStateRef) {
+        firebaseStateRef.set({
+          ...payload,
+          updatedAt: window.firebase.firestore.FieldValue.serverTimestamp()
+        }, { merge: true }).catch((error) => {
+          console.error(error);
+          showToast('Cloud შენახვა ვერ მოხერხდა', 'error');
+        });
+      }
       showToast('ადმინ ცვლილებები შენახულია', 'success');
     }
 
-    function loadAdminState() {
+    async function loadAdminState() {
       const raw = localStorage.getItem(ADMIN_STORAGE_KEY);
-      if (!raw) return;
+      if (raw) {
+        try {
+          const data = JSON.parse(raw);
+          applyAdminPayload(data);
+        } catch (error) {
+          console.error(error);
+          showToast('შენახული მონაცემი დაზიანებულია', 'error');
+        }
+      }
+
+      if (!initPublicFirebaseState() || !firebaseStateRef) return;
+
       try {
-        const data = JSON.parse(raw);
-        if (data.config && typeof data.config === 'object') {
-          config = { ...defaultConfig, ...data.config };
+        const cloudSnap = await firebaseStateRef.get();
+        if (cloudSnap.exists) {
+          applyAdminPayload(cloudSnap.data(), true);
         }
-        if (data.siteMeta && typeof data.siteMeta === 'object') {
-          siteMeta = {
-            ...defaultSiteMeta,
-            ...data.siteMeta,
-            sections: {
-              ...defaultSiteMeta.sections,
-              ...(data.siteMeta.sections || {})
-            }
-          };
-        }
-        if (data.homeContent && typeof data.homeContent === 'object') {
-          homeContent = { ...defaultHomeContent, ...data.homeContent };
-        }
-        if (Array.isArray(data.products)) {
-          products = data.products;
-        }
-        applyConfig();
-        applySiteMeta();
-        applyHomeContent();
-        applySectionVisibility();
-        renderProducts();
-        if (currentPage === 'shop') renderProducts();
-        if (currentPage === 'cart') renderCart();
-        applyAdminContentEdits(data.contentEdits || {});
-        renderAdminPanelValues();
       } catch (error) {
         console.error(error);
-        showToast('შენახული მონაცემი დაზიანებულია', 'error');
+      }
+
+      if (!firebaseStateUnsubscribe) {
+        firebaseStateUnsubscribe = firebaseStateRef.onSnapshot((snap) => {
+          if (!snap.exists) return;
+          applyAdminPayload(snap.data(), true);
+        }, (error) => {
+          console.error(error);
+        });
       }
     }
 
@@ -1795,10 +2083,12 @@
       config = { ...defaultConfigSnapshot };
       siteMeta = JSON.parse(JSON.stringify(defaultSiteMeta));
       homeContent = { ...defaultHomeContent };
+      aboutContent = { ...defaultAboutContent };
       products = JSON.parse(JSON.stringify(initialProducts));
       applyConfig();
       applySiteMeta();
       applyHomeContent();
+      applyAboutContent();
       applySectionVisibility();
       renderProducts();
       clearAdminProductForm();
@@ -1810,6 +2100,7 @@
       const payload = {
         config,
         siteMeta,
+        homeContent,
         products,
         contentEdits: collectAdminContentEdits()
       };
@@ -1826,11 +2117,11 @@
       const file = event.target.files?.[0];
       if (!file) return;
       const reader = new FileReader();
-      reader.onload = () => {
+      reader.onload = async () => {
         try {
           const parsed = JSON.parse(reader.result);
           localStorage.setItem(ADMIN_STORAGE_KEY, JSON.stringify(parsed));
-          loadAdminState();
+          await loadAdminState();
           showToast('JSON იმპორტი შესრულდა', 'success');
         } catch (error) {
           console.error(error);
@@ -1997,7 +2288,7 @@
     // =====================================================
     
     async function init() {
-      loadAdminState();
+      loadAdminState().catch((error) => console.error(error));
 
       window.addEventListener('hashchange', () => {
         const hashPage = getPageFromLocation();
@@ -2010,6 +2301,7 @@
       applyConfig();
       applySiteMeta();
       applyHomeContent();
+      applyAboutContent();
       applySectionVisibility();
       renderProducts();
 

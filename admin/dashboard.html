@@ -8,6 +8,11 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Georgian:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="./admin.css">
+  <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-storage-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-analytics-compat.js"></script>
 </head>
 <body>
   <header class="topbar">
@@ -17,16 +22,37 @@
         <p class="small">სრული მართვა: კონტენტი, დიზაინი, სექციები, პროდუქტები</p>
       </div>
       <div class="actions">
+        <button id="logout-btn" class="ghost" type="button">გასვლა</button>
         <a class="ghost" href="../index.html#home">საიტზე დაბრუნება</a>
       </div>
     </div>
   </header>
 
-  <main class="container grid cols-2">
+  <section id="auth-card" class="container auth-wrap">
+    <div class="card">
+      <h2>ადმინ ავტორიზაცია</h2>
+      <p class="small">შედი OAuth-ით ან Email/Password-ით.</p>
+      <div class="actions">
+        <button id="google-login" class="primary" type="button">Sign in with Google</button>
+      </div>
+      <form id="email-login-form" class="grid auth-grid">
+        <div><label for="auth-email">Email</label><input id="auth-email" type="email" required></div>
+        <div><label for="auth-password">Password</label><input id="auth-password" type="password" required></div>
+        <div class="actions">
+          <button class="primary" type="submit">Login</button>
+          <button id="signup-btn" class="ghost" type="button">Sign up</button>
+        </div>
+        <p id="auth-msg" class="small"></p>
+      </form>
+    </div>
+  </section>
+
+  <main id="admin-main" class="container grid cols-2 hidden">
     <section class="card">
       <div class="tabs">
         <button class="tab active" data-tab="settings" type="button">ძირითადი პარამეტრები</button>
         <button class="tab" data-tab="home" type="button">მთავარი გვერდი</button>
+        <button class="tab" data-tab="about" type="button">About/ისტორია</button>
         <button class="tab" data-tab="sections" type="button">სექციები</button>
         <button class="tab" data-tab="products" type="button">პროდუქტები</button>
         <button class="tab" data-tab="raw" type="button">RAW JSON</button>
@@ -42,8 +68,17 @@
           <div><label for="contact_phone">კონტაქტის ტელეფონი</label><input id="contact_phone" name="contact_phone"></div>
           <div><label for="contact_address">მისამართი</label><input id="contact_address" name="contact_address"></div>
           <div><label for="instagram_link">Instagram ლინკი</label><input id="instagram_link" name="instagram_link" type="url"></div>
+          <div><label for="order_notify_email">შეკვეთის მიმღები Email</label><input id="order_notify_email" name="order_notify_email" type="email" placeholder="matsiwine@gmail.com"></div>
+          <div><label for="cloudinary_cloud_name">Cloudinary Cloud Name</label><input id="cloudinary_cloud_name" name="cloudinary_cloud_name" placeholder="your-cloud-name"></div>
+          <div><label for="cloudinary_upload_preset">Cloudinary Upload Preset (unsigned)</label><input id="cloudinary_upload_preset" name="cloudinary_upload_preset" placeholder="unsigned_preset"></div>
           <div><label for="primary_color">Primary ფერი</label><input id="primary_color" name="primary_color" type="color"></div>
           <div><label for="text_color">Text ფერი</label><input id="text_color" name="text_color" type="color"></div>
+          <div><label for="logo_upload">ლოგო (matsiwine.png)</label><input id="logo_upload" name="logo_upload" type="file" accept="image/*"></div>
+          <div><label for="bottle_upload">ბოთლი (bottle.png)</label><input id="bottle_upload" name="bottle_upload" type="file" accept="image/*"></div>
+          <div><label for="logo_url_text">ლოგოს URL (ალტერნატივა)</label><input id="logo_url_text" name="logo_url_text" type="url" placeholder="https://..."></div>
+          <div><label for="hero_bottle_url_text">ბოთლის URL (ალტერნატივა)</label><input id="hero_bottle_url_text" name="hero_bottle_url_text" type="url" placeholder="https://..."></div>
+          <img id="logo-preview" class="image-preview hidden" alt="Logo preview">
+          <img id="bottle-preview" class="image-preview hidden" alt="Bottle preview">
           <button class="primary" type="submit">შენახვა</button>
           <p id="settings-msg" class="small"></p>
         </form>
@@ -93,6 +128,41 @@
 
           <button class="primary" type="submit">შენახვა</button>
           <p id="home-msg" class="small"></p>
+        </form>
+      </section>
+
+      <section id="tab-about" class="tab-panel hidden">
+        <h2>About გვერდის სრული რედაქტირება</h2>
+        <form id="about-form" class="grid">
+          <div><label for="about_kicker">About kicker</label><input id="about_kicker" name="about_kicker"></div>
+          <div><label for="about_title_edit">About სათაური</label><input id="about_title_edit" name="about_title_edit"></div>
+          <div><label for="about_subtitle">About ქვესათაური</label><textarea id="about_subtitle" name="about_subtitle"></textarea></div>
+
+          <div><label for="about_section1_title">სექცია 1 სათაური</label><input id="about_section1_title" name="about_section1_title"></div>
+          <div><label for="about_section1_text1">სექცია 1 ტექსტი 1</label><textarea id="about_section1_text1" name="about_section1_text1"></textarea></div>
+          <div><label for="about_section1_text2">სექცია 1 ტექსტი 2</label><textarea id="about_section1_text2" name="about_section1_text2"></textarea></div>
+          <div><label for="about_photo1_label">ფოტო 1 წარწერა</label><input id="about_photo1_label" name="about_photo1_label"></div>
+
+          <div><label for="about_section2_title">სექცია 2 სათაური</label><input id="about_section2_title" name="about_section2_title"></div>
+          <div><label for="about_section2_text1">სექცია 2 ტექსტი 1</label><textarea id="about_section2_text1" name="about_section2_text1"></textarea></div>
+          <div><label for="about_section2_text2">სექცია 2 ტექსტი 2</label><textarea id="about_section2_text2" name="about_section2_text2"></textarea></div>
+          <div><label for="about_photo2_label">ფოტო 2 წარწერა</label><input id="about_photo2_label" name="about_photo2_label"></div>
+
+          <div><label for="about_section3_title">სექცია 3 სათაური</label><input id="about_section3_title" name="about_section3_title"></div>
+          <div><label for="about_section3_text1">სექცია 3 ტექსტი 1</label><textarea id="about_section3_text1" name="about_section3_text1"></textarea></div>
+          <div><label for="about_section3_text2">სექცია 3 ტექსტი 2</label><textarea id="about_section3_text2" name="about_section3_text2"></textarea></div>
+          <div><label for="about_photo3_label">ფოტო 3 წარწერა</label><input id="about_photo3_label" name="about_photo3_label"></div>
+
+          <div><label for="about_values_title">ღირებულებების სათაური</label><input id="about_values_title" name="about_values_title"></div>
+          <div><label for="about_value1_title">ღირებულება 1 სათაური</label><input id="about_value1_title" name="about_value1_title"></div>
+          <div><label for="about_value1_text">ღირებულება 1 ტექსტი</label><input id="about_value1_text" name="about_value1_text"></div>
+          <div><label for="about_value2_title">ღირებულება 2 სათაური</label><input id="about_value2_title" name="about_value2_title"></div>
+          <div><label for="about_value2_text">ღირებულება 2 ტექსტი</label><input id="about_value2_text" name="about_value2_text"></div>
+          <div><label for="about_value3_title">ღირებულება 3 სათაური</label><input id="about_value3_title" name="about_value3_title"></div>
+          <div><label for="about_value3_text">ღირებულება 3 ტექსტი</label><input id="about_value3_text" name="about_value3_text"></div>
+
+          <button class="primary" type="submit">შენახვა</button>
+          <p id="about-msg" class="small"></p>
         </form>
       </section>
 
