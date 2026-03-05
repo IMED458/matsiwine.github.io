@@ -29,6 +29,7 @@ const defaultState = {
     contact_address: 'კახეთი, თელავის რაიონი, სოფ. წინანდალი',
     instagram_link: 'https://instagram.com/matsi_wine_',
     order_notify_email: 'matsiwine@gmail.com',
+    custom_label_price: 45,
     cloudinary_cloud_name: 'dlth7j0i6',
     cloudinary_upload_preset: 'matsi_labels_unsigned',
     logo_url: 'matsiwine.png',
@@ -510,6 +511,7 @@ function bindForms() {
       state.siteMeta.contact_address = fd.get('contact_address') || defaultState.siteMeta.contact_address;
       state.siteMeta.instagram_link = fd.get('instagram_link') || defaultState.siteMeta.instagram_link;
       state.siteMeta.order_notify_email = fd.get('order_notify_email') || defaultState.siteMeta.order_notify_email;
+      state.siteMeta.custom_label_price = parseFloat(fd.get('custom_label_price') || `${defaultState.siteMeta.custom_label_price}`) || defaultState.siteMeta.custom_label_price;
       state.siteMeta.cloudinary_cloud_name = fd.get('cloudinary_cloud_name') || defaultState.siteMeta.cloudinary_cloud_name;
       state.siteMeta.cloudinary_upload_preset = fd.get('cloudinary_upload_preset') || defaultState.siteMeta.cloudinary_upload_preset;
       const logoUrlText = (fd.get('logo_url_text') || '').toString().trim();
@@ -655,8 +657,8 @@ function bindForms() {
         image_path: existing?.image_path || ''
       };
 
-      if (!product.name || product.price <= 0) {
-        productsMsg.textContent = 'სახელი და ფასი აუცილებელია';
+      if (!product.name) {
+        productsMsg.textContent = 'სახელი აუცილებელია';
         return;
       }
 
@@ -760,6 +762,7 @@ function fillSettingsForm() {
   settingsForm.contact_address.value = state.siteMeta.contact_address || '';
   settingsForm.instagram_link.value = state.siteMeta.instagram_link || '';
   settingsForm.order_notify_email.value = state.siteMeta.order_notify_email || defaultState.siteMeta.order_notify_email;
+  settingsForm.custom_label_price.value = state.siteMeta.custom_label_price || defaultState.siteMeta.custom_label_price;
   settingsForm.cloudinary_cloud_name.value = state.siteMeta.cloudinary_cloud_name || defaultState.siteMeta.cloudinary_cloud_name;
   settingsForm.cloudinary_upload_preset.value = state.siteMeta.cloudinary_upload_preset || defaultState.siteMeta.cloudinary_upload_preset;
   settingsForm.logo_url_text.value = state.siteMeta.logo_url || '';

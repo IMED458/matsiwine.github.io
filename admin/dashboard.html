@@ -82,6 +82,7 @@
           <div><label for="instagram_link">Instagram ლინკი</label><input id="instagram_link" name="instagram_link" type="url"></div>
           <div class="full section-title">შეკვეთების პარამეტრები</div>
           <div><label for="order_notify_email">შეკვეთის მიმღები Email</label><input id="order_notify_email" name="order_notify_email" type="email" placeholder="matsiwine@gmail.com"></div>
+          <div><label for="custom_label_price">დიზაინის ფასი (₾)</label><input id="custom_label_price" name="custom_label_price" type="number" min="1" step="1" placeholder="45"></div>
           <div><label for="cloudinary_cloud_name">Cloudinary Cloud Name</label><input id="cloudinary_cloud_name" name="cloudinary_cloud_name" placeholder="your-cloud-name"></div>
           <div><label for="cloudinary_upload_preset">Cloudinary Upload Preset (unsigned)</label><input id="cloudinary_upload_preset" name="cloudinary_upload_preset" placeholder="unsigned_preset"></div>
           <div class="full section-title">ფერის თემა</div>
@@ -228,8 +229,8 @@
         <form id="products-form" class="grid" data-kind="products">
           <input type="hidden" name="id">
           <div><label>სახელი</label><input name="name" required></div>
-          <div><label>წელი</label><input name="year" type="number" required></div>
-          <div><label>ფასი (₾)</label><input name="price" type="number" required></div>
+          <div><label>წელი</label><input name="year" type="number"></div>
+          <div><label>ფასი (₾)</label><input name="price" type="number"></div>
           <div><label>ტიპი</label>
             <select name="type">
               <option value="red">წითელი</option>
