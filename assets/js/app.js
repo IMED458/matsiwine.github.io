@@ -912,10 +912,16 @@
       const name = (form.querySelector('#name')?.value || '').trim();
       const email = (form.querySelector('#email')?.value || '').trim();
       const replyTo = form.querySelector('input[name="_replyto"]');
+      const subjectInput = form.querySelector('input[name="_subject"]');
       const submitButton = form.querySelector('button[type="submit"]');
       const originalButtonText = submitButton ? submitButton.textContent : '';
+      const contactId = `CNT-${Date.now()}`;
+      const nowText = new Date().toLocaleString('ka-GE');
 
       if (replyTo) replyTo.value = email;
+      if (subjectInput) {
+        subjectInput.value = `Matsi Wine Contact | ${contactId} | ${nowText}`;
+      }
 
       if (submitButton) {
         submitButton.disabled = true;
@@ -1623,6 +1629,8 @@
       const phone = (designerRefs.orderPhone?.value || '').trim();
       const email = (designerRefs.orderEmail?.value || '').trim();
       const note = (designerRefs.orderNote?.value || '').trim();
+      const orderId = `ORD-${Date.now()}`;
+      const nowText = new Date().toLocaleString('ka-GE');
 
       if (!name || !phone) {
         showToast('შეავსე სახელი და ტელეფონი', 'error');
@@ -1644,11 +1652,13 @@
         if (statusEl) statusEl.textContent = 'მეილზე იგზავნება...';
 
         await sendDesignerOrderEmail({
-          _subject: `ახალი ეტიკეტის შეკვეთა - ${name}`,
+          _subject: `Matsi Label Order | ${orderId} | ${name} | ${nowText}`,
           name,
           phone,
           email: email || '-',
           message: `ახალი შეკვეთა:
+Order ID: ${orderId}
+თარიღი: ${nowText}
 სახელი: ${name}
 ტელეფონი: ${phone}
 ელფოსტა: ${email || '-'}
