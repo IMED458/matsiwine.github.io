@@ -226,6 +226,8 @@
           renderProductDetail(data);
         } else if (page === 'cart') {
           renderCart();
+        } else if (page === 'designer') {
+          initDesigner();
         }
       }
     }
@@ -647,6 +649,408 @@
       
       showToast(`გმადლობთ, ${name}! შეტყობინება მიღებულია`, 'success');
       form.reset();
+    }
+
+    // =====================================================
+    // LABEL DESIGNER
+    // =====================================================
+
+    const designerState = {
+      initialized: false,
+      mode: 'draw',
+      color: '#722f37',
+      size: 6,
+      drawing: false,
+      photoScale: 100,
+      photoX: 0,
+      photoY: 0,
+      textLayers: [],
+      selectedTextId: null,
+      draggingTextId: null,
+      dragOffset: { x: 0, y: 0 },
+      textColor: '#3d1219',
+      textSize: 28
+    };
+
+    const designerRefs = {};
+    let designerCtx = null;
+    let designerCanvasRatio = 1;
+
+    function initDesigner() {
+      if (designerState.initialized) return;
+
+      designerRefs.stage = document.getElementById('designer-stage');
+      designerRefs.drawCanvas = document.getElementById('designer-draw-canvas');
+      designerRefs.textLayer = document.getElementById('designer-text-layer');
+      designerRefs.photo = document.getElementById('designer-photo');
+      designerRefs.upload = document.getElementById('designer-upload');
+      designerRefs.mode = document.getElementById('designer-mode');
+      designerRefs.color = document.getElementById('designer-color');
+      designerRefs.size = document.getElementById('designer-size');
+      designerRefs.clearDrawing = document.getElementById('designer-clear-drawing');
+      designerRefs.reset = document.getElementById('designer-reset');
+      designerRefs.photoScale = document.getElementById('designer-photo-scale');
+      designerRefs.photoX = document.getElementById('designer-photo-x');
+      designerRefs.photoY = document.getElementById('designer-photo-y');
+      designerRefs.addText = document.getElementById('designer-add-text');
+      designerRefs.editText = document.getElementById('designer-edit-text');
+      designerRefs.deleteText = document.getElementById('designer-delete-text');
+      designerRefs.lockText = document.getElementById('designer-lock-text');
+      designerRefs.unlockText = document.getElementById('designer-unlock-text');
+      designerRefs.frontText = document.getElementById('designer-front-text');
+      designerRefs.backText = document.getElementById('designer-back-text');
+      designerRefs.textColor = document.getElementById('designer-text-color');
+      designerRefs.textSize = document.getElementById('designer-text-size');
+      designerRefs.exportBtn = document.getElementById('designer-export');
+
+      if (!designerRefs.stage || !designerRefs.drawCanvas) return;
+
+      resizeDesignerCanvas();
+      bindDesignerEvents();
+      window.addEventListener('resize', resizeDesignerCanvas);
+      designerState.initialized = true;
+    }
+
+    function bindDesignerEvents() {
+      designerRefs.mode.addEventListener('change', (event) => {
+        designerState.mode = event.target.value;
+      });
+
+      designerRefs.color.addEventListener('input', (event) => {
+        designerState.color = event.target.value;
+      });
+
+      designerRefs.size.addEventListener('input', (event) => {
+        designerState.size = parseInt(event.target.value, 10);
+      });
+
+      designerRefs.textColor.addEventListener('input', (event) => {
+        designerState.textColor = event.target.value;
+        const layer = getSelectedTextLayer();
+        if (layer) {
+          layer.color = designerState.textColor;
+          renderDesignerTextLayers();
+        }
+      });
+
+      designerRefs.textSize.addEventListener('input', (event) => {
+        designerState.textSize = parseInt(event.target.value, 10);
+        const layer = getSelectedTextLayer();
+        if (layer) {
+          layer.size = designerState.textSize;
+          renderDesignerTextLayers();
+        }
+      });
+
+      designerRefs.upload.addEventListener('change', handleDesignerUpload);
+      designerRefs.photoScale.addEventListener('input', handleDesignerPhotoTransform);
+      designerRefs.photoX.addEventListener('input', handleDesignerPhotoTransform);
+      designerRefs.photoY.addEventListener('input', handleDesignerPhotoTransform);
+
+      designerRefs.clearDrawing.addEventListener('click', () => {
+        clearDesignerDrawing();
+        showToast('ნახატი გასუფთავდა', 'info');
+      });
+
+      designerRefs.reset.addEventListener('click', resetDesigner);
+      designerRefs.addText.addEventListener('click', addDesignerText);
+      designerRefs.editText.addEventListener('click', editSelectedDesignerText);
+      designerRefs.deleteText.addEventListener('click', deleteSelectedDesignerText);
+      designerRefs.lockText.addEventListener('click', () => toggleSelectedTextLock(true));
+      designerRefs.unlockText.addEventListener('click', () => toggleSelectedTextLock(false));
+      designerRefs.frontText.addEventListener('click', bringSelectedTextToFront);
+      designerRefs.backText.addEventListener('click', sendSelectedTextToBack);
+      designerRefs.exportBtn.addEventListener('click', exportDesignerPng);
+
+      designerRefs.drawCanvas.addEventListener('pointerdown', startDesignerDrawing);
+      designerRefs.drawCanvas.addEventListener('pointermove', moveDesignerDrawing);
+      designerRefs.drawCanvas.addEventListener('pointerup', endDesignerDrawing);
+      designerRefs.drawCanvas.addEventListener('pointerleave', endDesignerDrawing);
+
+      designerRefs.textLayer.addEventListener('pointerdown', startDesignerTextDrag);
+      window.addEventListener('pointermove', moveDesignerTextDrag);
+      window.addEventListener('pointerup', endDesignerTextDrag);
+    }
+
+    function resizeDesignerCanvas() {
+      if (!designerRefs.stage || !designerRefs.drawCanvas) return;
+
+      const rect = designerRefs.stage.getBoundingClientRect();
+      const snapshot = designerRefs.drawCanvas.toDataURL ? designerRefs.drawCanvas.toDataURL() : null;
+      designerCanvasRatio = Math.max(1, window.devicePixelRatio || 1);
+      designerRefs.drawCanvas.width = Math.max(1, Math.floor(rect.width * designerCanvasRatio));
+      designerRefs.drawCanvas.height = Math.max(1, Math.floor(rect.height * designerCanvasRatio));
+
+      designerCtx = designerRefs.drawCanvas.getContext('2d');
+      designerCtx.setTransform(designerCanvasRatio, 0, 0, designerCanvasRatio, 0, 0);
+      designerCtx.lineJoin = 'round';
+      designerCtx.lineCap = 'round';
+
+      if (snapshot) {
+        const img = new Image();
+        img.onload = () => {
+          designerCtx.clearRect(0, 0, rect.width, rect.height);
+          designerCtx.drawImage(img, 0, 0, rect.width, rect.height);
+        };
+        img.src = snapshot;
+      }
+    }
+
+    function getDesignerPointer(event) {
+      const rect = designerRefs.drawCanvas.getBoundingClientRect();
+      return {
+        x: event.clientX - rect.left,
+        y: event.clientY - rect.top
+      };
+    }
+
+    function startDesignerDrawing(event) {
+      if (designerState.mode === 'select') return;
+      event.preventDefault();
+      designerState.drawing = true;
+      const point = getDesignerPointer(event);
+      designerCtx.beginPath();
+      designerCtx.moveTo(point.x, point.y);
+      designerRefs.drawCanvas.setPointerCapture(event.pointerId);
+    }
+
+    function moveDesignerDrawing(event) {
+      if (!designerState.drawing) return;
+      const point = getDesignerPointer(event);
+      designerCtx.lineWidth = designerState.size;
+      if (designerState.mode === 'erase') {
+        designerCtx.globalCompositeOperation = 'destination-out';
+        designerCtx.strokeStyle = 'rgba(0,0,0,1)';
+      } else {
+        designerCtx.globalCompositeOperation = 'source-over';
+        designerCtx.strokeStyle = designerState.color;
+      }
+      designerCtx.lineTo(point.x, point.y);
+      designerCtx.stroke();
+    }
+
+    function endDesignerDrawing() {
+      if (!designerState.drawing) return;
+      designerState.drawing = false;
+      designerCtx.closePath();
+      designerCtx.globalCompositeOperation = 'source-over';
+    }
+
+    function clearDesignerDrawing() {
+      const rect = designerRefs.stage.getBoundingClientRect();
+      designerCtx.clearRect(0, 0, rect.width, rect.height);
+    }
+
+    function handleDesignerUpload(event) {
+      const file = event.target.files?.[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        designerRefs.photo.src = reader.result;
+        designerRefs.photo.classList.remove('hidden');
+        updateDesignerPhotoTransform();
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function handleDesignerPhotoTransform() {
+      designerState.photoScale = parseInt(designerRefs.photoScale.value, 10);
+      designerState.photoX = parseInt(designerRefs.photoX.value, 10);
+      designerState.photoY = parseInt(designerRefs.photoY.value, 10);
+      updateDesignerPhotoTransform();
+    }
+
+    function updateDesignerPhotoTransform() {
+      designerRefs.photo.style.transform = `translate(${designerState.photoX}px, ${designerState.photoY}px) scale(${designerState.photoScale / 100})`;
+    }
+
+    function addDesignerText() {
+      const text = prompt('შეიყვანე ტექსტი ეტიკეტისთვის:', 'MATSI WINE');
+      if (!text) return;
+      const id = `text-${Date.now()}`;
+      designerState.textLayers.push({
+        id,
+        text,
+        x: 120,
+        y: 140,
+        color: designerState.textColor,
+        size: designerState.textSize,
+        locked: false
+      });
+      designerState.selectedTextId = id;
+      renderDesignerTextLayers();
+    }
+
+    function renderDesignerTextLayers() {
+      designerRefs.textLayer.innerHTML = designerState.textLayers.map((layer) => `
+        <div
+          class="designer-text-item ${designerState.selectedTextId === layer.id ? 'selected' : ''} ${layer.locked ? 'locked' : ''}"
+          data-text-id="${layer.id}"
+          style="left:${layer.x}px; top:${layer.y}px; color:${layer.color}; font-size:${layer.size}px;"
+        >${escapeHtml(layer.text)}</div>
+      `).join('');
+    }
+
+    function escapeHtml(text) {
+      return text
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    function startDesignerTextDrag(event) {
+      const target = event.target.closest('.designer-text-item');
+      if (!target) return;
+      const id = target.dataset.textId;
+      const layer = designerState.textLayers.find((item) => item.id === id);
+      if (!layer) return;
+
+      designerState.selectedTextId = id;
+      renderDesignerTextLayers();
+
+      if (designerState.mode !== 'select' || layer.locked) return;
+      const rect = designerRefs.stage.getBoundingClientRect();
+      designerState.draggingTextId = id;
+      designerState.dragOffset = {
+        x: event.clientX - rect.left - layer.x,
+        y: event.clientY - rect.top - layer.y
+      };
+      event.preventDefault();
+    }
+
+    function moveDesignerTextDrag(event) {
+      if (!designerState.draggingTextId) return;
+      const layer = designerState.textLayers.find((item) => item.id === designerState.draggingTextId);
+      if (!layer) return;
+      const rect = designerRefs.stage.getBoundingClientRect();
+      layer.x = Math.max(0, Math.min(rect.width - 20, event.clientX - rect.left - designerState.dragOffset.x));
+      layer.y = Math.max(0, Math.min(rect.height - 20, event.clientY - rect.top - designerState.dragOffset.y));
+      renderDesignerTextLayers();
+    }
+
+    function endDesignerTextDrag() {
+      designerState.draggingTextId = null;
+    }
+
+    function getSelectedTextLayer() {
+      return designerState.textLayers.find((item) => item.id === designerState.selectedTextId) || null;
+    }
+
+    function editSelectedDesignerText() {
+      const layer = getSelectedTextLayer();
+      if (!layer) {
+        showToast('ჯერ აირჩიე ტექსტი', 'info');
+        return;
+      }
+      const nextText = prompt('შეცვალე ტექსტი:', layer.text);
+      if (!nextText) return;
+      layer.text = nextText;
+      renderDesignerTextLayers();
+    }
+
+    function deleteSelectedDesignerText() {
+      if (!designerState.selectedTextId) {
+        showToast('ჯერ აირჩიე ტექსტი', 'info');
+        return;
+      }
+      designerState.textLayers = designerState.textLayers.filter((item) => item.id !== designerState.selectedTextId);
+      designerState.selectedTextId = null;
+      renderDesignerTextLayers();
+    }
+
+    function toggleSelectedTextLock(locked) {
+      const layer = getSelectedTextLayer();
+      if (!layer) {
+        showToast('ჯერ აირჩიე ტექსტი', 'info');
+        return;
+      }
+      layer.locked = locked;
+      renderDesignerTextLayers();
+    }
+
+    function bringSelectedTextToFront() {
+      const layer = getSelectedTextLayer();
+      if (!layer) return;
+      designerState.textLayers = designerState.textLayers.filter((item) => item.id !== layer.id);
+      designerState.textLayers.push(layer);
+      renderDesignerTextLayers();
+    }
+
+    function sendSelectedTextToBack() {
+      const layer = getSelectedTextLayer();
+      if (!layer) return;
+      designerState.textLayers = designerState.textLayers.filter((item) => item.id !== layer.id);
+      designerState.textLayers.unshift(layer);
+      renderDesignerTextLayers();
+    }
+
+    function resetDesigner() {
+      designerState.mode = 'draw';
+      designerState.color = '#722f37';
+      designerState.size = 6;
+      designerState.photoScale = 100;
+      designerState.photoX = 0;
+      designerState.photoY = 0;
+      designerState.textLayers = [];
+      designerState.selectedTextId = null;
+      designerRefs.mode.value = 'draw';
+      designerRefs.color.value = '#722f37';
+      designerRefs.size.value = '6';
+      designerRefs.textColor.value = '#3d1219';
+      designerRefs.textSize.value = '28';
+      designerRefs.photoScale.value = '100';
+      designerRefs.photoX.value = '0';
+      designerRefs.photoY.value = '0';
+      designerRefs.upload.value = '';
+      designerRefs.photo.src = '';
+      designerRefs.photo.classList.add('hidden');
+      updateDesignerPhotoTransform();
+      clearDesignerDrawing();
+      renderDesignerTextLayers();
+      showToast('დიზაინერი განულდა', 'info');
+    }
+
+    function exportDesignerPng() {
+      const rect = designerRefs.stage.getBoundingClientRect();
+      const exportWidth = 1080;
+      const exportHeight = 1440;
+      const scale = exportWidth / rect.width;
+      const canvas = document.createElement('canvas');
+      canvas.width = exportWidth;
+      canvas.height = exportHeight;
+      const ctx = canvas.getContext('2d');
+
+      const gradient = ctx.createLinearGradient(0, 0, 0, exportHeight);
+      gradient.addColorStop(0, '#f7f1e5');
+      gradient.addColorStop(1, '#eee2cc');
+      ctx.fillStyle = gradient;
+      ctx.fillRect(0, 0, exportWidth, exportHeight);
+
+      if (designerRefs.photo && !designerRefs.photo.classList.contains('hidden')) {
+        const img = designerRefs.photo;
+        const drawW = exportWidth * (designerState.photoScale / 100);
+        const drawH = exportHeight * (designerState.photoScale / 100);
+        const drawX = designerState.photoX * scale + (exportWidth - drawW) / 2;
+        const drawY = designerState.photoY * scale + (exportHeight - drawH) / 2;
+        ctx.drawImage(img, drawX, drawY, drawW, drawH);
+      }
+
+      ctx.drawImage(designerRefs.drawCanvas, 0, 0, exportWidth, exportHeight);
+
+      designerState.textLayers.forEach((layer) => {
+        ctx.fillStyle = layer.color;
+        ctx.font = `700 ${Math.round(layer.size * scale)}px "Cormorant Garamond", Georgia, serif`;
+        ctx.textBaseline = 'top';
+        ctx.fillText(layer.text, layer.x * scale, layer.y * scale);
+      });
+
+      const link = document.createElement('a');
+      link.download = `matsi-label-${Date.now()}.png`;
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+      showToast('PNG ექსპორტი დასრულდა', 'success');
     }
     
     // =====================================================
