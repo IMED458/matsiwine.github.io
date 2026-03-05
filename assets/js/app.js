@@ -25,6 +25,10 @@
     const FIREBASE_STATE_DOC = 'main';
     const DEFAULT_ORDER_EMAIL = 'matsiwine@gmail.com';
     const CART_STORAGE_KEY = 'matsi_cart_v1';
+    const BANK_ACCOUNTS = [
+      { bank: 'ბოგ', iban: 'GE35BG0000000537576314' },
+      { bank: 'თბს', iban: 'GE25TB7332245064300052' }
+    ];
 
     const defaultHomeContent = {
       hero_kicker: 'ქართული ღვინის ტრადიცია',
@@ -893,6 +897,7 @@
       if (!container) return;
       
       if (cartItems.length === 0) {
+        checkoutFormVisible = false;
         container.innerHTML = `
           <div class="text-center py-16">
             <div class="w-24 h-24 mx-auto mb-6 rounded-full bg-wine-100 flex items-center justify-center">
@@ -911,6 +916,21 @@
       }
       
       const total = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+      const orderRows = cartItems.map((item) => `
+        <div class="py-2 border-b border-wine-200/70 text-sm">
+          <div class="font-medium text-wine-900">${item.productName}</div>
+          <div class="text-wine-600">₾${item.price} x ${item.quantity} = ₾${item.price * item.quantity}</div>
+        </div>
+      `).join('');
+      const bankRows = BANK_ACCOUNTS.map((item, idx) => `
+        <div class="bg-cream-100 rounded-xl p-3 flex items-start justify-between gap-3">
+          <div>
+            <p class="text-xs text-wine-500">${item.bank}</p>
+            <p id="checkout-iban-${idx}" class="font-mono text-sm text-wine-900 break-all">${item.iban}</p>
+          </div>
+          <button type="button" onclick="copyCheckoutIban('${item.iban}')" class="px-3 py-1.5 rounded-lg bg-wine-700 text-cream-50 text-xs hover:bg-wine-800">კოპირება</button>
+        </div>
+      `).join('');
       
       container.innerHTML = `
         <div class="space-y-4 mb-8">
@@ -952,16 +972,159 @@
             <span class="text-cream-200">ჯამი:</span>
             <span class="font-display text-3xl font-bold">₾${total}</span>
           </div>
-          <button onclick="handleCheckout()" class="btn-wine w-full py-4 bg-cream-50 text-wine-800 font-semibold rounded-xl hover:bg-cream-100 transition-all">
+          <button type="button" onclick="handleCheckout()" class="btn-wine w-full py-4 bg-cream-50 text-wine-800 font-semibold rounded-xl hover:bg-cream-100 transition-all">
             შეკვეთის გაფორმება
           </button>
           <p class="text-cream-200/60 text-xs text-center mt-4">მიტანა თბილისში უფასოა ₾100+ შეკვეთაზე</p>
         </div>
+
+        ${checkoutFormVisible ? `
+        <div class="bg-white rounded-2xl p-6 md:p-8 shadow-lg">
+          <h2 class="font-display text-3xl text-wine-900 mb-3">შეკვეთის ფორმა</h2>
+          <p class="text-sm text-wine-600 mb-4">შეავსე მონაცემები, ატვირთე ქვითარი და გაგზავნე შეკვეთა.</p>
+          <div class="grid md:grid-cols-2 gap-6">
+            <div>
+              <h3 class="font-semibold text-wine-900 mb-2">შეკვეთილი პროდუქტები</h3>
+              <div class="bg-cream-50 rounded-xl p-3 mb-3">${orderRows}</div>
+              <p class="font-semibold text-wine-900">სულ გადასახდელი: ₾<span id="checkout-total">${total}</span></p>
+            </div>
+            <div>
+              <h3 class="font-semibold text-wine-900 mb-2">ბანკის ანგარიშები</h3>
+              <div class="space-y-2 mb-3">${bankRows}</div>
+            </div>
+          </div>
+          <form id="checkout-form" class="grid md:grid-cols-2 gap-4 mt-6" onsubmit="submitCheckoutOrder(event)">
+            <div>
+              <label class="block text-sm text-wine-700 mb-1">სახელი</label>
+              <input required name="first_name" class="w-full px-3 py-2 rounded-lg border border-wine-200">
+            </div>
+            <div>
+              <label class="block text-sm text-wine-700 mb-1">გვარი</label>
+              <input required name="last_name" class="w-full px-3 py-2 rounded-lg border border-wine-200">
+            </div>
+            <div>
+              <label class="block text-sm text-wine-700 mb-1">ტელეფონი</label>
+              <input required name="phone" class="w-full px-3 py-2 rounded-lg border border-wine-200">
+            </div>
+            <div>
+              <label class="block text-sm text-wine-700 mb-1">ელფოსტა</label>
+              <input required type="email" name="email" class="w-full px-3 py-2 rounded-lg border border-wine-200">
+            </div>
+            <div class="md:col-span-2">
+              <label class="block text-sm text-wine-700 mb-1">მისამართი (სად იგზავნება)</label>
+              <textarea required name="address" rows="2" class="w-full px-3 py-2 rounded-lg border border-wine-200"></textarea>
+            </div>
+            <div class="md:col-span-2">
+              <label class="block text-sm text-wine-700 mb-1">გადახდის ქვითარი</label>
+              <input required type="file" accept="image/*,application/pdf" name="receipt" class="w-full px-3 py-2 rounded-lg border border-wine-200 bg-cream-50">
+            </div>
+            <div class="md:col-span-2 flex gap-3">
+              <button type="submit" class="btn-wine px-6 py-3 bg-wine-700 text-cream-50 rounded-xl hover:bg-wine-800">შეკვეთის გაგზავნა</button>
+              <button type="button" onclick="toggleCheckoutForm(false)" class="px-6 py-3 rounded-xl border border-wine-200 text-wine-700 hover:bg-cream-100">დახურვა</button>
+            </div>
+            <p id="checkout-status" class="md:col-span-2 text-sm text-wine-600"></p>
+          </form>
+        </div>
+        ` : ''}
       `;
     }
     
     function handleCheckout() {
-      showToast('დემო რეჟიმი — შეკვეთა არ არის დამუშავებული', 'info');
+      if (!cartItems.length) {
+        showToast('კალათა ცარიელია', 'info');
+        return;
+      }
+      toggleCheckoutForm(true);
+    }
+
+    function toggleCheckoutForm(show) {
+      checkoutFormVisible = !!show;
+      renderCart();
+    }
+
+    function copyCheckoutIban(value) {
+      navigator.clipboard.writeText(value).then(() => {
+        showToast('IBAN დაკოპირდა', 'success');
+      }).catch(() => {
+        showToast('კოპირება ვერ მოხერხდა', 'error');
+      });
+    }
+
+    async function clearCartAfterOrder() {
+      if (window.dataSdk) {
+        for (const item of [...cartItems]) {
+          try {
+            await window.dataSdk.delete(item);
+          } catch {
+            // ignore
+          }
+        }
+      }
+      cartItems = [];
+      saveCartToLocal();
+      updateCartCount();
+      checkoutFormVisible = false;
+      renderCart();
+    }
+
+    async function submitCheckoutOrder(event) {
+      event.preventDefault();
+      const form = event.target;
+      const statusEl = document.getElementById('checkout-status');
+      const submitBtn = form.querySelector('button[type="submit"]');
+      const total = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+
+      const fd = new FormData(form);
+      const receiptFile = fd.get('receipt');
+      if (!(receiptFile instanceof File) || !receiptFile.size) {
+        showToast('ატვირთე გადახდის ქვითარი', 'error');
+        return;
+      }
+
+      if (submitBtn) submitBtn.disabled = true;
+      if (statusEl) statusEl.textContent = 'ქვითარი იტვირთება...';
+
+      try {
+        const receiptUrl = await uploadFileToCloudinary(receiptFile, 'matsi-order-receipts');
+        const orderId = `ORDER-${Date.now()}`;
+        const nowText = new Date().toLocaleString('ka-GE');
+        const itemsText = cartItems.map((item, index) =>
+          `${index + 1}. ${item.productName} | qty:${item.quantity} | ₾${item.price * item.quantity} | ფოტო: ${item.image_url || '-'}`
+        ).join('\n');
+
+        if (statusEl) statusEl.textContent = 'მეილი იგზავნება...';
+        await sendFormSubmitEmail({
+          _subject: `Matsi Checkout | ${orderId} | ₾${total}`,
+          first_name: (fd.get('first_name') || '').toString(),
+          last_name: (fd.get('last_name') || '').toString(),
+          phone: (fd.get('phone') || '').toString(),
+          email: (fd.get('email') || '').toString(),
+          address: (fd.get('address') || '').toString(),
+          total: `₾${total}`,
+          receipt_url: receiptUrl,
+          message: `Order ID: ${orderId}
+თარიღი: ${nowText}
+სახელი: ${(fd.get('first_name') || '').toString()} ${(fd.get('last_name') || '').toString()}
+ტელეფონი: ${(fd.get('phone') || '').toString()}
+ელფოსტა: ${(fd.get('email') || '').toString()}
+მისამართი: ${(fd.get('address') || '').toString()}
+ჯამი: ₾${total}
+ქვითარი: ${receiptUrl}
+
+პროდუქტები:
+${itemsText}`
+        });
+
+        showToast('შეკვეთა წარმატებით გაიგზავნა', 'success');
+        if (statusEl) statusEl.textContent = 'წარმატებით გაიგზავნა.';
+        await clearCartAfterOrder();
+      } catch (error) {
+        console.error(error);
+        showToast('შეკვეთის გაგზავნა ვერ მოხერხდა', 'error');
+        if (statusEl) statusEl.textContent = `შეცდომა: ${error.message}`;
+      } finally {
+        if (submitBtn) submitBtn.disabled = false;
+      }
     }
     
     // =====================================================
@@ -1664,7 +1827,7 @@
         await addToCart(
           `custom-label-${Date.now()}`,
           'პერსონალური ეტიკეტი',
-          45,
+          Number(siteMeta.custom_label_price || 45),
           { image_url: imageUrl, item_type: 'custom_label' }
         );
       } catch (error) {
