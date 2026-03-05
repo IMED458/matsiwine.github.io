@@ -225,6 +225,8 @@
     let firebaseStateRef = null;
     let firebaseStateUnsubscribe = null;
     let firebaseDb = null;
+    let firebaseAuth = null;
+    let firebaseAuthReadyPromise = null;
     
     // =====================================================
     // DATA SDK INTEGRATION
@@ -1701,6 +1703,9 @@ Order ID: ${orderId}
         if (!window.firebase.apps.length) {
           window.firebase.initializeApp(FIREBASE_CONFIG);
         }
+        if (window.firebase.auth) {
+          firebaseAuth = window.firebase.auth();
+        }
         firebaseDb = window.firebase.firestore();
         firebaseStateRef = firebaseDb.collection(FIREBASE_STATE_COLLECTION).doc(FIREBASE_STATE_DOC);
         firebasePublicReady = true;
@@ -1709,6 +1714,18 @@ Order ID: ${orderId}
         console.error('Firebase init failed:', error);
         return false;
       }
+    }
+
+    async function ensurePublicFirebaseAuth() {
+      if (!firebaseAuth || !firebaseAuth.signInAnonymously) return;
+      if (firebaseAuth.currentUser) return;
+      if (!firebaseAuthReadyPromise) {
+        firebaseAuthReadyPromise = firebaseAuth.signInAnonymously().catch((error) => {
+          console.error('Anonymous auth failed:', error);
+          firebaseAuthReadyPromise = null;
+        });
+      }
+      await firebaseAuthReadyPromise;
     }
 
     function normalizeAdminPayload(data) {
@@ -2180,12 +2197,14 @@ Order ID: ${orderId}
       };
       localStorage.setItem(ADMIN_STORAGE_KEY, JSON.stringify(payload));
       if (initPublicFirebaseState() && firebaseStateRef) {
-        firebaseStateRef.set({
-          ...payload,
-          updatedAt: window.firebase.firestore.FieldValue.serverTimestamp()
-        }, { merge: true }).catch((error) => {
-          console.error(error);
-          showToast('Cloud შენახვა ვერ მოხერხდა', 'error');
+        ensurePublicFirebaseAuth().then(() => {
+          firebaseStateRef.set({
+            ...payload,
+            updatedAt: window.firebase.firestore.FieldValue.serverTimestamp()
+          }, { merge: true }).catch((error) => {
+            console.error(error);
+            showToast('Cloud შენახვა ვერ მოხერხდა', 'error');
+          });
         });
       }
       showToast('ადმინ ცვლილებები შენახულია', 'success');
@@ -2206,6 +2225,7 @@ Order ID: ${orderId}
       if (!initPublicFirebaseState() || !firebaseStateRef) return;
 
       try {
+        await ensurePublicFirebaseAuth();
         const cloudSnap = await firebaseStateRef.get();
         if (cloudSnap.exists) {
           applyAdminPayload(cloudSnap.data(), true);
@@ -2215,6 +2235,7 @@ Order ID: ${orderId}
       }
 
       if (!firebaseStateUnsubscribe) {
+        await ensurePublicFirebaseAuth();
         firebaseStateUnsubscribe = firebaseStateRef.onSnapshot((snap) => {
           if (!snap.exists) return;
           applyAdminPayload(snap.data(), true);
