@@ -214,7 +214,14 @@
     // NAVIGATION
     // =====================================================
     
-    function navigateTo(page, data = null) {
+    function getPageFromLocation() {
+      const allowedPages = ['home', 'shop', 'product', 'about', 'contact', 'designer', 'admin', 'cart'];
+      const hashPage = window.location.hash.replace('#', '').trim();
+      if (allowedPages.includes(hashPage)) return hashPage;
+      return null;
+    }
+
+    function navigateTo(page, data = null, updateHash = true) {
       document.querySelectorAll('.page-section').forEach(section => {
         section.classList.add('hidden');
       });
@@ -237,6 +244,13 @@
         } else if (page === 'admin') {
           initAdminPanel();
           renderAdminPanelValues();
+        }
+
+        if (updateHash) {
+          const nextHash = `#${page}`;
+          if (window.location.hash !== nextHash) {
+            history.replaceState(null, '', nextHash);
+          }
         }
       }
     }
@@ -1620,9 +1634,23 @@
       initAdminPanel();
       loadAdminState();
 
+      window.addEventListener('hashchange', () => {
+        const hashPage = getPageFromLocation();
+        if (hashPage && hashPage !== currentPage) {
+          navigateTo(hashPage, null, false);
+        }
+      });
+
       // Render UI immediately
       applyConfig();
       renderProducts();
+
+      const initialPage = getPageFromLocation();
+      if (initialPage && initialPage !== currentPage) {
+        navigateTo(initialPage, null, false);
+      } else {
+        history.replaceState(null, '', '#home');
+      }
 
       // Hide loader fast so first paint does not feel delayed
       hideLoader(250);
