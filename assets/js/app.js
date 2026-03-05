@@ -955,7 +955,8 @@
 
     const designerState = {
       initialized: false,
-      mode: 'draw',
+      mode: 'select',
+      drawArmed: false,
       color: '#722f37',
       size: 6,
       drawing: false,
@@ -1012,6 +1013,8 @@
       designerRefs.orderNote = document.getElementById('designer-order-note');
       designerRefs.orderSubmit = document.getElementById('designer-submit-order');
       designerRefs.orderStatus = document.getElementById('designer-order-status');
+      designerRefs.toggleDraw = document.getElementById('designer-toggle-draw');
+      designerRefs.drawStatus = document.getElementById('designer-draw-status');
 
       if (!designerRefs.stage || !designerRefs.drawCanvas) return;
 
@@ -1026,6 +1029,7 @@
       designerRefs.mode.addEventListener('change', (event) => {
         setDesignerMode(event.target.value);
       });
+      designerRefs.toggleDraw.addEventListener('click', toggleDesignerDrawArmed);
 
       designerRefs.color.addEventListener('input', (event) => {
         designerState.color = event.target.value;
@@ -1092,6 +1096,40 @@
       window.addEventListener('keydown', handleDesignerHotkeys);
     }
 
+    function syncDesignerDrawUi() {
+      if (!designerRefs.toggleDraw || !designerRefs.drawStatus) return;
+      const canDraw = designerState.mode === 'draw' || designerState.mode === 'erase';
+      if (!canDraw) {
+        designerRefs.toggleDraw.disabled = true;
+        designerRefs.toggleDraw.style.opacity = '0.6';
+        designerRefs.toggleDraw.style.cursor = 'not-allowed';
+        designerRefs.toggleDraw.textContent = 'ხატვა მიუწვდომელია';
+        designerRefs.drawStatus.textContent = 'აირჩიე ხატვა ან საშლელი';
+        designerRefs.drawStatus.className = 'px-3 py-1 rounded-full bg-cream-200 text-wine-800 text-xs';
+        return;
+      }
+
+      designerRefs.toggleDraw.disabled = false;
+      designerRefs.toggleDraw.style.opacity = '';
+      designerRefs.toggleDraw.style.cursor = '';
+      designerRefs.toggleDraw.textContent = designerState.drawArmed ? 'ხატვის გამორთვა' : 'ხატვის ჩართვა';
+      designerRefs.drawStatus.textContent = designerState.drawArmed ? 'ხატვა ჩართულია' : 'ხატვა გამორთულია';
+      designerRefs.drawStatus.className = designerState.drawArmed
+        ? 'px-3 py-1 rounded-full bg-green-100 text-green-800 text-xs'
+        : 'px-3 py-1 rounded-full bg-cream-200 text-wine-800 text-xs';
+    }
+
+    function toggleDesignerDrawArmed() {
+      const canDraw = designerState.mode === 'draw' || designerState.mode === 'erase';
+      if (!canDraw) {
+        showToast('ჯერ აირჩიე რეჟიმი: ხატვა ან საშლელი', 'info');
+        return;
+      }
+      designerState.drawArmed = !designerState.drawArmed;
+      syncDesignerDrawUi();
+      showToast(designerState.drawArmed ? 'ხატვა ჩართულია' : 'ხატვა გამორთულია', 'info');
+    }
+
     function resizeDesignerCanvas() {
       if (!designerRefs.stage || !designerRefs.drawCanvas) return;
 
@@ -1126,6 +1164,8 @@
       if (designerRefs.drawCanvas) designerRefs.drawCanvas.style.pointerEvents = isSelect ? 'none' : 'auto';
       if (designerRefs.textLayer) designerRefs.textLayer.style.pointerEvents = isSelect ? 'auto' : 'none';
       if (designerRefs.stage) designerRefs.stage.style.cursor = isSelect ? 'grab' : 'crosshair';
+      if (isSelect) designerState.drawArmed = false;
+      syncDesignerDrawUi();
     }
 
     function getDesignerPointer(event) {
@@ -1139,6 +1179,10 @@
     function startDesignerDrawing(event) {
       if (!designerCtx) return;
       if (designerState.mode === 'select') return;
+      if (!designerState.drawArmed) {
+        showToast('ხატვის დასაწყებად დააჭირე "ხატვის ჩართვა"', 'info');
+        return;
+      }
       if (event.button !== 0) return;
       event.preventDefault();
       designerState.drawing = true;
@@ -1427,7 +1471,8 @@
     }
 
     function resetDesigner() {
-      designerState.mode = 'draw';
+      designerState.mode = 'select';
+      designerState.drawArmed = false;
       designerState.color = '#722f37';
       designerState.size = 6;
       designerState.photoScale = 100;
@@ -1435,7 +1480,7 @@
       designerState.photoY = 0;
       designerState.textLayers = [];
       designerState.selectedTextId = null;
-      designerRefs.mode.value = 'draw';
+      designerRefs.mode.value = 'select';
       designerRefs.color.value = '#722f37';
       designerRefs.size.value = '6';
       designerRefs.textColor.value = '#3d1219';
@@ -1451,7 +1496,7 @@
       designerState.drawHistory = [];
       designerState.drawHistoryIndex = -1;
       pushDesignerHistory();
-      setDesignerMode('draw');
+      setDesignerMode('select');
       renderDesignerTextLayers();
       showToast('დიზაინერი განულდა', 'info');
     }

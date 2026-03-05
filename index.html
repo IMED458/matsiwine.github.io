@@ -502,13 +502,14 @@
           </div>
          </div>
          <div class="bg-white rounded-2xl p-5 shadow-lg">
-          <h2 class="font-display text-2xl text-wine-900 mb-4">ხატვა და ედითინგი</h2>
+         <h2 class="font-display text-2xl text-wine-900 mb-4">ხატვა და ედითინგი</h2>
+          <p class="text-sm text-wine-600 mb-3">1) აირჩიე რეჟიმი 2) დააჭირე „ხატვის ჩართვა“ 3) შემდეგ დახატე ბოთლზე.</p>
           <div class="grid sm:grid-cols-2 gap-3 mb-4">
            <label class="text-sm text-wine-700">მოდი
             <select id="designer-mode" class="w-full mt-1 px-3 py-2 rounded-lg border border-wine-200">
+             <option value="select">არჩევა/გადაადგილება</option>
              <option value="draw">ხატვა</option>
              <option value="erase">საშლელი</option>
-             <option value="select">არჩევა/გადაადგილება</option>
             </select>
            </label>
            <label class="text-sm text-wine-700">ფერი
@@ -518,11 +519,15 @@
           <label class="text-sm text-wine-700 block mb-4">ხაზის სისქე
            <input id="designer-size" type="range" min="1" max="30" value="6" class="w-full">
           </label>
+          <div class="flex flex-wrap items-center gap-2 mb-4">
+           <button id="designer-toggle-draw" type="button" class="px-4 py-2 rounded-full bg-wine-700 text-cream-50 hover:bg-wine-800">ხატვის ჩართვა</button>
+           <span id="designer-draw-status" class="px-3 py-1 rounded-full bg-cream-200 text-wine-800 text-xs">ხატვა გამორთულია</span>
+          </div>
           <div class="flex flex-wrap gap-2">
-           <button id="designer-undo" class="px-4 py-2 rounded-full bg-cream-200 text-wine-800 hover:bg-cream-300">Undo</button>
-           <button id="designer-redo" class="px-4 py-2 rounded-full bg-cream-200 text-wine-800 hover:bg-cream-300">Redo</button>
-           <button id="designer-clear-drawing" class="px-4 py-2 rounded-full bg-wine-100 text-wine-800 hover:bg-wine-200">ნახატის გასუფთავება</button>
-           <button id="designer-reset" class="px-4 py-2 rounded-full bg-cream-200 text-wine-800 hover:bg-cream-300">Reset</button>
+           <button id="designer-undo" type="button" class="px-4 py-2 rounded-full bg-cream-200 text-wine-800 hover:bg-cream-300">Undo</button>
+           <button id="designer-redo" type="button" class="px-4 py-2 rounded-full bg-cream-200 text-wine-800 hover:bg-cream-300">Redo</button>
+           <button id="designer-clear-drawing" type="button" class="px-4 py-2 rounded-full bg-wine-100 text-wine-800 hover:bg-wine-200">ნახატის გასუფთავება</button>
+           <button id="designer-reset" type="button" class="px-4 py-2 rounded-full bg-cream-200 text-wine-800 hover:bg-cream-300">Reset</button>
           </div>
          </div>
          <div class="bg-white rounded-2xl p-5 shadow-lg">
