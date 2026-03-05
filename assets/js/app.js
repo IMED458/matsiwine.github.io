@@ -242,7 +242,7 @@
     // =====================================================
     
     function getPageFromLocation() {
-      const allowedPages = ['home', 'shop', 'product', 'about', 'contact', 'designer', 'admin', 'cart'];
+      const allowedPages = ['home', 'shop', 'product', 'about', 'contact', 'designer', 'cart'];
       const hashPage = window.location.hash.replace('#', '').trim();
       if (allowedPages.includes(hashPage)) return hashPage;
       return null;
@@ -273,9 +273,6 @@
           renderCart();
         } else if (page === 'designer') {
           initDesigner();
-        } else if (page === 'admin') {
-          initAdminPanel();
-          renderAdminPanelValues();
         }
 
         if (updateHash) {
@@ -324,25 +321,7 @@
         <div class="product-card bg-white rounded-2xl overflow-hidden shadow-lg cursor-pointer" onclick="viewProduct('${product.id}')">
           <div class="aspect-[3/4] bg-gradient-to-br from-wine-100 to-cream-200 p-6 flex items-center justify-center relative overflow-hidden">
             <div class="glass-shimmer absolute inset-0"></div>
-            <svg viewBox="0 0 80 200" class="w-16 h-40 drop-shadow-xl">
-              <defs>
-                <linearGradient id="bottle-${product.id}" x1="0%" y1="0%" x2="100%" y2="0%">
-                  <stop offset="0%" style="stop-color:${getBottleColor(product.type, 0)}"/>
-                  <stop offset="50%" style="stop-color:${getBottleColor(product.type, 1)}"/>
-                  <stop offset="100%" style="stop-color:${getBottleColor(product.type, 0)}"/>
-                </linearGradient>
-                <linearGradient id="wine-${product.id}" x1="0%" y1="0%" x2="0%" y2="100%">
-                  <stop offset="0%" style="stop-color:${getWineColor(product.type, 0)}"/>
-                  <stop offset="100%" style="stop-color:${getWineColor(product.type, 1)}"/>
-                </linearGradient>
-              </defs>
-              <path d="M25 60 Q25 50 30 45 L30 25 Q30 20 35 20 L45 20 Q50 20 50 25 L50 45 Q55 50 55 60 L55 180 Q55 190 40 190 Q25 190 25 180 Z" fill="url(#bottle-${product.id})"/>
-              <path d="M27 70 L53 70 L53 178 Q53 188 40 188 Q27 188 27 178 Z" fill="url(#wine-${product.id})"/>
-              <rect x="28" y="100" width="24" height="50" fill="#f9f1e4" rx="2"/>
-              <text x="40" y="125" text-anchor="middle" fill="${getBottleColor(product.type, 1)}" font-size="5" font-family="serif">MATSI</text>
-              <rect x="33" y="8" width="14" height="14" fill="#d4bc9a" rx="2"/>
-              <path d="M32 20 L32 28 Q32 32 40 32 Q48 32 48 28 L48 20" fill="#8b7355"/>
-            </svg>
+            ${getProductVisualMarkup(product, 'card')}
           </div>
           <div class="p-5">
             <p class="text-wine-500 text-xs font-medium mb-1">${product.category}</p>
@@ -358,6 +337,36 @@
           </div>
         </div>
       `).join('');
+    }
+
+    function getProductVisualMarkup(product, variant = 'card') {
+      if (product.image_url) {
+        const sizeClass = variant === 'detail' ? 'w-full h-full object-contain' : 'w-full h-full object-contain';
+        return `<img src="${product.image_url}" alt="${escapeHtml(product.name || 'Wine')}" class="${sizeClass} drop-shadow-2xl">`;
+      }
+
+      const svgClass = variant === 'detail' ? 'w-32 h-80 drop-shadow-2xl' : 'w-16 h-40 drop-shadow-xl';
+      return `
+        <svg viewBox="0 0 80 200" class="${svgClass}">
+          <defs>
+            <linearGradient id="bottle-${product.id || 'fallback'}" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" style="stop-color:${getBottleColor(product.type, 0)}"/>
+              <stop offset="50%" style="stop-color:${getBottleColor(product.type, 1)}"/>
+              <stop offset="100%" style="stop-color:${getBottleColor(product.type, 0)}"/>
+            </linearGradient>
+            <linearGradient id="wine-${product.id || 'fallback'}" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" style="stop-color:${getWineColor(product.type, 0)}"/>
+              <stop offset="100%" style="stop-color:${getWineColor(product.type, 1)}"/>
+            </linearGradient>
+          </defs>
+          <path d="M25 60 Q25 50 30 45 L30 25 Q30 20 35 20 L45 20 Q50 20 50 25 L50 45 Q55 50 55 60 L55 180 Q55 190 40 190 Q25 190 25 180 Z" fill="url(#bottle-${product.id || 'fallback'})"/>
+          <path d="M27 70 L53 70 L53 178 Q53 188 40 188 Q27 188 27 178 Z" fill="url(#wine-${product.id || 'fallback'})"/>
+          <rect x="28" y="100" width="24" height="50" fill="#f9f1e4" rx="2"/>
+          <text x="40" y="125" text-anchor="middle" fill="${getBottleColor(product.type, 1)}" font-size="5" font-family="serif">MATSI</text>
+          <rect x="33" y="8" width="14" height="14" fill="#d4bc9a" rx="2"/>
+          <path d="M32 20 L32 28 Q32 32 40 32 Q48 32 48 28 L48 20" fill="#8b7355"/>
+        </svg>
+      `;
     }
     
     function getBottleColor(type, index) {
@@ -394,26 +403,7 @@
       container.innerHTML = `
         <div class="bg-gradient-to-br from-wine-100 to-cream-200 rounded-3xl p-12 flex items-center justify-center relative overflow-hidden">
           <div class="glass-shimmer absolute inset-0"></div>
-          <svg viewBox="0 0 80 200" class="w-32 h-80 drop-shadow-2xl">
-            <defs>
-              <linearGradient id="bottle-detail" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" style="stop-color:${getBottleColor(product.type, 0)}"/>
-                <stop offset="50%" style="stop-color:${getBottleColor(product.type, 1)}"/>
-                <stop offset="100%" style="stop-color:${getBottleColor(product.type, 0)}"/>
-              </linearGradient>
-              <linearGradient id="wine-detail" x1="0%" y1="0%" x2="0%" y2="100%">
-                <stop offset="0%" style="stop-color:${getWineColor(product.type, 0)}"/>
-                <stop offset="100%" style="stop-color:${getWineColor(product.type, 1)}"/>
-              </linearGradient>
-            </defs>
-            <path d="M25 60 Q25 50 30 45 L30 25 Q30 20 35 20 L45 20 Q50 20 50 25 L50 45 Q55 50 55 60 L55 180 Q55 190 40 190 Q25 190 25 180 Z" fill="url(#bottle-detail)"/>
-            <path d="M27 70 L53 70 L53 178 Q53 188 40 188 Q27 188 27 178 Z" fill="url(#wine-detail)"/>
-            <rect x="28" y="95" width="24" height="60" fill="#f9f1e4" rx="2"/>
-            <text x="40" y="115" text-anchor="middle" fill="${getBottleColor(product.type, 1)}" font-size="5" font-family="serif">MATSI</text>
-            <text x="40" y="125" text-anchor="middle" fill="${getBottleColor(product.type, 1)}" font-size="3" font-family="sans-serif">${product.year}</text>
-            <rect x="33" y="8" width="14" height="14" fill="#d4bc9a" rx="2"/>
-            <path d="M32 20 L32 28 Q32 32 40 32 Q48 32 48 28 L48 20" fill="#8b7355"/>
-          </svg>
+          ${getProductVisualMarkup(product, 'detail')}
         </div>
         
         <div class="space-y-6">
@@ -1779,7 +1769,6 @@
     // =====================================================
     
     async function init() {
-      initAdminPanel();
       loadAdminState();
 
       window.addEventListener('hashchange', () => {

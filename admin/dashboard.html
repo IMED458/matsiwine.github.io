@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="ka">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MATSI Admin Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Georgian:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./admin.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="container row">
+      <div>
+        <h1>MATSI ადმინისტრირება</h1>
+        <p class="small">სრული მართვა: კონტენტი, დიზაინი, სექციები, პროდუქტები</p>
+      </div>
+      <div class="actions">
+        <a class="ghost" href="../index.html#home">საიტზე დაბრუნება</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="container grid cols-2">
+    <section class="card">
+      <div class="tabs">
+        <button class="tab active" data-tab="settings" type="button">ძირითადი პარამეტრები</button>
+        <button class="tab" data-tab="sections" type="button">სექციები</button>
+        <button class="tab" data-tab="products" type="button">პროდუქტები</button>
+        <button class="tab" data-tab="raw" type="button">RAW JSON</button>
+      </div>
+
+      <section id="tab-settings" class="tab-panel">
+        <h2>საიტის კონტენტი და თემა</h2>
+        <form id="settings-form" class="grid">
+          <div><label for="hero_title">Hero სათაური</label><input id="hero_title" name="hero_title"></div>
+          <div><label for="hero_subtitle">Hero ქვესათაური</label><textarea id="hero_subtitle" name="hero_subtitle"></textarea></div>
+          <div><label for="about_title">About სათაური</label><input id="about_title" name="about_title"></div>
+          <div><label for="contact_email">კონტაქტის ელფოსტა</label><input id="contact_email" name="contact_email" type="email"></div>
+          <div><label for="contact_phone">კონტაქტის ტელეფონი</label><input id="contact_phone" name="contact_phone"></div>
+          <div><label for="contact_address">მისამართი</label><input id="contact_address" name="contact_address"></div>
+          <div><label for="instagram_link">Instagram ლინკი</label><input id="instagram_link" name="instagram_link" type="url"></div>
+          <div><label for="primary_color">Primary ფერი</label><input id="primary_color" name="primary_color" type="color"></div>
+          <div><label for="text_color">Text ფერი</label><input id="text_color" name="text_color" type="color"></div>
+          <button class="primary" type="submit">შენახვა</button>
+          <p id="settings-msg" class="small"></p>
+        </form>
+      </section>
+
+      <section id="tab-sections" class="tab-panel hidden">
+        <h2>სექციების ჩართვა/გამორთვა</h2>
+        <form id="sections-form" class="grid">
+          <label class="check"><input type="checkbox" name="home"> მთავარი</label>
+          <label class="check"><input type="checkbox" name="shop"> მაღაზია</label>
+          <label class="check"><input type="checkbox" name="about"> ჩვენს შესახებ</label>
+          <label class="check"><input type="checkbox" name="contact"> კონტაქტი</label>
+          <label class="check"><input type="checkbox" name="designer"> შექმენი შენი დიზაინი</label>
+          <label class="check"><input type="checkbox" name="cart"> კალათა</label>
+          <button class="primary" type="submit">შენახვა</button>
+          <p id="sections-msg" class="small"></p>
+        </form>
+      </section>
+
+      <section id="tab-products" class="tab-panel hidden">
+        <h2>პროდუქტის დამატება/რედაქტირება</h2>
+        <form id="products-form" class="grid" data-kind="products">
+          <input type="hidden" name="id">
+          <div><label>სახელი</label><input name="name" required></div>
+          <div><label>წელი</label><input name="year" type="number" required></div>
+          <div><label>ფასი (₾)</label><input name="price" type="number" required></div>
+          <div><label>ტიპი</label>
+            <select name="type">
+              <option value="red">წითელი</option>
+              <option value="white">თეთრი</option>
+              <option value="amber">ქარვისფერი</option>
+              <option value="rose">როზე</option>
+            </select>
+          </div>
+          <div><label>კატეგორია</label><input name="category"></div>
+          <div><label>ჯიში</label><input name="grape"></div>
+          <div><label>რეგიონი</label><input name="region"></div>
+          <div><label>ალკოჰოლი</label><input name="alcohol"></div>
+          <div><label>ტემპერატურა</label><input name="temperature"></div>
+          <div><label>შეხამება</label><input name="pairing"></div>
+          <div><label>არომატი</label><input name="aroma"></div>
+          <div><label>გემო</label><input name="taste"></div>
+          <div><label>აღწერა</label><textarea name="description"></textarea></div>
+          <div>
+            <label>პროდუქტის ფოტო</label>
+            <input id="product_image" name="product_image" type="file" accept="image/*">
+            <img id="product-image-preview" class="image-preview hidden" alt="Product preview">
+          </div>
+          <div class="actions">
+            <button class="primary" type="submit">შენახვა</button>
+            <button id="products-reset" class="ghost" type="button">გასუფთავება</button>
+          </div>
+          <p id="products-msg" class="small"></p>
+        </form>
+      </section>
+
+      <section id="tab-raw" class="tab-panel hidden">
+        <h2>RAW JSON</h2>
+        <textarea id="raw-json" class="raw" spellcheck="false"></textarea>
+        <div class="actions">
+          <button id="apply-raw" class="primary" type="button">Apply JSON</button>
+          <button id="download-backup" class="ghost" type="button">Export JSON</button>
+        </div>
+        <p id="raw-msg" class="small"></p>
+      </section>
+    </section>
+
+    <section class="card">
+      <h2>პროდუქტების სია</h2>
+      <div id="items-list" class="list"></div>
+    </section>
+  </main>
+
+  <script src="./admin.js"></script>
+</body>
+</html>
