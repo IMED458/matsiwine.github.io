@@ -24,6 +24,7 @@
     const FIREBASE_STATE_COLLECTION = 'site';
     const FIREBASE_STATE_DOC = 'main';
     const DEFAULT_ORDER_EMAIL = 'matsiwine@gmail.com';
+    const CART_STORAGE_KEY = 'matsi_cart_v1';
 
     const defaultHomeContent = {
       hero_kicker: 'ქართული ღვინის ტრადიცია',
@@ -227,6 +228,33 @@
     let firebaseDb = null;
     let firebaseAuth = null;
     let firebaseAuthReadyPromise = null;
+
+    function getCartItemKey(item) {
+      return item?.__backendId || item?.id || item?.localId || item?.productId || '';
+    }
+
+    function loadCartFromLocal() {
+      try {
+        const raw = localStorage.getItem(CART_STORAGE_KEY);
+        if (!raw) return [];
+        const parsed = JSON.parse(raw);
+        if (!Array.isArray(parsed)) return [];
+        return parsed.map((item) => ({
+          ...item,
+          localId: item.localId || item.id || `${item.productId || 'item'}-${Date.now()}`
+        }));
+      } catch {
+        return [];
+      }
+    }
+
+    function saveCartToLocal() {
+      try {
+        localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cartItems));
+      } catch {
+        // ignore
+      }
+    }
     
     // =====================================================
     // DATA SDK INTEGRATION
@@ -235,6 +263,7 @@
     const dataHandler = {
       onDataChanged(data) {
         cartItems = data;
+        saveCartToLocal();
         updateCartUI();
         updateCartCount();
       }
@@ -245,8 +274,15 @@
         const result = await window.dataSdk.init(dataHandler);
         if (!result.isOk) {
           console.error('Failed to initialize Data SDK');
+          cartItems = loadCartFromLocal();
+          updateCartUI();
+          updateCartCount();
         }
+        return;
       }
+      cartItems = loadCartFromLocal();
+      updateCartUI();
+      updateCartCount();
     }
     
     // =====================================================
@@ -676,7 +712,7 @@
     // CART FUNCTIONALITY
     // =====================================================
     
-    async function addToCart(productId, productName, price) {
+    async function addToCart(productId, productName, price, meta = {}) {
       if (isLoading) return;
       
       if (cartItems.length >= 999) {
@@ -690,41 +726,67 @@
       
       if (existingItem) {
         if (window.dataSdk) {
-          const result = await window.dataSdk.update({
-            ...existingItem,
-            quantity: existingItem.quantity + 1
-          });
-          if (!result.isOk) {
-            showToast('შეცდომა კალათის განახლებისას', 'error');
-          } else {
+          try {
+            const result = await window.dataSdk.update({
+              ...existingItem,
+              quantity: existingItem.quantity + 1
+            });
+            if (!result.isOk) throw new Error('sdk update failed');
+            showToast(`${productName} დამატებულია კალათაში`, 'success');
+          } catch {
+            existingItem.quantity += 1;
+            saveCartToLocal();
+            updateCartUI();
+            updateCartCount();
             showToast(`${productName} დამატებულია კალათაში`, 'success');
           }
+        } else {
+          existingItem.quantity += 1;
+          saveCartToLocal();
+          updateCartUI();
+          updateCartCount();
+          showToast(`${productName} დამატებულია კალათაში`, 'success');
         }
       } else {
+        const newItem = {
+          id: Date.now().toString(),
+          localId: `local-${Date.now()}`,
+          productId,
+          productName,
+          quantity: 1,
+          price,
+          image_url: meta.image_url || '',
+          item_type: meta.item_type || 'product',
+          createdAt: new Date().toISOString()
+        };
         if (window.dataSdk) {
-          const result = await window.dataSdk.create({
-            id: Date.now().toString(),
-            productId,
-            productName,
-            quantity: 1,
-            price,
-            createdAt: new Date().toISOString()
-          });
-          if (!result.isOk) {
-            showToast('შეცდომა კალათაში დამატებისას', 'error');
-          } else {
+          try {
+            const result = await window.dataSdk.create(newItem);
+            if (!result.isOk) throw new Error('sdk create failed');
+            showToast(`${productName} დამატებულია კალათაში`, 'success');
+          } catch {
+            cartItems.push(newItem);
+            saveCartToLocal();
+            updateCartUI();
+            updateCartCount();
             showToast(`${productName} დამატებულია კალათაში`, 'success');
           }
+        } else {
+          cartItems.push(newItem);
+          saveCartToLocal();
+          updateCartUI();
+          updateCartCount();
+          showToast(`${productName} დამატებულია კალათაში`, 'success');
         }
       }
       
       isLoading = false;
     }
     
-    async function updateQuantity(backendId, delta) {
+    async function updateQuantity(itemKey, delta) {
       if (isLoading) return;
       
-      const item = cartItems.find(i => i.__backendId === backendId);
+      const item = cartItems.find(i => getCartItemKey(i) === itemKey);
       if (!item) return;
       
       isLoading = true;
@@ -733,41 +795,72 @@
       
       if (newQuantity <= 0) {
         if (window.dataSdk) {
-          const result = await window.dataSdk.delete(item);
-          if (!result.isOk) {
-            showToast('შეცდომა წაშლისას', 'error');
+          try {
+            const result = await window.dataSdk.delete(item);
+            if (!result.isOk) throw new Error('sdk delete failed');
+          } catch {
+            cartItems = cartItems.filter((i) => getCartItemKey(i) !== itemKey);
+            saveCartToLocal();
+            updateCartUI();
+            updateCartCount();
           }
+        } else {
+          cartItems = cartItems.filter((i) => getCartItemKey(i) !== itemKey);
+          saveCartToLocal();
+          updateCartUI();
+          updateCartCount();
         }
       } else {
         if (window.dataSdk) {
-          const result = await window.dataSdk.update({
-            ...item,
-            quantity: newQuantity
-          });
-          if (!result.isOk) {
-            showToast('შეცდომა განახლებისას', 'error');
+          try {
+            const result = await window.dataSdk.update({
+              ...item,
+              quantity: newQuantity
+            });
+            if (!result.isOk) throw new Error('sdk update failed');
+          } catch {
+            item.quantity = newQuantity;
+            saveCartToLocal();
+            updateCartUI();
+            updateCartCount();
           }
+        } else {
+          item.quantity = newQuantity;
+          saveCartToLocal();
+          updateCartUI();
+          updateCartCount();
         }
       }
       
       isLoading = false;
     }
     
-    async function removeFromCart(backendId) {
+    async function removeFromCart(itemKey) {
       if (isLoading) return;
       
-      const item = cartItems.find(i => i.__backendId === backendId);
+      const item = cartItems.find(i => getCartItemKey(i) === itemKey);
       if (!item) return;
       
       isLoading = true;
       
       if (window.dataSdk) {
-        const result = await window.dataSdk.delete(item);
-        if (!result.isOk) {
-          showToast('შეცდომა წაშლისას', 'error');
-        } else {
+        try {
+          const result = await window.dataSdk.delete(item);
+          if (!result.isOk) throw new Error('sdk delete failed');
+          showToast('პროდუქტი წაიშალა კალათიდან', 'success');
+        } catch {
+          cartItems = cartItems.filter((i) => getCartItemKey(i) !== itemKey);
+          saveCartToLocal();
+          updateCartUI();
+          updateCartCount();
           showToast('პროდუქტი წაიშალა კალათიდან', 'success');
         }
+      } else {
+        cartItems = cartItems.filter((i) => getCartItemKey(i) !== itemKey);
+        saveCartToLocal();
+        updateCartUI();
+        updateCartCount();
+        showToast('პროდუქტი წაიშალა კალათიდან', 'success');
       }
       
       isLoading = false;
@@ -820,28 +913,29 @@
           ${cartItems.map(item => `
             <div class="bg-white rounded-2xl p-4 md:p-6 shadow-lg flex items-center gap-4">
               <div class="w-16 h-20 bg-wine-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                ${item.image_url ? `<img src="${item.image_url}" alt="${escapeHtml(item.productName)}" class="w-full h-full object-cover rounded-xl">` : `
                 <svg viewBox="0 0 80 200" class="w-8 h-16">
                   <path d="M25 60 Q25 50 30 45 L30 25 Q30 20 35 20 L45 20 Q50 20 50 25 L50 45 Q55 50 55 60 L55 180 Q55 190 40 190 Q25 190 25 180 Z" fill="#5a1f29"/>
-                </svg>
+                </svg>`}
               </div>
               <div class="flex-grow min-w-0">
                 <h3 class="font-display text-lg font-semibold text-wine-900 truncate">${item.productName}</h3>
                 <p class="text-wine-600/70 text-sm">₾${item.price} თითოეული</p>
               </div>
               <div class="flex items-center gap-3">
-                <button onclick="updateQuantity('${item.__backendId}', -1)" 
+                <button onclick="updateQuantity('${getCartItemKey(item)}', -1)" 
                         class="w-8 h-8 rounded-full bg-wine-100 text-wine-700 flex items-center justify-center hover:bg-wine-200 transition-colors">
                   −
                 </button>
                 <span class="font-semibold text-wine-900 w-8 text-center">${item.quantity}</span>
-                <button onclick="updateQuantity('${item.__backendId}', 1)" 
+                <button onclick="updateQuantity('${getCartItemKey(item)}', 1)" 
                         class="w-8 h-8 rounded-full bg-wine-100 text-wine-700 flex items-center justify-center hover:bg-wine-200 transition-colors">
                   +
                 </button>
               </div>
               <div class="text-right">
                 <p class="font-display text-xl font-bold text-wine-800">₾${item.price * item.quantity}</p>
-                <button onclick="removeFromCart('${item.__backendId}')" class="text-wine-400 hover:text-wine-600 text-sm transition-colors">
+                <button onclick="removeFromCart('${getCartItemKey(item)}')" class="text-wine-400 hover:text-wine-600 text-sm transition-colors">
                   წაშლა
                 </button>
               </div>
@@ -1015,6 +1109,7 @@
       designerRefs.textColor = document.getElementById('designer-text-color');
       designerRefs.textSize = document.getElementById('designer-text-size');
       designerRefs.exportBtn = document.getElementById('designer-export');
+      designerRefs.addToCartBtn = document.getElementById('designer-add-to-cart');
       designerRefs.orderName = document.getElementById('designer-order-name');
       designerRefs.orderPhone = document.getElementById('designer-order-phone');
       designerRefs.orderEmail = document.getElementById('designer-order-email');
@@ -1087,6 +1182,7 @@
       designerRefs.frontText.addEventListener('click', bringSelectedTextToFront);
       designerRefs.backText.addEventListener('click', sendSelectedTextToBack);
       designerRefs.exportBtn.addEventListener('click', exportDesignerPng);
+      designerRefs.addToCartBtn.addEventListener('click', addDesignerToCart);
       designerRefs.orderSubmit.addEventListener('click', submitDesignerOrder);
 
       designerRefs.drawCanvas.addEventListener('pointerdown', startDesignerDrawing);
@@ -1554,6 +1650,30 @@
       link.href = canvas.toDataURL('image/png');
       link.click();
       showToast('PNG ექსპორტი დასრულდა', 'success');
+    }
+
+    async function addDesignerToCart() {
+      try {
+        let imageUrl = '';
+        const canvas = buildDesignerExportCanvas();
+        const blob = await canvasToBlob(canvas);
+        const fileName = `matsi-label-cart-${Date.now()}.png`;
+        try {
+          imageUrl = await uploadDesignerToCloudinary(blob, fileName);
+        } catch {
+          imageUrl = canvas.toDataURL('image/png');
+        }
+
+        await addToCart(
+          `custom-label-${Date.now()}`,
+          'პერსონალური ეტიკეტი',
+          45,
+          { image_url: imageUrl, item_type: 'custom_label' }
+        );
+      } catch (error) {
+        console.error(error);
+        showToast('დიზაინის კალათაში დამატება ვერ მოხერხდა', 'error');
+      }
     }
 
     function canvasToBlob(canvas) {
