@@ -924,9 +924,12 @@
       `).join('');
       const bankRows = BANK_ACCOUNTS.map((item, idx) => `
         <div class="bg-cream-100 rounded-xl p-3 flex items-start justify-between gap-3">
-          <div>
+          <div class="flex items-start gap-2">
+            <span class="w-7 h-7 rounded-full bg-white border border-wine-200 flex items-center justify-center flex-shrink-0">${getBankIconSvg(item.bank)}</span>
+            <div>
             <p class="text-xs text-wine-500">${item.bank}</p>
             <p id="checkout-iban-${idx}" class="font-mono text-sm text-wine-900 break-all">${item.iban}</p>
+            </div>
           </div>
           <button type="button" onclick="copyCheckoutIban('${item.iban}')" class="px-3 py-1.5 rounded-lg bg-wine-700 text-cream-50 text-xs hover:bg-wine-800">კოპირება</button>
         </div>
@@ -988,10 +991,6 @@
               <div class="bg-cream-50 rounded-xl p-3 mb-3">${orderRows}</div>
               <p class="font-semibold text-wine-900">სულ გადასახდელი: ₾<span id="checkout-total">${total}</span></p>
             </div>
-            <div>
-              <h3 class="font-semibold text-wine-900 mb-2">ბანკის ანგარიშები</h3>
-              <div class="space-y-2 mb-3">${bankRows}</div>
-            </div>
           </div>
           <form id="checkout-form" class="grid md:grid-cols-2 gap-4 mt-6" onsubmit="submitCheckoutOrder(event)">
             <div>
@@ -1013,6 +1012,10 @@
             <div class="md:col-span-2">
               <label class="block text-sm text-wine-700 mb-1">მისამართი (სად იგზავნება)</label>
               <textarea required name="address" rows="2" class="w-full px-3 py-2 rounded-lg border border-wine-200"></textarea>
+            </div>
+            <div class="md:col-span-2">
+              <h3 class="font-semibold text-wine-900 mb-2">ბანკის ანგარიშები</h3>
+              <div class="space-y-2 mb-2">${bankRows}</div>
             </div>
             <div class="md:col-span-2">
               <label class="block text-sm text-wine-700 mb-1">გადახდის ქვითარი</label>
@@ -1048,6 +1051,21 @@
       }).catch(() => {
         showToast('კოპირება ვერ მოხერხდა', 'error');
       });
+    }
+
+    function getBankIconSvg(bank) {
+      if (bank === 'ბოგ') {
+        return `
+          <svg viewBox="0 0 24 24" class="w-4 h-4 text-[#e11d48]" fill="currentColor" aria-hidden="true">
+            <path d="M12 2a10 10 0 100 20 10 10 0 000-20Zm0 3.2a2.8 2.8 0 110 5.6 2.8 2.8 0 010-5.6Zm0 13.6c-2.7 0-5.1-1.4-6.5-3.6.1-2.2 4.4-3.4 6.5-3.4 2.1 0 6.4 1.2 6.5 3.4-1.4 2.2-3.8 3.6-6.5 3.6Z"/>
+          </svg>
+        `;
+      }
+      return `
+        <svg viewBox="0 0 24 24" class="w-4 h-4 text-[#2563eb]" fill="currentColor" aria-hidden="true">
+          <path d="M3 5h18v2H3V5Zm2 4h14v10H5V9Zm3 2v6h2v-2h4v2h2v-6H8Zm2 2v-1h4v1h-4Z"/>
+        </svg>
+      `;
     }
 
     async function clearCartAfterOrder() {
