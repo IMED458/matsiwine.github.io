@@ -1589,13 +1589,27 @@
     async function sendDesignerOrderEmail(payload) {
       const recipient = (siteMeta.order_notify_email || DEFAULT_ORDER_EMAIL || 'matsiwine@gmail.com').trim();
       const endpoint = `https://formsubmit.co/ajax/${encodeURIComponent(recipient)}`;
+      const formData = new FormData();
+
+      formData.append('_captcha', 'false');
+      formData.append('_template', 'table');
+
+      Object.entries(payload || {}).forEach(([key, value]) => {
+        if (value === undefined || value === null) return;
+        formData.append(key, String(value));
+      });
+
+      const replyEmail = (payload?.email || '').toString().trim();
+      if (replyEmail && replyEmail !== '-') {
+        formData.append('_replyto', replyEmail);
+      }
+
       const response = await fetch(endpoint, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
           Accept: 'application/json'
         },
-        body: JSON.stringify(payload)
+        body: formData
       });
 
       const result = await response.json().catch(() => ({}));
