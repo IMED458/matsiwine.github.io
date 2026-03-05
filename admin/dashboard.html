@@ -50,29 +50,38 @@
   <main id="admin-main" class="container grid cols-2 hidden">
     <section class="card">
       <div class="tabs">
-        <button class="tab active" data-tab="settings" type="button">ძირითადი პარამეტრები</button>
-        <button class="tab" data-tab="home" type="button">მთავარი გვერდი</button>
-        <button class="tab" data-tab="about" type="button">About/ისტორია</button>
-        <button class="tab" data-tab="sections" type="button">სექციები</button>
-        <button class="tab" data-tab="products" type="button">პროდუქტები</button>
-        <button class="tab" data-tab="raw" type="button">RAW JSON</button>
+        <button class="tab active" data-tab="settings" type="button">1) ბრენდი და კონტაქტი</button>
+        <button class="tab" data-tab="home" type="button">2) მთავარი გვერდი</button>
+        <button class="tab" data-tab="about" type="button">3) ჩვენს შესახებ</button>
+        <button class="tab" data-tab="sections" type="button">4) გვერდების ჩართვა</button>
+        <button class="tab" data-tab="products" type="button">5) პროდუქტები</button>
+        <button class="tab" data-tab="raw" type="button">6) ტექნიკური JSON</button>
+      </div>
+      <div class="notice">
+        <strong>როგორ გამოიყენო:</strong> აირჩიე ტაბი → შეცვალე მხოლოდ საჭირო ველები → დააჭირე „შენახვა“.
       </div>
 
       <section id="tab-settings" class="tab-panel">
-        <h2>საიტის კონტენტი და თემა</h2>
+        <h2>ბრენდი, კონტაქტი, ლოგო/ბოთლი</h2>
+        <p class="hint">აქედან აკონტროლებ ძირითად მონაცემებს, ფერებს და ლოგო/ბოთლის სურათს.</p>
         <form id="settings-form" class="grid">
+          <div class="full section-title">ძირითადი ტექსტები</div>
           <div><label for="hero_title">Hero სათაური</label><input id="hero_title" name="hero_title"></div>
           <div><label for="hero_subtitle">Hero ქვესათაური</label><textarea id="hero_subtitle" name="hero_subtitle"></textarea></div>
           <div><label for="about_title">About სათაური</label><input id="about_title" name="about_title"></div>
+          <div class="full section-title">კონტაქტი და სოციალური</div>
           <div><label for="contact_email">კონტაქტის ელფოსტა</label><input id="contact_email" name="contact_email" type="email"></div>
           <div><label for="contact_phone">კონტაქტის ტელეფონი</label><input id="contact_phone" name="contact_phone"></div>
           <div><label for="contact_address">მისამართი</label><input id="contact_address" name="contact_address"></div>
           <div><label for="instagram_link">Instagram ლინკი</label><input id="instagram_link" name="instagram_link" type="url"></div>
+          <div class="full section-title">შეკვეთების პარამეტრები</div>
           <div><label for="order_notify_email">შეკვეთის მიმღები Email</label><input id="order_notify_email" name="order_notify_email" type="email" placeholder="matsiwine@gmail.com"></div>
           <div><label for="cloudinary_cloud_name">Cloudinary Cloud Name</label><input id="cloudinary_cloud_name" name="cloudinary_cloud_name" placeholder="your-cloud-name"></div>
           <div><label for="cloudinary_upload_preset">Cloudinary Upload Preset (unsigned)</label><input id="cloudinary_upload_preset" name="cloudinary_upload_preset" placeholder="unsigned_preset"></div>
+          <div class="full section-title">ფერის თემა</div>
           <div><label for="primary_color">Primary ფერი</label><input id="primary_color" name="primary_color" type="color"></div>
           <div><label for="text_color">Text ფერი</label><input id="text_color" name="text_color" type="color"></div>
+          <div class="full section-title">ლოგო და ბოთლი</div>
           <div><label for="logo_upload">ლოგო (matsiwine.png)</label><input id="logo_upload" name="logo_upload" type="file" accept="image/*"></div>
           <div><label for="bottle_upload">ბოთლი (bottle.png)</label><input id="bottle_upload" name="bottle_upload" type="file" accept="image/*"></div>
           <div><label for="logo_url_text">ლოგოს URL (ალტერნატივა)</label><input id="logo_url_text" name="logo_url_text" type="url" placeholder="https://..."></div>
@@ -86,32 +95,34 @@
 
       <section id="tab-home" class="tab-panel hidden">
         <h2>მთავარი გვერდის სრული კონტენტი</h2>
+        <p class="hint">მთავარ გვერდზე ყველა ტექსტს ცვლი აქედან.</p>
         <form id="home-form" class="grid">
+          <div class="full section-title">Hero ბლოკი</div>
           <div><label for="home_hero_kicker">Hero kicker</label><input id="home_hero_kicker" name="home_hero_kicker"></div>
           <div><label for="home_hero_btn_primary">Hero ღილაკი 1</label><input id="home_hero_btn_primary" name="home_hero_btn_primary"></div>
           <div><label for="home_hero_btn_secondary">Hero ღილაკი 2</label><input id="home_hero_btn_secondary" name="home_hero_btn_secondary"></div>
           <div><label for="home_featured_kicker">Featured kicker</label><input id="home_featured_kicker" name="home_featured_kicker"></div>
           <div><label for="home_featured_title">Featured სათაური</label><input id="home_featured_title" name="home_featured_title"></div>
           <div><label for="home_featured_cta">Featured CTA</label><input id="home_featured_cta" name="home_featured_cta"></div>
-
+          <div class="full section-title">ბარათი 1</div>
           <div><label for="home_card1_category">Card1 კატეგორია</label><input id="home_card1_category" name="home_card1_category"></div>
           <div><label for="home_card1_title">Card1 სათაური</label><input id="home_card1_title" name="home_card1_title"></div>
           <div><label for="home_card1_desc">Card1 აღწერა</label><input id="home_card1_desc" name="home_card1_desc"></div>
           <div><label for="home_card1_price">Card1 ფასი</label><input id="home_card1_price" name="home_card1_price"></div>
           <div><label for="home_card1_btn">Card1 ღილაკი</label><input id="home_card1_btn" name="home_card1_btn"></div>
-
+          <div class="full section-title">ბარათი 2</div>
           <div><label for="home_card2_category">Card2 კატეგორია</label><input id="home_card2_category" name="home_card2_category"></div>
           <div><label for="home_card2_title">Card2 სათაური</label><input id="home_card2_title" name="home_card2_title"></div>
           <div><label for="home_card2_desc">Card2 აღწერა</label><input id="home_card2_desc" name="home_card2_desc"></div>
           <div><label for="home_card2_price">Card2 ფასი</label><input id="home_card2_price" name="home_card2_price"></div>
           <div><label for="home_card2_btn">Card2 ღილაკი</label><input id="home_card2_btn" name="home_card2_btn"></div>
-
+          <div class="full section-title">ბარათი 3</div>
           <div><label for="home_card3_category">Card3 კატეგორია</label><input id="home_card3_category" name="home_card3_category"></div>
           <div><label for="home_card3_title">Card3 სათაური</label><input id="home_card3_title" name="home_card3_title"></div>
           <div><label for="home_card3_desc">Card3 აღწერა</label><input id="home_card3_desc" name="home_card3_desc"></div>
           <div><label for="home_card3_price">Card3 ფასი</label><input id="home_card3_price" name="home_card3_price"></div>
           <div><label for="home_card3_btn">Card3 ღილაკი</label><input id="home_card3_btn" name="home_card3_btn"></div>
-
+          <div class="full section-title">ფილოსოფია + სტატისტიკა</div>
           <div><label for="home_story_kicker">Story kicker</label><input id="home_story_kicker" name="home_story_kicker"></div>
           <div><label for="home_story_title">Story სათაური</label><input id="home_story_title" name="home_story_title"></div>
           <div><label for="home_story_text">Story ტექსტი</label><textarea id="home_story_text" name="home_story_text"></textarea></div>
@@ -133,26 +144,28 @@
 
       <section id="tab-about" class="tab-panel hidden">
         <h2>About გვერდის სრული რედაქტირება</h2>
+        <p class="hint">„ჩვენი ისტორია“, „ქვევრის ტრადიცია“ და სხვა About ტექსტები იცვლება აქ.</p>
         <form id="about-form" class="grid">
+          <div class="full section-title">ზედა ნაწილი</div>
           <div><label for="about_kicker">About kicker</label><input id="about_kicker" name="about_kicker"></div>
           <div><label for="about_title_edit">About სათაური</label><input id="about_title_edit" name="about_title_edit"></div>
           <div><label for="about_subtitle">About ქვესათაური</label><textarea id="about_subtitle" name="about_subtitle"></textarea></div>
-
+          <div class="full section-title">სექცია 1</div>
           <div><label for="about_section1_title">სექცია 1 სათაური</label><input id="about_section1_title" name="about_section1_title"></div>
           <div><label for="about_section1_text1">სექცია 1 ტექსტი 1</label><textarea id="about_section1_text1" name="about_section1_text1"></textarea></div>
           <div><label for="about_section1_text2">სექცია 1 ტექსტი 2</label><textarea id="about_section1_text2" name="about_section1_text2"></textarea></div>
           <div><label for="about_photo1_label">ფოტო 1 წარწერა</label><input id="about_photo1_label" name="about_photo1_label"></div>
-
+          <div class="full section-title">სექცია 2</div>
           <div><label for="about_section2_title">სექცია 2 სათაური</label><input id="about_section2_title" name="about_section2_title"></div>
           <div><label for="about_section2_text1">სექცია 2 ტექსტი 1</label><textarea id="about_section2_text1" name="about_section2_text1"></textarea></div>
           <div><label for="about_section2_text2">სექცია 2 ტექსტი 2</label><textarea id="about_section2_text2" name="about_section2_text2"></textarea></div>
           <div><label for="about_photo2_label">ფოტო 2 წარწერა</label><input id="about_photo2_label" name="about_photo2_label"></div>
-
+          <div class="full section-title">სექცია 3</div>
           <div><label for="about_section3_title">სექცია 3 სათაური</label><input id="about_section3_title" name="about_section3_title"></div>
           <div><label for="about_section3_text1">სექცია 3 ტექსტი 1</label><textarea id="about_section3_text1" name="about_section3_text1"></textarea></div>
           <div><label for="about_section3_text2">სექცია 3 ტექსტი 2</label><textarea id="about_section3_text2" name="about_section3_text2"></textarea></div>
           <div><label for="about_photo3_label">ფოტო 3 წარწერა</label><input id="about_photo3_label" name="about_photo3_label"></div>
-
+          <div class="full section-title">ღირებულებები</div>
           <div><label for="about_values_title">ღირებულებების სათაური</label><input id="about_values_title" name="about_values_title"></div>
           <div><label for="about_value1_title">ღირებულება 1 სათაური</label><input id="about_value1_title" name="about_value1_title"></div>
           <div><label for="about_value1_text">ღირებულება 1 ტექსტი</label><input id="about_value1_text" name="about_value1_text"></div>
@@ -168,6 +181,7 @@
 
       <section id="tab-sections" class="tab-panel hidden">
         <h2>სექციების ჩართვა/გამორთვა</h2>
+        <p class="hint">მოხსენი მონიშვნა, თუ კონკრეტული გვერდი დროებით უნდა დაიმალოს საიტიდან.</p>
         <form id="sections-form" class="grid">
           <label class="check"><input type="checkbox" name="home"> მთავარი</label>
           <label class="check"><input type="checkbox" name="shop"> მაღაზია</label>
@@ -182,6 +196,7 @@
 
       <section id="tab-products" class="tab-panel hidden">
         <h2>პროდუქტის დამატება/რედაქტირება</h2>
+        <p class="hint">ახალი პროდუქტი: შეავსე ველები და დააჭირე „შენახვა“. რედაქტირება: მარჯვნივ აირჩიე პროდუქტი.</p>
         <form id="products-form" class="grid" data-kind="products">
           <input type="hidden" name="id">
           <div><label>სახელი</label><input name="name" required></div>
@@ -219,6 +234,7 @@
 
       <section id="tab-raw" class="tab-panel hidden">
         <h2>RAW JSON</h2>
+        <p class="hint">ტექნიკური რეჟიმი. გამოიყენე მხოლოდ მაშინ, როცა ზუსტად იცი JSON სტრუქტურა.</p>
         <textarea id="raw-json" class="raw" spellcheck="false"></textarea>
         <div class="actions">
           <button id="apply-raw" class="primary" type="button">Apply JSON</button>
@@ -228,8 +244,9 @@
       </section>
     </section>
 
-    <section class="card">
+    <section id="products-list-panel" class="card">
       <h2>პროდუქტების სია</h2>
+      <p class="small">ეს ბლოკი გამოიყენე „5) პროდუქტები“ ტაბთან ერთად.</p>
       <div id="items-list" class="list"></div>
     </section>
   </main>

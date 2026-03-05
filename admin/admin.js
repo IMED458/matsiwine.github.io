@@ -174,6 +174,7 @@ const logoPreview = document.getElementById('logo-preview');
 const bottlePreview = document.getElementById('bottle-preview');
 const rawJson = document.getElementById('raw-json');
 const rawMsg = document.getElementById('raw-msg');
+const productsListPanel = document.getElementById('products-list-panel');
 
 boot();
 
@@ -429,8 +430,12 @@ function bindTabs() {
       Object.keys(panels).forEach((panelKey) => {
         panels[panelKey].classList.toggle('hidden', panelKey !== key);
       });
+      if (productsListPanel) {
+        productsListPanel.classList.toggle('hidden', key !== 'products');
+      }
     });
   });
+  if (productsListPanel) productsListPanel.classList.add('hidden');
 }
 
 function bindForms() {
