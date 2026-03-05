@@ -4,6 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MATSI WINE — ქართული ღვინის ხელოვნება</title>
+  <link rel="icon" type="image/png" href="matsiwine.png?v=20260305b">
+  <link rel="shortcut icon" type="image/png" href="matsiwine.png?v=20260305b">
+  <link rel="apple-touch-icon" href="matsiwine.png?v=20260305">
   <script src="https://cdn.tailwindcss.com/3.4.17"></script>
   <script src="/_sdk/element_sdk.js" defer></script>
   <script src="/_sdk/data_sdk.js" defer></script>
@@ -126,6 +129,8 @@
         <div class="product-card bg-white rounded-2xl overflow-hidden shadow-lg cursor-pointer" onclick="viewProduct('saperavi-reserve')">
          <div class="aspect-[3/4] bg-gradient-to-br from-wine-100 to-cream-200 p-8 flex items-center justify-center relative overflow-hidden">
           <div class="glass-shimmer absolute inset-0"></div><!-- Wine Bottle SVG -->
+          <img id="home-card1-image" class="hidden absolute inset-0 w-full h-full object-cover" alt="Card 1">
+          <div id="home-card1-svg">
           <svg viewbox="0 0 80 200" class="w-20 h-48 drop-shadow-2xl"><defs>
             <lineargradient id="bottle1" x1="0%" y1="0%" x2="100%" y2="0%">
              <stop offset="0%" style="stop-color:#3d1219" />
@@ -140,6 +145,7 @@
             MATSI
            </text> <!-- Cork --> <rect x="33" y="8" width="14" height="14" fill="#d4bc9a" rx="2" /> <!-- Foil --> <path d="M32 20 L32 28 Q32 32 40 32 Q48 32 48 28 L48 20" fill="#8b7355" />
           </svg>
+          </div>
          </div>
          <div class="p-6">
           <p id="home-card1-category" class="text-wine-500 text-sm font-medium mb-1">წითელი მშრალი</p>
@@ -152,6 +158,8 @@
         <div class="product-card bg-white rounded-2xl overflow-hidden shadow-lg cursor-pointer" onclick="viewProduct('mtsvane-qvevri')">
          <div class="aspect-[3/4] bg-gradient-to-br from-oak-100 to-cream-300 p-8 flex items-center justify-center relative overflow-hidden">
           <div class="glass-shimmer absolute inset-0"></div>
+          <img id="home-card2-image" class="hidden absolute inset-0 w-full h-full object-cover" alt="Card 2">
+          <div id="home-card2-svg">
           <svg viewbox="0 0 80 200" class="w-20 h-48 drop-shadow-2xl"><defs>
             <lineargradient id="bottle2" x1="0%" y1="0%" x2="100%" y2="0%">
              <stop offset="0%" style="stop-color:#4a5d23" />
@@ -166,6 +174,7 @@
             MATSI
            </text> <rect x="33" y="8" width="14" height="14" fill="#d4bc9a" rx="2" /> <path d="M32 20 L32 28 Q32 32 40 32 Q48 32 48 28 L48 20" fill="#8b7355" />
           </svg>
+          </div>
          </div>
          <div class="p-6">
           <p id="home-card2-category" class="text-wine-500 text-sm font-medium mb-1">ქვევრის ღვინო</p>
@@ -178,6 +187,8 @@
         <div class="product-card bg-white rounded-2xl overflow-hidden shadow-lg cursor-pointer" onclick="viewProduct('kindzmarauli')">
          <div class="aspect-[3/4] bg-gradient-to-br from-wine-200 to-cream-200 p-8 flex items-center justify-center relative overflow-hidden">
           <div class="glass-shimmer absolute inset-0"></div>
+          <img id="home-card3-image" class="hidden absolute inset-0 w-full h-full object-cover" alt="Card 3">
+          <div id="home-card3-svg">
           <svg viewbox="0 0 80 200" class="w-20 h-48 drop-shadow-2xl"><defs>
             <lineargradient id="bottle3" x1="0%" y1="0%" x2="100%" y2="0%">
              <stop offset="0%" style="stop-color:#2a0a10" />
@@ -192,6 +203,7 @@
             MATSI
            </text> <rect x="33" y="8" width="14" height="14" fill="#d4bc9a" rx="2" /> <path d="M32 20 L32 28 Q32 32 40 32 Q48 32 48 28 L48 20" fill="#8b7355" />
           </svg>
+          </div>
          </div>
          <div class="p-6">
           <p id="home-card3-category" class="text-wine-500 text-sm font-medium mb-1">ნახევრად ტკბილი</p>
@@ -227,27 +239,31 @@
         </div>
         <div class="grid grid-cols-2 gap-4">
          <div class="bg-wine-800/50 rounded-2xl p-6 text-center">
-          <div id="home-stat1-value" class="font-display text-4xl font-bold text-cream-50 mb-2">
+         <div id="home-stat1-value" class="font-display text-4xl font-bold text-cream-50 mb-2">
            8000+
           </div>
+          <img id="home-stat1-image" class="hidden w-full h-20 object-cover rounded-xl mb-2" alt="Stat 1">
           <p id="home-stat1-label" class="text-cream-300/70 text-sm">წლიანი ტრადიცია</p>
          </div>
          <div class="bg-wine-800/50 rounded-2xl p-6 text-center">
           <div id="home-stat2-value" class="font-display text-4xl font-bold text-cream-50 mb-2">
            525
           </div>
+          <img id="home-stat2-image" class="hidden w-full h-20 object-cover rounded-xl mb-2" alt="Stat 2">
           <p id="home-stat2-label" class="text-cream-300/70 text-sm">ქართული ჯიში</p>
          </div>
          <div class="bg-wine-800/50 rounded-2xl p-6 text-center">
           <div id="home-stat3-value" class="font-display text-4xl font-bold text-cream-50 mb-2">
            100%
           </div>
+          <img id="home-stat3-image" class="hidden w-full h-20 object-cover rounded-xl mb-2" alt="Stat 3">
           <p id="home-stat3-label" class="text-cream-300/70 text-sm">ორგანული</p>
          </div>
          <div class="bg-wine-800/50 rounded-2xl p-6 text-center">
           <div id="home-stat4-value" class="font-display text-4xl font-bold text-cream-50 mb-2">
            🏆
           </div>
+          <img id="home-stat4-image" class="hidden w-full h-20 object-cover rounded-xl mb-2" alt="Stat 4">
           <p id="home-stat4-label" class="text-cream-300/70 text-sm">საერთაშორისო ჯილდოები</p>
          </div>
         </div>
@@ -369,7 +385,11 @@
        <div class="grid md:grid-cols-2 gap-12"><!-- Contact Form -->
         <div class="bg-white rounded-2xl p-8 shadow-lg">
          <h2 class="font-display text-2xl font-bold text-wine-900 mb-6">მოგვწერეთ</h2>
-         <form id="contact-form" onsubmit="handleContactSubmit(event)" class="space-y-6">
+         <form id="contact-form" action="https://formsubmit.co/ajax/matsiwine@gmail.com" method="POST" onsubmit="handleContactSubmit(event)" class="space-y-6">
+          <input type="hidden" name="_subject" value="Matsi Wine — ახალი საკონტაქტო შეტყობინება">
+          <input type="hidden" name="_template" value="table">
+          <input type="hidden" name="_captcha" value="false">
+          <input type="hidden" name="_replyto" value="">
           <div><label for="name" class="block text-wine-700 font-medium mb-2">სახელი</label> <input type="text" id="name" name="name" required class="w-full px-4 py-3 rounded-xl border border-wine-200 focus:border-wine-500 focus:ring-2 focus:ring-wine-200 outline-none transition-all" placeholder="თქვენი სახელი">
           </div>
           <div><label for="email" class="block text-wine-700 font-medium mb-2">ელ.ფოსტა</label> <input type="email" id="email" name="email" required class="w-full px-4 py-3 rounded-xl border border-wine-200 focus:border-wine-500 focus:ring-2 focus:ring-wine-200 outline-none transition-all" placeholder="your@email.com">

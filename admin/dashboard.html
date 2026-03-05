@@ -4,6 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MATSI Admin Dashboard</title>
+  <link rel="icon" type="image/png" href="../matsiwine.png?v=20260305b">
+  <link rel="shortcut icon" type="image/png" href="../matsiwine.png?v=20260305b">
+  <link rel="apple-touch-icon" href="../matsiwine.png?v=20260305">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Georgian:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -50,15 +53,15 @@
   <main id="admin-main" class="container grid cols-2 hidden">
     <section class="card">
       <div class="tabs">
-        <button class="tab active" data-tab="settings" type="button">1) ბრენდი და კონტაქტი</button>
-        <button class="tab" data-tab="home" type="button">2) მთავარი გვერდი</button>
-        <button class="tab" data-tab="about" type="button">3) ჩვენს შესახებ</button>
-        <button class="tab" data-tab="sections" type="button">4) გვერდების ჩართვა</button>
-        <button class="tab" data-tab="products" type="button">5) პროდუქტები</button>
-        <button class="tab" data-tab="raw" type="button">6) ტექნიკური JSON</button>
+        <button class="tab active" data-tab="settings" type="button">1. ბრენდი</button>
+        <button class="tab" data-tab="home" type="button">2. მთავარი</button>
+        <button class="tab" data-tab="about" type="button">3. About</button>
+        <button class="tab" data-tab="sections" type="button">4. გვერდები</button>
+        <button class="tab" data-tab="products" type="button">5. პროდუქტები</button>
+        <button class="tab" data-tab="raw" type="button">6. ტექნიკური</button>
       </div>
       <div class="notice">
-        <strong>როგორ გამოიყენო:</strong> აირჩიე ტაბი → შეცვალე მხოლოდ საჭირო ველები → დააჭირე „შენახვა“.
+        <strong>მარტივი გამოყენება:</strong> ჯერ აირჩიე ტაბი, შეცვალე მხოლოდ საჭირო ველები, დააჭირე „შენახვა“.
       </div>
 
       <section id="tab-settings" class="tab-panel">
@@ -95,7 +98,7 @@
 
       <section id="tab-home" class="tab-panel hidden">
         <h2>მთავარი გვერდის სრული კონტენტი</h2>
-        <p class="hint">მთავარ გვერდზე ყველა ტექსტს ცვლი აქედან.</p>
+        <p class="hint">აქ შეგიძლია შეცვალო ტექსტები და ატვირთო Card 1/2/3/4 ფოტოები.</p>
         <form id="home-form" class="grid">
           <div class="full section-title">Hero ბლოკი</div>
           <div><label for="home_hero_kicker">Hero kicker</label><input id="home_hero_kicker" name="home_hero_kicker"></div>
@@ -110,18 +113,27 @@
           <div><label for="home_card1_desc">Card1 აღწერა</label><input id="home_card1_desc" name="home_card1_desc"></div>
           <div><label for="home_card1_price">Card1 ფასი</label><input id="home_card1_price" name="home_card1_price"></div>
           <div><label for="home_card1_btn">Card1 ღილაკი</label><input id="home_card1_btn" name="home_card1_btn"></div>
+          <div><label for="home_card1_image_file">Card1 ფოტო ატვირთვა</label><input id="home_card1_image_file" name="home_card1_image_file" type="file" accept="image/*"></div>
+          <div><label for="home_card1_image_url">Card1 ფოტო URL (ალტერნატივა)</label><input id="home_card1_image_url" name="home_card1_image_url" type="url" placeholder="https://..."></div>
+          <img id="home-card1-image-preview" class="image-preview hidden" alt="Card1 preview">
           <div class="full section-title">ბარათი 2</div>
           <div><label for="home_card2_category">Card2 კატეგორია</label><input id="home_card2_category" name="home_card2_category"></div>
           <div><label for="home_card2_title">Card2 სათაური</label><input id="home_card2_title" name="home_card2_title"></div>
           <div><label for="home_card2_desc">Card2 აღწერა</label><input id="home_card2_desc" name="home_card2_desc"></div>
           <div><label for="home_card2_price">Card2 ფასი</label><input id="home_card2_price" name="home_card2_price"></div>
           <div><label for="home_card2_btn">Card2 ღილაკი</label><input id="home_card2_btn" name="home_card2_btn"></div>
+          <div><label for="home_card2_image_file">Card2 ფოტო ატვირთვა</label><input id="home_card2_image_file" name="home_card2_image_file" type="file" accept="image/*"></div>
+          <div><label for="home_card2_image_url">Card2 ფოტო URL (ალტერნატივა)</label><input id="home_card2_image_url" name="home_card2_image_url" type="url" placeholder="https://..."></div>
+          <img id="home-card2-image-preview" class="image-preview hidden" alt="Card2 preview">
           <div class="full section-title">ბარათი 3</div>
           <div><label for="home_card3_category">Card3 კატეგორია</label><input id="home_card3_category" name="home_card3_category"></div>
           <div><label for="home_card3_title">Card3 სათაური</label><input id="home_card3_title" name="home_card3_title"></div>
           <div><label for="home_card3_desc">Card3 აღწერა</label><input id="home_card3_desc" name="home_card3_desc"></div>
           <div><label for="home_card3_price">Card3 ფასი</label><input id="home_card3_price" name="home_card3_price"></div>
           <div><label for="home_card3_btn">Card3 ღილაკი</label><input id="home_card3_btn" name="home_card3_btn"></div>
+          <div><label for="home_card3_image_file">Card3 ფოტო ატვირთვა</label><input id="home_card3_image_file" name="home_card3_image_file" type="file" accept="image/*"></div>
+          <div><label for="home_card3_image_url">Card3 ფოტო URL (ალტერნატივა)</label><input id="home_card3_image_url" name="home_card3_image_url" type="url" placeholder="https://..."></div>
+          <img id="home-card3-image-preview" class="image-preview hidden" alt="Card3 preview">
           <div class="full section-title">ფილოსოფია + სტატისტიკა</div>
           <div><label for="home_story_kicker">Story kicker</label><input id="home_story_kicker" name="home_story_kicker"></div>
           <div><label for="home_story_title">Story სათაური</label><input id="home_story_title" name="home_story_title"></div>
@@ -136,6 +148,19 @@
           <div><label for="home_stat3_label">Stat3 label</label><input id="home_stat3_label" name="home_stat3_label"></div>
           <div><label for="home_stat4_value">Stat4 value</label><input id="home_stat4_value" name="home_stat4_value"></div>
           <div><label for="home_stat4_label">Stat4 label</label><input id="home_stat4_label" name="home_stat4_label"></div>
+          <div class="full section-title">Card 1/2/3/4 ფოტოები (სტატისტიკის ბარათები)</div>
+          <div><label for="home_stat1_image_file">Card1 ფოტო ატვირთვა</label><input id="home_stat1_image_file" name="home_stat1_image_file" type="file" accept="image/*"></div>
+          <div><label for="home_stat1_image_url">Card1 ფოტო URL</label><input id="home_stat1_image_url" name="home_stat1_image_url" type="url" placeholder="https://..."></div>
+          <img id="home-stat1-image-preview" class="image-preview hidden" alt="Card1 stat preview">
+          <div><label for="home_stat2_image_file">Card2 ფოტო ატვირთვა</label><input id="home_stat2_image_file" name="home_stat2_image_file" type="file" accept="image/*"></div>
+          <div><label for="home_stat2_image_url">Card2 ფოტო URL</label><input id="home_stat2_image_url" name="home_stat2_image_url" type="url" placeholder="https://..."></div>
+          <img id="home-stat2-image-preview" class="image-preview hidden" alt="Card2 stat preview">
+          <div><label for="home_stat3_image_file">Card3 ფოტო ატვირთვა</label><input id="home_stat3_image_file" name="home_stat3_image_file" type="file" accept="image/*"></div>
+          <div><label for="home_stat3_image_url">Card3 ფოტო URL</label><input id="home_stat3_image_url" name="home_stat3_image_url" type="url" placeholder="https://..."></div>
+          <img id="home-stat3-image-preview" class="image-preview hidden" alt="Card3 stat preview">
+          <div><label for="home_stat4_image_file">Card4 ფოტო ატვირთვა</label><input id="home_stat4_image_file" name="home_stat4_image_file" type="file" accept="image/*"></div>
+          <div><label for="home_stat4_image_url">Card4 ფოტო URL</label><input id="home_stat4_image_url" name="home_stat4_image_url" type="url" placeholder="https://..."></div>
+          <img id="home-stat4-image-preview" class="image-preview hidden" alt="Card4 stat preview">
 
           <button class="primary" type="submit">შენახვა</button>
           <p id="home-msg" class="small"></p>

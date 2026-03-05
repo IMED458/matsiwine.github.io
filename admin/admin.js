@@ -56,28 +56,42 @@ const defaultState = {
     card1_desc: 'მუხის კასრში დაძველებული, ხავერდოვანი ტანინები',
     card1_price: '₾85',
     card1_btn: 'დამატება',
+    card1_image: '',
+    card1_image_path: '',
     card2_category: 'ქვევრის ღვინო',
     card2_title: 'მწვანე ქვევრი 2021',
     card2_desc: 'ქვევრში დაყენებული, ქარვისფერი, მდიდარი არომატით',
     card2_price: '₾65',
     card2_btn: 'დამატება',
+    card2_image: '',
+    card2_image_path: '',
     card3_category: 'ნახევრად ტკბილი',
     card3_title: 'კინძმარაული 2020',
     card3_desc: 'კლასიკური კახური, მაყვლისა და ალუბლის ნოტებით',
     card3_price: '₾55',
     card3_btn: 'დამატება',
+    card3_image: '',
+    card3_image_path: '',
     story_kicker: 'ჩვენი ფილოსოფია',
     story_title: 'მიწიდან სუფრამდე',
     story_text: 'MATSI WINE — ეს არის ოჯახური მეღვინეობის თანამედროვე გაგრძელება. ჩვენ ვაერთიანებთ ქვევრის უძველეს ტრადიციას ევროპული მეღვინეობის თანამედროვე მიდგომებთან, რათა შევქმნათ ღვინო, რომელიც მოგვითხრობს ქართული მიწის ისტორიას.',
     story_btn: 'მეტის გაგება',
     stat1_value: '8000+',
     stat1_label: 'წლიანი ტრადიცია',
+    stat1_image: '',
+    stat1_image_path: '',
     stat2_value: '525',
     stat2_label: 'ქართული ჯიში',
+    stat2_image: '',
+    stat2_image_path: '',
     stat3_value: '100%',
     stat3_label: 'ორგანული',
+    stat3_image: '',
+    stat3_image_path: '',
     stat4_value: '🏆',
-    stat4_label: 'საერთაშორისო ჯილდოები'
+    stat4_label: 'საერთაშორისო ჯილდოები',
+    stat4_image: '',
+    stat4_image_path: ''
   },
   aboutContent: {
     about_kicker: 'ჩვენს შესახებ',
@@ -138,6 +152,15 @@ let editingProductId = null;
 let pendingProductFile = null;
 let pendingLogoFile = null;
 let pendingBottleFile = null;
+const pendingHomeCardFiles = {
+  card1: null,
+  card2: null,
+  card3: null,
+  stat1: null,
+  stat2: null,
+  stat3: null,
+  stat4: null
+};
 let initialized = false;
 
 const tabs = Array.from(document.querySelectorAll('.tab'));
@@ -175,6 +198,20 @@ const bottlePreview = document.getElementById('bottle-preview');
 const rawJson = document.getElementById('raw-json');
 const rawMsg = document.getElementById('raw-msg');
 const productsListPanel = document.getElementById('products-list-panel');
+const homeCard1ImageFile = document.getElementById('home_card1_image_file');
+const homeCard2ImageFile = document.getElementById('home_card2_image_file');
+const homeCard3ImageFile = document.getElementById('home_card3_image_file');
+const homeStat1ImageFile = document.getElementById('home_stat1_image_file');
+const homeStat2ImageFile = document.getElementById('home_stat2_image_file');
+const homeStat3ImageFile = document.getElementById('home_stat3_image_file');
+const homeStat4ImageFile = document.getElementById('home_stat4_image_file');
+const homeCard1ImagePreview = document.getElementById('home-card1-image-preview');
+const homeCard2ImagePreview = document.getElementById('home-card2-image-preview');
+const homeCard3ImagePreview = document.getElementById('home-card3-image-preview');
+const homeStat1ImagePreview = document.getElementById('home-stat1-image-preview');
+const homeStat2ImagePreview = document.getElementById('home-stat2-image-preview');
+const homeStat3ImagePreview = document.getElementById('home-stat3-image-preview');
+const homeStat4ImagePreview = document.getElementById('home-stat4-image-preview');
 
 boot();
 
@@ -514,6 +551,7 @@ function bindForms() {
     e.preventDefault();
     const fd = new FormData(homeForm);
     for (const key of Object.keys(defaultState.homeContent)) {
+      if (key.endsWith('_image') || key.endsWith('_image_path')) continue;
       const field = `home_${key}`;
       const value = fd.get(field);
       if (value !== null) {
@@ -522,7 +560,36 @@ function bindForms() {
     }
 
     try {
+      const imageConfigs = [
+        { id: 'card1', imageKey: 'card1_image', pathKey: 'card1_image_path', urlField: 'home_card1_image_url', folder: 'home/cards' },
+        { id: 'card2', imageKey: 'card2_image', pathKey: 'card2_image_path', urlField: 'home_card2_image_url', folder: 'home/cards' },
+        { id: 'card3', imageKey: 'card3_image', pathKey: 'card3_image_path', urlField: 'home_card3_image_url', folder: 'home/cards' },
+        { id: 'stat1', imageKey: 'stat1_image', pathKey: 'stat1_image_path', urlField: 'home_stat1_image_url', folder: 'home/stats' },
+        { id: 'stat2', imageKey: 'stat2_image', pathKey: 'stat2_image_path', urlField: 'home_stat2_image_url', folder: 'home/stats' },
+        { id: 'stat3', imageKey: 'stat3_image', pathKey: 'stat3_image_path', urlField: 'home_stat3_image_url', folder: 'home/stats' },
+        { id: 'stat4', imageKey: 'stat4_image', pathKey: 'stat4_image_path', urlField: 'home_stat4_image_url', folder: 'home/stats' }
+      ];
+
+      for (const cfg of imageConfigs) {
+        const manualUrl = (fd.get(cfg.urlField) || '').toString().trim();
+        if (manualUrl) {
+          if (state.homeContent[cfg.pathKey]) await safeDeleteFile(state.homeContent[cfg.pathKey]);
+          state.homeContent[cfg.imageKey] = manualUrl;
+          state.homeContent[cfg.pathKey] = '';
+        }
+
+        const pendingFile = pendingHomeCardFiles[cfg.id];
+        if (pendingFile) {
+          if (state.homeContent[cfg.pathKey]) await safeDeleteFile(state.homeContent[cfg.pathKey]);
+          const uploaded = await uploadFile(pendingFile, cfg.folder);
+          state.homeContent[cfg.imageKey] = uploaded.url;
+          state.homeContent[cfg.pathKey] = uploaded.path;
+          pendingHomeCardFiles[cfg.id] = null;
+        }
+      }
+
       await saveState('მთავარი გვერდის კონტენტი შენახულია');
+      fillHomeForm();
     } catch (error) {
       homeMsg.textContent = error.message;
     }
@@ -622,6 +689,25 @@ function bindForms() {
     setPreview(bottlePreview, URL.createObjectURL(file));
   });
 
+  const imageInputMaps = [
+    { input: homeCard1ImageFile, key: 'card1', preview: homeCard1ImagePreview },
+    { input: homeCard2ImageFile, key: 'card2', preview: homeCard2ImagePreview },
+    { input: homeCard3ImageFile, key: 'card3', preview: homeCard3ImagePreview },
+    { input: homeStat1ImageFile, key: 'stat1', preview: homeStat1ImagePreview },
+    { input: homeStat2ImageFile, key: 'stat2', preview: homeStat2ImagePreview },
+    { input: homeStat3ImageFile, key: 'stat3', preview: homeStat3ImagePreview },
+    { input: homeStat4ImageFile, key: 'stat4', preview: homeStat4ImagePreview }
+  ];
+
+  imageInputMaps.forEach(({ input, key, preview }) => {
+    input?.addEventListener('change', (event) => {
+      const file = event.target.files?.[0];
+      if (!file) return;
+      pendingHomeCardFiles[key] = file;
+      if (preview) setPreview(preview, URL.createObjectURL(file));
+    });
+  });
+
   document.getElementById('apply-raw').addEventListener('click', async () => {
     try {
       const parsed = JSON.parse(rawJson.value);
@@ -681,9 +767,33 @@ function fillSettingsForm() {
 function fillHomeForm() {
   const hc = state.homeContent || {};
   for (const key of Object.keys(defaultState.homeContent)) {
+    if (key.endsWith('_image') || key.endsWith('_image_path')) continue;
     const input = homeForm.elements.namedItem(`home_${key}`);
     if (input) input.value = hc[key] ?? defaultState.homeContent[key];
   }
+
+  const urlMappings = [
+    { field: 'home_card1_image_url', key: 'card1_image', preview: homeCard1ImagePreview },
+    { field: 'home_card2_image_url', key: 'card2_image', preview: homeCard2ImagePreview },
+    { field: 'home_card3_image_url', key: 'card3_image', preview: homeCard3ImagePreview },
+    { field: 'home_stat1_image_url', key: 'stat1_image', preview: homeStat1ImagePreview },
+    { field: 'home_stat2_image_url', key: 'stat2_image', preview: homeStat2ImagePreview },
+    { field: 'home_stat3_image_url', key: 'stat3_image', preview: homeStat3ImagePreview },
+    { field: 'home_stat4_image_url', key: 'stat4_image', preview: homeStat4ImagePreview }
+  ];
+
+  urlMappings.forEach(({ field, key, preview }) => {
+    const input = homeForm.elements.namedItem(field);
+    const imageUrl = hc[key] || '';
+    if (input) input.value = imageUrl;
+    if (preview) {
+      if (imageUrl) {
+        setPreview(preview, imageUrl);
+      } else {
+        preview.classList.add('hidden');
+      }
+    }
+  });
 }
 
 function fillAboutForm() {

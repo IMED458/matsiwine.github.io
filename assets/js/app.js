@@ -37,28 +37,35 @@
       card1_desc: 'მუხის კასრში დაძველებული, ხავერდოვანი ტანინები',
       card1_price: '₾85',
       card1_btn: 'დამატება',
+      card1_image: '',
       card2_category: 'ქვევრის ღვინო',
       card2_title: 'მწვანე ქვევრი 2021',
       card2_desc: 'ქვევრში დაყენებული, ქარვისფერი, მდიდარი არომატით',
       card2_price: '₾65',
       card2_btn: 'დამატება',
+      card2_image: '',
       card3_category: 'ნახევრად ტკბილი',
       card3_title: 'კინძმარაული 2020',
       card3_desc: 'კლასიკური კახური, მაყვლისა და ალუბლის ნოტებით',
       card3_price: '₾55',
       card3_btn: 'დამატება',
+      card3_image: '',
       story_kicker: 'ჩვენი ფილოსოფია',
       story_title: 'მიწიდან სუფრამდე',
       story_text: 'MATSI WINE — ეს არის ოჯახური მეღვინეობის თანამედროვე გაგრძელება. ჩვენ ვაერთიანებთ ქვევრის უძველეს ტრადიციას ევროპული მეღვინეობის თანამედროვე მიდგომებთან, რათა შევქმნათ ღვინო, რომელიც მოგვითხრობს ქართული მიწის ისტორიას.',
       story_btn: 'მეტის გაგება',
       stat1_value: '8000+',
       stat1_label: 'წლიანი ტრადიცია',
+      stat1_image: '',
       stat2_value: '525',
       stat2_label: 'ქართული ჯიში',
+      stat2_image: '',
       stat3_value: '100%',
       stat3_label: 'ორგანული',
+      stat3_image: '',
       stat4_value: '🏆',
-      stat4_label: 'საერთაშორისო ჯილდოები'
+      stat4_label: 'საერთაშორისო ჯილდოები',
+      stat4_image: ''
     };
     const defaultAboutContent = {
       about_kicker: 'ჩვენს შესახებ',
@@ -347,6 +354,35 @@
       element.textContent = String(value);
     }
 
+    function setFeaturedCardImage(cardNumber, imageUrl) {
+      const imageElement = document.getElementById(`home-card${cardNumber}-image`);
+      const svgElement = document.getElementById(`home-card${cardNumber}-svg`);
+      if (!imageElement || !svgElement) return;
+
+      if (imageUrl && String(imageUrl).trim()) {
+        imageElement.src = String(imageUrl).trim();
+        imageElement.classList.remove('hidden');
+        svgElement.classList.add('hidden');
+      } else {
+        imageElement.classList.add('hidden');
+        imageElement.removeAttribute('src');
+        svgElement.classList.remove('hidden');
+      }
+    }
+
+    function setStatCardImage(cardNumber, imageUrl) {
+      const imageElement = document.getElementById(`home-stat${cardNumber}-image`);
+      if (!imageElement) return;
+
+      if (imageUrl && String(imageUrl).trim()) {
+        imageElement.src = String(imageUrl).trim();
+        imageElement.classList.remove('hidden');
+      } else {
+        imageElement.classList.add('hidden');
+        imageElement.removeAttribute('src');
+      }
+    }
+
     function applyHomeContent() {
       setTextById('home-hero-kicker', homeContent.hero_kicker);
       setTextById('home-hero-btn-primary', homeContent.hero_btn_primary);
@@ -360,18 +396,21 @@
       setTextById('home-card1-desc', homeContent.card1_desc);
       setTextById('home-card1-price', homeContent.card1_price);
       setTextById('home-card1-btn', homeContent.card1_btn);
+      setFeaturedCardImage(1, homeContent.card1_image);
 
       setTextById('home-card2-category', homeContent.card2_category);
       setTextById('home-card2-title', homeContent.card2_title);
       setTextById('home-card2-desc', homeContent.card2_desc);
       setTextById('home-card2-price', homeContent.card2_price);
       setTextById('home-card2-btn', homeContent.card2_btn);
+      setFeaturedCardImage(2, homeContent.card2_image);
 
       setTextById('home-card3-category', homeContent.card3_category);
       setTextById('home-card3-title', homeContent.card3_title);
       setTextById('home-card3-desc', homeContent.card3_desc);
       setTextById('home-card3-price', homeContent.card3_price);
       setTextById('home-card3-btn', homeContent.card3_btn);
+      setFeaturedCardImage(3, homeContent.card3_image);
 
       setTextById('home-story-kicker', homeContent.story_kicker);
       setTextById('home-story-title', homeContent.story_title);
@@ -380,12 +419,16 @@
 
       setTextById('home-stat1-value', homeContent.stat1_value);
       setTextById('home-stat1-label', homeContent.stat1_label);
+      setStatCardImage(1, homeContent.stat1_image);
       setTextById('home-stat2-value', homeContent.stat2_value);
       setTextById('home-stat2-label', homeContent.stat2_label);
+      setStatCardImage(2, homeContent.stat2_image);
       setTextById('home-stat3-value', homeContent.stat3_value);
       setTextById('home-stat3-label', homeContent.stat3_label);
+      setStatCardImage(3, homeContent.stat3_image);
       setTextById('home-stat4-value', homeContent.stat4_value);
       setTextById('home-stat4-label', homeContent.stat4_label);
+      setStatCardImage(4, homeContent.stat4_image);
     }
 
     function applyAboutContent() {
@@ -862,14 +905,48 @@
     // CONTACT FORM
     // =====================================================
     
-    function handleContactSubmit(event) {
+    async function handleContactSubmit(event) {
       event.preventDefault();
-      
+
       const form = event.target;
-      const name = form.querySelector('#name').value;
-      
-      showToast(`გმადლობთ, ${name}! შეტყობინება მიღებულია`, 'success');
-      form.reset();
+      const name = (form.querySelector('#name')?.value || '').trim();
+      const email = (form.querySelector('#email')?.value || '').trim();
+      const replyTo = form.querySelector('input[name="_replyto"]');
+      const submitButton = form.querySelector('button[type="submit"]');
+      const originalButtonText = submitButton ? submitButton.textContent : '';
+
+      if (replyTo) replyTo.value = email;
+
+      if (submitButton) {
+        submitButton.disabled = true;
+        submitButton.textContent = 'იგზავნება...';
+      }
+
+      try {
+        const response = await fetch(form.action, {
+          method: 'POST',
+          body: new FormData(form),
+          headers: {
+            Accept: 'application/json'
+          }
+        });
+
+        const result = await response.json().catch(() => ({}));
+        if (!response.ok || result.success === 'false' || result.success === false) {
+          throw new Error(result.message || 'FormSubmit გაგზავნა ვერ მოხერხდა');
+        }
+
+        showToast(`გმადლობთ, ${name || 'მეგობარო'}! შეტყობინება მიღებულია`, 'success');
+        form.reset();
+      } catch (error) {
+        console.error(error);
+        showToast('გაგზავნა ვერ მოხერხდა, სცადეთ თავიდან', 'error');
+      } finally {
+        if (submitButton) {
+          submitButton.disabled = false;
+          submitButton.textContent = originalButtonText;
+        }
+      }
     }
 
     // =====================================================
