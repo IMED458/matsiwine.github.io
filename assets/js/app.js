@@ -927,9 +927,12 @@
       `).join('');
       const bankRows = BANK_ACCOUNTS.map((item, idx) => `
         <div class="bg-cream-100 rounded-xl p-3 flex items-start justify-between gap-3">
-          <div>
+          <div class="flex items-start gap-2">
+            <span class="w-7 h-7 rounded-full bg-white border border-wine-200 flex items-center justify-center flex-shrink-0">${getBankIconMarkup(item.bank)}</span>
+            <div>
             <p class="text-xs text-wine-500">${item.bank}</p>
             <p id="checkout-iban-${idx}" class="font-mono text-sm text-wine-900 break-all">${item.iban}</p>
+            </div>
           </div>
           <button type="button" onclick="copyCheckoutIban('${item.iban}')" class="px-3 py-1.5 rounded-lg bg-wine-700 text-cream-50 text-xs hover:bg-wine-800">კოპირება</button>
         </div>
@@ -1051,6 +1054,12 @@
       }).catch(() => {
         showToast('კოპირება ვერ მოხერხდა', 'error');
       });
+    }
+
+    function getBankIconMarkup(bank) {
+      const iconPath = bank === 'ბოგ' ? 'bog.png' : 'tbc.png';
+      const fallbackText = bank === 'ბოგ' ? 'ბ' : 'თ';
+      return `<img src="${iconPath}" alt="${bank}" class="w-4 h-4 object-contain" onerror="this.outerHTML='<span class=&quot;text-[10px] font-bold text-wine-700&quot;>${fallbackText}</span>'">`;
     }
 
     async function clearCartAfterOrder() {
