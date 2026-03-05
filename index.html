@@ -61,7 +61,7 @@
       <svg viewbox="0 0 60 100" class="w-full h-full wine-loader"><path d="M15 10 Q15 0 30 0 Q45 0 45 10 L42 45 Q42 55 30 55 Q18 55 18 45 Z" fill="none" stroke="#f9d0d9" stroke-width="2" /> <path d="M30 55 L30 80" stroke="#f9d0d9" stroke-width="2" /> <path d="M20 80 L40 80 Q45 80 45 85 L15 85 Q15 80 20 80" fill="none" stroke="#f9d0d9" stroke-width="2" /> <!-- Wine fill --> <path id="wine-fill" d="M18 45 Q18 55 30 55 Q42 55 42 45 L40 25 Q30 25 20 25 Z" fill="#722f37" class="wine-pour" style="transform-origin: bottom;" />
       </svg>
      </div>
-     <img src="matsiwine.png" alt="Matsi Wine" class="h-10 mx-auto object-contain" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+     <img src="matsiwine.png" alt="Matsi Wine" class="h-10 mx-auto object-contain" onerror="if(!this.dataset.fallback){this.dataset.fallback='1';this.src='assets/images/matsiwine.png';return;} this.style.display='none'; this.nextElementSibling.style.display='block';">
      <p class="text-cream-200 font-display text-xl tracking-widest" style="display:none;">MATSI WINE</p>
      <p class="text-cream-300/60 text-sm mt-2">იტვირთება...</p>
     </div>
@@ -69,7 +69,7 @@
    <nav id="main-nav" class="fixed top-0 left-0 right-0 z-40 nav-blur bg-cream-50/80 border-b border-wine-200/30">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
      <div class="flex items-center justify-between h-16 md:h-20"><!-- Logo --> <a href="#" onclick="navigateTo('home')" class="flex items-center gap-3 group">
-       <img src="matsiwine.png" alt="Matsi Wine" class="h-10 md:h-12 w-auto object-contain" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
+       <img src="matsiwine.png" alt="Matsi Wine" class="h-10 md:h-12 w-auto object-contain" onerror="if(!this.dataset.fallback){this.dataset.fallback='1';this.src='assets/images/matsiwine.png';return;} this.style.display='none'; this.nextElementSibling.style.display='inline';">
        <span class="font-display text-xl md:text-2xl font-semibold text-wine-800 tracking-wide" style="display:none;">MATSI</span> </a> <!-- Desktop Nav -->
       <div class="hidden md:flex items-center gap-8"><a href="#" onclick="navigateTo('home')" class="nav-link text-wine-700 hover:text-wine-900 font-medium transition-colors relative group"> მთავარი <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-wine-700 transition-all group-hover:w-full"></span> </a> <a href="#" onclick="navigateTo('shop')" class="nav-link text-wine-700 hover:text-wine-900 font-medium transition-colors relative group"> მაღაზია <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-wine-700 transition-all group-hover:w-full"></span> </a> <a href="#" onclick="navigateTo('about')" class="nav-link text-wine-700 hover:text-wine-900 font-medium transition-colors relative group"> ჩვენს შესახებ <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-wine-700 transition-all group-hover:w-full"></span> </a> <a href="#" onclick="navigateTo('designer')" class="nav-link text-wine-700 hover:text-wine-900 font-medium transition-colors relative group"> შექმენი შენი დიზაინი <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-wine-700 transition-all group-hover:w-full"></span> </a> <a href="#" onclick="navigateTo('contact')" class="nav-link text-wine-700 hover:text-wine-900 font-medium transition-colors relative group"> კონტაქტი <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-wine-700 transition-all group-hover:w-full"></span> </a>
       </div><!-- Cart & Mobile Menu -->
@@ -102,7 +102,7 @@
         </div><!-- 3D Bottle Placeholder -->
         <div class="hidden md:flex justify-center items-center">
          <div class="relative hero-bottle-wrap">
-          <img src="bottle.png" alt="Matsi Wine Bottle" class="hero-bottle-image" loading="eager" decoding="async" onerror="this.style.display='none'; document.getElementById('hero-bottle-fallback').classList.remove('hidden');">
+          <img src="bottle.png" alt="Matsi Wine Bottle" class="hero-bottle-image" loading="eager" decoding="async" onerror="if(!this.dataset.fallback){this.dataset.fallback='1';this.src='assets/images/bottle.png';return;} this.style.display='none'; document.getElementById('hero-bottle-fallback').classList.remove('hidden');">
           <div id="hero-bottle-fallback" class="hidden absolute inset-0 rounded-3xl bg-gradient-to-t from-wine-700/20 to-transparent"></div>
          </div>
         </div>
@@ -548,7 +548,7 @@
      <div class="grid md:grid-cols-4 gap-8 mb-8">
       <div class="md:col-span-2">
        <div class="flex items-center gap-3 mb-4">
-        <img src="matsiwine.png" alt="Matsi Wine" class="h-10 md:h-12 w-auto object-contain" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
+        <img src="matsiwine.png" alt="Matsi Wine" class="h-10 md:h-12 w-auto object-contain" onerror="if(!this.dataset.fallback){this.dataset.fallback='1';this.src='assets/images/matsiwine.png';return;} this.style.display='none'; this.nextElementSibling.style.display='inline';">
         <span class="font-display text-2xl font-semibold" style="display:none;">MATSI WINE</span>
        </div>
        <p class="text-cream-200/70 max-w-md">ქართული ღვინის ხელოვნება — 8000 წლიანი ტრადიციის თანამედროვე ინტერპრეტაცია</p>
