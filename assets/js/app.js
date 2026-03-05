@@ -804,7 +804,7 @@
             <h2 class="font-display text-2xl font-semibold text-wine-900 mb-2">კალათა ცარიელია</h2>
             <p class="text-wine-600/70 mb-8">აღმოაჩინეთ ჩვენი კოლექცია და შეარჩიეთ საყვარელი ღვინო</p>
             <button onclick="navigateTo('shop')" class="btn-wine px-8 py-4 bg-wine-700 text-cream-50 font-semibold rounded-full hover:bg-wine-800">
-              მაღაზიაში გადასვლა
+              პროდუქტებში გადასვლა
             </button>
           </div>
         `;
