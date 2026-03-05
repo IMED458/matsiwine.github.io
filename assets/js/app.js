@@ -235,6 +235,7 @@
     let firebaseAuthReadyPromise = null;
     let firebasePollIntervalId = null;
     let lastCloudVersion = 0;
+    let localAdminVersion = 0;
     let checkoutFormVisible = false;
 
     function getCartItemKey(item) {
@@ -1993,7 +1994,24 @@ ${itemsText}`
     function normalizeAdminPayload(data) {
       const payload = { ...(data || {}) };
       delete payload.updatedAt;
+      payload.updatedAtClient = Number(payload.updatedAtClient || 0) || 0;
       return payload;
+    }
+
+    function getAdminPayloadVersion(data) {
+      return Number(data?.updatedAtClient || 0) || 0;
+    }
+
+    function buildAdminPayload() {
+      return {
+        config,
+        siteMeta,
+        homeContent,
+        aboutContent,
+        products,
+        contentEdits: collectAdminContentEdits(),
+        updatedAtClient: Date.now()
+      };
     }
 
     function applyAdminPayload(data, persistLocal = false) {
@@ -2042,10 +2060,13 @@ ${itemsText}`
           config,
           siteMeta,
           homeContent,
+          aboutContent,
           products,
-          contentEdits: payload.contentEdits || collectAdminContentEdits()
+          contentEdits: payload.contentEdits || collectAdminContentEdits(),
+          updatedAtClient: getAdminPayloadVersion(payload) || localAdminVersion || Date.now()
         };
         localStorage.setItem(ADMIN_STORAGE_KEY, JSON.stringify(localPayload));
+        localAdminVersion = getAdminPayloadVersion(localPayload);
       }
     }
 
@@ -2456,13 +2477,9 @@ ${itemsText}`
     }
 
     function saveAdminState() {
-      const payload = {
-        config,
-        siteMeta,
-        homeContent,
-        products,
-        contentEdits: collectAdminContentEdits()
-      };
+      const payload = buildAdminPayload();
+      localAdminVersion = payload.updatedAtClient;
+      lastCloudVersion = Math.max(lastCloudVersion, localAdminVersion);
       localStorage.setItem(ADMIN_STORAGE_KEY, JSON.stringify(payload));
       if (initPublicFirebaseState() && firebaseStateRef) {
         ensurePublicFirebaseAuth().then(() => {
@@ -2479,10 +2496,14 @@ ${itemsText}`
     }
 
     async function loadAdminState() {
+      let localVersion = 0;
       const raw = localStorage.getItem(ADMIN_STORAGE_KEY);
       if (raw) {
         try {
           const data = JSON.parse(raw);
+          localVersion = getAdminPayloadVersion(data);
+          localAdminVersion = localVersion;
+          lastCloudVersion = Math.max(lastCloudVersion, localVersion);
           applyAdminPayload(data);
         } catch (error) {
           console.error(error);
@@ -2497,8 +2518,11 @@ ${itemsText}`
         const cloudSnap = await firebaseStateRef.get();
         if (cloudSnap.exists) {
           const data = cloudSnap.data();
-          lastCloudVersion = Number(data?.updatedAtClient || 0);
-          applyAdminPayload(data, true);
+          const cloudVersion = getAdminPayloadVersion(data);
+          if (cloudVersion >= localVersion) {
+            lastCloudVersion = cloudVersion;
+            applyAdminPayload(data, true);
+          }
         }
       } catch (error) {
         console.error(error);
@@ -2509,7 +2533,9 @@ ${itemsText}`
         firebaseStateUnsubscribe = firebaseStateRef.onSnapshot((snap) => {
           if (!snap.exists) return;
           const data = snap.data();
-          lastCloudVersion = Number(data?.updatedAtClient || 0);
+          const cloudVersion = getAdminPayloadVersion(data);
+          if (cloudVersion < localAdminVersion) return;
+          lastCloudVersion = cloudVersion;
           applyAdminPayload(data, true);
         }, (error) => {
           console.error(error);
@@ -2524,7 +2550,7 @@ ${itemsText}`
             const snap = await firebaseStateRef.get();
             if (!snap.exists) return;
             const data = snap.data();
-            const cloudVersion = Number(data?.updatedAtClient || 0);
+            const cloudVersion = getAdminPayloadVersion(data);
             if (cloudVersion > lastCloudVersion) {
               lastCloudVersion = cloudVersion;
               applyAdminPayload(data, true);

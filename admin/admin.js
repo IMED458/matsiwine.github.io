@@ -375,6 +375,7 @@ function deepMerge(base, incoming) {
 
 function normalizeState(input) {
   const merged = deepMerge(defaultState, input || {});
+  merged.updatedAtClient = Number(merged.updatedAtClient || 0) || 0;
   if (!merged.siteMeta) merged.siteMeta = structuredClone(defaultState.siteMeta);
   if (!merged.siteMeta.cloudinary_cloud_name || !String(merged.siteMeta.cloudinary_cloud_name).trim()) {
     merged.siteMeta.cloudinary_cloud_name = defaultState.siteMeta.cloudinary_cloud_name;
@@ -413,6 +414,16 @@ function saveStateToLocal() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
 }
 
+function getStateVersion(input = state) {
+  return Number(input?.updatedAtClient || 0) || 0;
+}
+
+function stampStateVersion() {
+  const version = Date.now();
+  state.updatedAtClient = version;
+  return version;
+}
+
 function setSaveStatus(message, isError = false) {
   if (!saveStatus) return;
   saveStatus.textContent = message;
@@ -420,6 +431,7 @@ function setSaveStatus(message, isError = false) {
 }
 
 async function saveState(message = 'შენახულია') {
+  const version = stampStateVersion();
   saveStateToLocal();
   const nowText = new Date().toLocaleString('ka-GE');
   settingsMsg.textContent = message;
@@ -434,7 +446,7 @@ async function saveState(message = 'შენახულია') {
 
   const payload = JSON.parse(JSON.stringify(state));
   payload.updatedAt = window.firebase.firestore.FieldValue.serverTimestamp();
-  payload.updatedAtClient = Date.now();
+  payload.updatedAtClient = version;
   try {
     await docRef.set(payload, { merge: true });
     setSaveStatus(`✅ მონაცემები შენახულია Firebase-ში (${nowText})`);
@@ -456,6 +468,9 @@ async function loadCloudState(applyToUi = false) {
   }
 
   const cloudState = normalizeState(sanitizeCloudData(snap.data()));
+  if (getStateVersion(cloudState) < getStateVersion(state)) {
+    return;
+  }
   applyState(cloudState);
 }
 
@@ -466,6 +481,7 @@ function subscribeCloudState() {
   unsubscribeState = docRef.onSnapshot((snap) => {
     if (!snap.exists) return;
     const cloudState = normalizeState(sanitizeCloudData(snap.data()));
+    if (getStateVersion(cloudState) < getStateVersion(state)) return;
     applyState(cloudState);
   }, (error) => {
     setAuthMessage(`Sync error: ${error.message}`);
