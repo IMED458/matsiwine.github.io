@@ -273,15 +273,27 @@
      </div>
     </section><!-- SHOP PAGE -->
     <section id="page-shop" class="page-section hidden">
-     <div class="py-12 md:py-20 bg-cream-50 min-h-screen">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"><!-- Header -->
-       <div class="text-center mb-12">
-        <h1 class="font-display text-4xl md:text-5xl font-bold text-wine-900 mb-4">ჩვენი კოლექცია</h1>
-        <p class="text-wine-600/70 text-lg max-w-2xl mx-auto">აღმოაჩინეთ გამორჩეული ქართული ღვინოები — თითოეული ბოთლი მოგვითხრობს თავის უნიკალურ ისტორიას</p>
-       </div><!-- Filters -->
-       <div class="flex flex-wrap gap-3 justify-center mb-12"><button onclick="filterProducts('all')" class="filter-btn active px-5 py-2 rounded-full text-sm font-medium bg-wine-700 text-cream-50 transition-all" data-filter="all"> ყველა </button> <button onclick="filterProducts('red')" class="filter-btn px-5 py-2 rounded-full text-sm font-medium bg-cream-200 text-wine-700 hover:bg-wine-100 transition-all" data-filter="red"> წითელი </button> <button onclick="filterProducts('white')" class="filter-btn px-5 py-2 rounded-full text-sm font-medium bg-cream-200 text-wine-700 hover:bg-wine-100 transition-all" data-filter="white"> თეთრი </button> <button onclick="filterProducts('amber')" class="filter-btn px-5 py-2 rounded-full text-sm font-medium bg-cream-200 text-wine-700 hover:bg-wine-100 transition-all" data-filter="amber"> ქარვისფერი </button> <button onclick="filterProducts('rose')" class="filter-btn px-5 py-2 rounded-full text-sm font-medium bg-cream-200 text-wine-700 hover:bg-wine-100 transition-all" data-filter="rose"> ვარდისფერი </button> <button onclick="filterProducts('chocolate')" class="filter-btn px-5 py-2 rounded-full text-sm font-medium bg-cream-200 text-wine-700 hover:bg-wine-100 transition-all" data-filter="chocolate"> შოკოლადი </button>
-       </div><!-- Products Grid -->
-       <div id="products-grid" class="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"><!-- Products will be rendered here -->
+     <div class="py-12 md:py-16 bg-cream-50 min-h-screen">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+       <div class="shop-hero mb-10 md:mb-12">
+        <div class="shop-hero-text">
+         <p class="shop-hero-kicker">MATSI WINE CATALOG</p>
+         <h1 class="font-display text-4xl md:text-5xl lg:text-6xl font-bold text-cream-50 mb-4">პროდუქტების<br>კატალოგი</h1>
+         <p class="text-cream-200/80 text-base md:text-lg max-w-xl">Spline-inspired ატმოსფერო, მოძრავი შუქი და პრემიუმ ბარათები. აირჩიე სტილი და დაამატე კალათაში.</p>
+        </div>
+        <div class="shop-spline-wrap">
+         <spline-viewer loading-anim-type="none" url="assets/spline/scene.splinecode"></spline-viewer>
+        </div>
+       </div>
+       <div class="shop-filter-wrap">
+        <button onclick="filterProducts('all')" class="filter-btn shop-filter-btn active" data-filter="all">ყველა</button>
+        <button onclick="filterProducts('red')" class="filter-btn shop-filter-btn" data-filter="red">წითელი</button>
+        <button onclick="filterProducts('white')" class="filter-btn shop-filter-btn" data-filter="white">თეთრი</button>
+        <button onclick="filterProducts('amber')" class="filter-btn shop-filter-btn" data-filter="amber">ქარვისფერი</button>
+        <button onclick="filterProducts('rose')" class="filter-btn shop-filter-btn" data-filter="rose">ვარდისფერი</button>
+        <button onclick="filterProducts('chocolate')" class="filter-btn shop-filter-btn" data-filter="chocolate">შოკოლადი</button>
+       </div>
+       <div id="products-grid" class="catalog-grid"><!-- Products will be rendered here -->
        </div>
       </div>
      </div>
@@ -610,6 +622,7 @@
     </div>
    </footer>
   </div>
+  <script type="module" src="https://unpkg.com/@splinetool/viewer@1.9.67/build/spline-viewer.js"></script>
   <script src="assets/js/app.js" defer></script>
  </body>
 </html>
