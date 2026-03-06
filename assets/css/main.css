@@ -40,6 +40,42 @@ body.matsi-neo {
     linear-gradient(180deg, #fbfcff 0%, #f4f7fb 40%, #f8f9fc 100%);
 }
 
+/* Contrast tuning: keep the same visual style but improve readability */
+body.matsi-neo .text-wine-900,
+body.matsi-neo .text-wine-800,
+body.matsi-neo .text-wine-700 {
+  color: #1b2a3f !important;
+}
+
+body.matsi-neo .text-wine-600,
+body.matsi-neo .text-wine-600\/80,
+body.matsi-neo .text-wine-600\/70,
+body.matsi-neo .text-wine-600\/60,
+body.matsi-neo .text-wine-500 {
+  color: #3e516e !important;
+}
+
+body.matsi-neo .text-wine-400,
+body.matsi-neo .text-wine-300 {
+  color: #4c6384 !important;
+}
+
+body.matsi-neo .text-cream-50,
+body.matsi-neo .text-cream-100,
+body.matsi-neo .text-cream-200,
+body.matsi-neo .text-cream-200\/70,
+body.matsi-neo .text-cream-200\/60,
+body.matsi-neo .text-cream-300\/70,
+body.matsi-neo .text-cream-300\/60 {
+  color: #2c3f5b !important;
+}
+
+body.matsi-neo input::placeholder,
+body.matsi-neo textarea::placeholder {
+  color: #5f7290;
+  opacity: 1;
+}
+
 .app-wrapper {
   width: 100%;
   min-height: 100%;
