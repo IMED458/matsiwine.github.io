@@ -104,6 +104,8 @@
     let currentPage = 'home';
     let currentFilter = 'all';
     let isLoading = false;
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let revealObserver = null;
     const defaultSiteMeta = {
       contact_email: 'info@matsiwine.ge',
       contact_phone: '+995 555 123 456',
@@ -539,14 +541,32 @@
         showToast('ეს სექცია დროებით გამორთულია ადმინიდან', 'info');
         page = 'home';
       }
-
-      document.querySelectorAll('.page-section').forEach(section => {
-        section.classList.add('hidden');
-      });
       
       const targetSection = document.getElementById(`page-${page}`);
       if (targetSection) {
+        document.querySelectorAll('.page-section').forEach(section => {
+          if (section === targetSection) return;
+          section.classList.add('hidden');
+          section.classList.remove('page-transition');
+          section.style.opacity = '';
+          section.style.transform = '';
+          section.style.filter = '';
+        });
+
         targetSection.classList.remove('hidden');
+        targetSection.classList.add('page-transition');
+        targetSection.style.opacity = '0';
+        targetSection.style.transform = 'translateY(14px)';
+        targetSection.style.filter = 'blur(2px)';
+
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            targetSection.style.opacity = '1';
+            targetSection.style.transform = 'translateY(0)';
+            targetSection.style.filter = 'blur(0)';
+          });
+        });
+
         currentPage = page;
         
         window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -567,12 +587,89 @@
             history.replaceState(null, '', nextHash);
           }
         }
+
+        refreshMotionTargets(targetSection);
       }
     }
     
     function toggleMobileMenu() {
       const menu = document.getElementById('mobile-menu');
       menu.classList.toggle('hidden');
+    }
+
+    function initMotionEnhancements() {
+      if (!prefersReducedMotion && 'IntersectionObserver' in window) {
+        revealObserver = new IntersectionObserver((entries, observer) => {
+          entries.forEach((entry) => {
+            if (!entry.isIntersecting) return;
+            entry.target.classList.add('is-visible');
+            observer.unobserve(entry.target);
+          });
+        }, { threshold: 0.16, rootMargin: '0px 0px -8% 0px' });
+      }
+
+      initHeroParallax();
+      refreshMotionTargets(document);
+    }
+
+    function refreshMotionTargets(scope = document) {
+      if (!scope) return;
+
+      const revealItems = scope.querySelectorAll ? scope.querySelectorAll('.reveal, .product-card, .bg-white.rounded-2xl, .bg-white.rounded-3xl') : [];
+      revealItems.forEach((item) => {
+        item.classList.add('reveal');
+        if (prefersReducedMotion) {
+          item.classList.add('is-visible');
+          return;
+        }
+
+        if (revealObserver) {
+          revealObserver.observe(item);
+        } else {
+          item.classList.add('is-visible');
+        }
+      });
+
+      if (!prefersReducedMotion) {
+        initCardTilt(scope);
+      }
+    }
+
+    function initHeroParallax() {
+      if (prefersReducedMotion) return;
+      const hero = document.querySelector('#page-home .hero-bottle-wrap');
+      const image = document.querySelector('#hero-bottle-img');
+      if (!hero || !image) return;
+
+      hero.addEventListener('pointermove', (event) => {
+        const rect = hero.getBoundingClientRect();
+        const x = ((event.clientX - rect.left) / rect.width - 0.5) * 2;
+        const y = ((event.clientY - rect.top) / rect.height - 0.5) * 2;
+        image.style.transform = `translate3d(${x * 8}px, ${y * 6}px, 0) rotateX(${y * -2.2}deg) rotateY(${x * 3.2}deg)`;
+      });
+
+      hero.addEventListener('pointerleave', () => {
+        image.style.transform = '';
+      });
+    }
+
+    function initCardTilt(scope = document) {
+      const cards = scope.querySelectorAll ? scope.querySelectorAll('.product-card') : [];
+      cards.forEach((card) => {
+        if (card.dataset.tiltReady === '1') return;
+        card.dataset.tiltReady = '1';
+
+        card.addEventListener('pointermove', (event) => {
+          const rect = card.getBoundingClientRect();
+          const x = ((event.clientX - rect.left) / rect.width - 0.5) * 2;
+          const y = ((event.clientY - rect.top) / rect.height - 0.5) * 2;
+          card.style.transform = `translateY(-8px) rotateX(${y * -3}deg) rotateY(${x * 3}deg)`;
+        });
+
+        card.addEventListener('pointerleave', () => {
+          card.style.transform = '';
+        });
+      });
     }
     
     // =====================================================
@@ -624,6 +721,7 @@
         </div>
       `).join('');
       applyLiquidButtons(grid);
+      refreshMotionTargets(grid);
     }
 
     function getProductVisualMarkup(product, variant = 'card') {
@@ -739,6 +837,7 @@
         </div>
       `;
       applyLiquidButtons(container);
+      refreshMotionTargets(container);
     }
     
     // =====================================================
@@ -938,6 +1037,7 @@
           </div>
         `;
         applyLiquidButtons(container);
+        refreshMotionTargets(container);
         return;
       }
       
@@ -1057,6 +1157,7 @@
         ` : ''}
       `;
       applyLiquidButtons(container);
+      refreshMotionTargets(container);
     }
     
     function handleCheckout() {
@@ -2808,6 +2909,7 @@ ${itemsText}`
       applySectionVisibility();
       renderProducts();
       applyLiquidButtons(document);
+      initMotionEnhancements();
 
       const initialPage = getPageFromLocation();
       if (initialPage && initialPage !== currentPage) {
