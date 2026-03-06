@@ -231,6 +231,25 @@ body.matsi-neo textarea::placeholder {
   text-wrap: balance;
 }
 
+#hero-title[data-hero-logo="1"] {
+  line-height: 1;
+  letter-spacing: 0;
+  margin-bottom: 1.4rem;
+}
+
+.hero-title-logo {
+  width: clamp(260px, 36vw, 430px);
+  height: clamp(124px, 20vw, 245px);
+  max-width: 100%;
+  object-fit: contain;
+  object-position: left center;
+  filter: drop-shadow(0 12px 20px rgba(31, 49, 78, 0.18));
+}
+
+#hero-title-fallback {
+  line-height: 0.93;
+}
+
 .hero-bottle-wrap {
   width: min(440px, 90%);
   height: 600px;
@@ -903,6 +922,13 @@ select:focus {
 
   #hero-title {
     font-size: clamp(3rem, 18vw, 4.4rem) !important;
+  }
+
+  .hero-title-logo {
+    width: clamp(220px, 72vw, 360px);
+    height: clamp(108px, 34vw, 190px);
+    object-position: center;
+    margin-inline: auto;
   }
 
   .product-card:hover {

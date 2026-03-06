@@ -374,7 +374,15 @@
       const aboutTitle = document.getElementById('about-title');
       
       if (heroTitle) {
-        heroTitle.innerHTML = (config.hero_title || defaultConfig.hero_title).replace(/\s+/g, '<br/>');
+        if (heroTitle.dataset.heroLogo === '1') {
+          heroTitle.setAttribute('aria-label', config.hero_title || defaultConfig.hero_title);
+          const fallback = document.getElementById('hero-title-fallback');
+          if (fallback) {
+            fallback.innerHTML = (config.hero_title || defaultConfig.hero_title).replace(/\s+/g, '<br/>');
+          }
+        } else {
+          heroTitle.innerHTML = (config.hero_title || defaultConfig.hero_title).replace(/\s+/g, '<br/>');
+        }
       }
       if (heroSubtitle) {
         heroSubtitle.textContent = config.hero_subtitle || defaultConfig.hero_subtitle;
@@ -427,6 +435,7 @@
       setImageSource('loader-logo-img', logo);
       setImageSource('header-logo-img', logo);
       setImageSource('footer-logo-img', logo);
+      setImageSource('hero-title-logo', logo);
       setImageSource('hero-bottle-img', bottleImage);
     }
 
