@@ -217,6 +217,25 @@ const saveStatus = document.getElementById('save-status');
 
 boot();
 
+function applyLiquidButtons(root = document) {
+  const nodes = root.querySelectorAll('button, a.primary, a.ghost, .tab');
+  nodes.forEach((el) => {
+    if (!el.classList.contains('matsi-liquid-btn')) {
+      el.classList.add('matsi-liquid-btn');
+    }
+    if (el.dataset.liquidBound === '1') return;
+    el.dataset.liquidBound = '1';
+    const pressOn = () => el.classList.add('is-pressed');
+    const pressOff = () => el.classList.remove('is-pressed');
+    el.addEventListener('mousedown', pressOn);
+    el.addEventListener('mouseup', pressOff);
+    el.addEventListener('mouseleave', pressOff);
+    el.addEventListener('touchstart', pressOn, { passive: true });
+    el.addEventListener('touchend', pressOff);
+    el.addEventListener('touchcancel', pressOff);
+  });
+}
+
 function boot() {
   try {
     initFirebase();
@@ -348,6 +367,7 @@ function initAdminUi() {
   fillSectionsForm();
   renderProductsList();
   refreshRawEditor();
+  applyLiquidButtons(document);
 }
 
 function deepMerge(base, incoming) {
@@ -928,6 +948,7 @@ function renderProductsList() {
       }
     });
   });
+  applyLiquidButtons(itemsList);
 }
 
 function refreshRawEditor() {

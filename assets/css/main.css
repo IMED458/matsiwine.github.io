@@ -309,3 +309,43 @@ body { box-sizing: border-box; }
   color: #5a1f29;
   border-color: rgba(139, 115, 85, 0.45);
 }
+
+.matsi-liquid-btn {
+  position: relative;
+  overflow: hidden;
+  border-radius: 999px !important;
+  border: 1px solid rgba(255, 255, 255, 0.42) !important;
+  background: linear-gradient(160deg, rgba(255, 255, 255, 0.24), rgba(114, 47, 55, 0.88)) !important;
+  color: #fff !important;
+  box-shadow:
+    0 10px 24px -12px rgba(42, 10, 16, 0.75),
+    inset 0 1px 0 rgba(255, 255, 255, 0.45),
+    inset 0 -10px 18px -12px rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  transition: transform .22s ease, filter .22s ease, box-shadow .22s ease;
+}
+
+.matsi-liquid-btn::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(110deg, transparent 15%, rgba(255,255,255,.34) 45%, transparent 70%);
+  transform: translateX(-120%);
+  transition: transform .45s ease;
+}
+
+.matsi-liquid-btn:hover {
+  transform: translateY(-1px) scale(1.015);
+  filter: brightness(1.08);
+}
+
+.matsi-liquid-btn:hover::before {
+  transform: translateX(120%);
+}
+
+.matsi-liquid-btn.is-pressed,
+.matsi-liquid-btn:active {
+  transform: translateY(1px) scale(0.985);
+  filter: brightness(.94);
+}

@@ -264,6 +264,26 @@
         // ignore
       }
     }
+
+    function applyLiquidButtons(root = document) {
+      const nodes = root.querySelectorAll('button, a.primary, a.ghost, .tab');
+      nodes.forEach((el) => {
+        if (el.dataset.noLiquid === '1') return;
+        if (!el.classList.contains('matsi-liquid-btn')) {
+          el.classList.add('matsi-liquid-btn');
+        }
+        if (el.dataset.liquidBound === '1') return;
+        el.dataset.liquidBound = '1';
+        const pressOn = () => el.classList.add('is-pressed');
+        const pressOff = () => el.classList.remove('is-pressed');
+        el.addEventListener('mousedown', pressOn);
+        el.addEventListener('mouseup', pressOff);
+        el.addEventListener('mouseleave', pressOff);
+        el.addEventListener('touchstart', pressOn, { passive: true });
+        el.addEventListener('touchend', pressOff);
+        el.addEventListener('touchcancel', pressOff);
+      });
+    }
     
     // =====================================================
     // DATA SDK INTEGRATION
@@ -603,6 +623,7 @@
           </div>
         </div>
       `).join('');
+      applyLiquidButtons(grid);
     }
 
     function getProductVisualMarkup(product, variant = 'card') {
@@ -717,6 +738,7 @@
           </div>
         </div>
       `;
+      applyLiquidButtons(container);
     }
     
     // =====================================================
@@ -915,6 +937,7 @@
             </button>
           </div>
         `;
+        applyLiquidButtons(container);
         return;
       }
       
@@ -1033,6 +1056,7 @@
         </div>
         ` : ''}
       `;
+      applyLiquidButtons(container);
     }
     
     function handleCheckout() {
@@ -2783,6 +2807,7 @@ ${itemsText}`
       applyAboutContent();
       applySectionVisibility();
       renderProducts();
+      applyLiquidButtons(document);
 
       const initialPage = getPageFromLocation();
       if (initialPage && initialPage !== currentPage) {

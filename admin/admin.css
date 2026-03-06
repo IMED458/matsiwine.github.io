@@ -130,6 +130,44 @@ button.ghost, a.ghost {
 }
 button.primary:hover { background: var(--primary-2); }
 
+.matsi-liquid-btn {
+  position: relative;
+  overflow: hidden;
+  border-radius: 999px !important;
+  border: 1px solid rgba(255, 255, 255, 0.4) !important;
+  background: linear-gradient(155deg, rgba(255,255,255,0.22), rgba(111, 36, 52, 0.9)) !important;
+  color: #fff !important;
+  box-shadow:
+    0 10px 22px -12px rgba(43, 26, 31, 0.7),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4),
+    inset 0 -10px 18px -12px rgba(0, 0, 0, 0.7);
+  transition: transform .2s ease, filter .2s ease;
+}
+
+.matsi-liquid-btn::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(110deg, transparent 18%, rgba(255,255,255,.32) 50%, transparent 75%);
+  transform: translateX(-120%);
+  transition: transform .45s ease;
+}
+
+.matsi-liquid-btn:hover::before {
+  transform: translateX(120%);
+}
+
+.matsi-liquid-btn:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.06);
+}
+
+.matsi-liquid-btn.is-pressed,
+.matsi-liquid-btn:active {
+  transform: translateY(1px) scale(0.985);
+  filter: brightness(.95);
+}
+
 .list { display: grid; gap: 8px; max-height: 72vh; overflow: auto; }
 .item {
   border: 1px solid var(--line);
