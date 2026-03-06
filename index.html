@@ -273,15 +273,36 @@
      </div>
     </section><!-- SHOP PAGE -->
     <section id="page-shop" class="page-section hidden">
-     <div class="py-12 md:py-20 bg-cream-50 min-h-screen">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"><!-- Header -->
-       <div class="text-center mb-12">
-        <h1 class="font-display text-4xl md:text-5xl font-bold text-wine-900 mb-4">ჩვენი კოლექცია</h1>
-        <p class="text-wine-600/70 text-lg max-w-2xl mx-auto">აღმოაჩინეთ გამორჩეული ქართული ღვინოები — თითოეული ბოთლი მოგვითხრობს თავის უნიკალურ ისტორიას</p>
-       </div><!-- Filters -->
-       <div class="flex flex-wrap gap-3 justify-center mb-12"><button onclick="filterProducts('all')" class="filter-btn active px-5 py-2 rounded-full text-sm font-medium bg-wine-700 text-cream-50 transition-all" data-filter="all"> ყველა </button> <button onclick="filterProducts('red')" class="filter-btn px-5 py-2 rounded-full text-sm font-medium bg-cream-200 text-wine-700 hover:bg-wine-100 transition-all" data-filter="red"> წითელი </button> <button onclick="filterProducts('white')" class="filter-btn px-5 py-2 rounded-full text-sm font-medium bg-cream-200 text-wine-700 hover:bg-wine-100 transition-all" data-filter="white"> თეთრი </button> <button onclick="filterProducts('amber')" class="filter-btn px-5 py-2 rounded-full text-sm font-medium bg-cream-200 text-wine-700 hover:bg-wine-100 transition-all" data-filter="amber"> ქარვისფერი </button> <button onclick="filterProducts('rose')" class="filter-btn px-5 py-2 rounded-full text-sm font-medium bg-cream-200 text-wine-700 hover:bg-wine-100 transition-all" data-filter="rose"> ვარდისფერი </button> <button onclick="filterProducts('chocolate')" class="filter-btn px-5 py-2 rounded-full text-sm font-medium bg-cream-200 text-wine-700 hover:bg-wine-100 transition-all" data-filter="chocolate"> შოკოლადი </button>
-       </div><!-- Products Grid -->
-       <div id="products-grid" class="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"><!-- Products will be rendered here -->
+     <div class="py-8 md:py-12 bg-cream-50 min-h-screen">
+      <div class="w-full relative container px-2 mx-auto max-w-7xl">
+       <div class="commerce-surface">
+        <header class="commerce-header">
+         <div class="commerce-header-left">
+          <a href="#" onclick="navigateTo('home')" class="commerce-brand">Matsi_</a>
+          <nav class="commerce-inner-nav hidden lg:flex">
+           <button onclick="navigateTo('home')" class="commerce-nav-btn">Home</button>
+           <button onclick="navigateTo('shop')" class="commerce-nav-btn">Shop</button>
+           <button onclick="navigateTo('about')" class="commerce-nav-btn">Collections</button>
+           <button onclick="navigateTo('contact')" class="commerce-nav-btn">Contact</button>
+          </nav>
+         </div>
+         <div class="commerce-header-right hidden md:flex">
+          <button class="commerce-icon-btn" aria-label="Search">
+           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35M10.5 18a7.5 7.5 0 100-15 7.5 7.5 0 000 15z" /></svg>
+          </button>
+          <button onclick="navigateTo('cart')" class="commerce-icon-btn" aria-label="Cart">
+           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" /></svg>
+          </button>
+         </div>
+        </header>
+        <section class="commerce-hero">
+         <h1 class="commerce-hero-title">Curate Your Wines<br><span>Into Fine Collections.</span></h1>
+         <p class="commerce-hero-text">გამოიკვლიე MATSI-ს კოლექცია თანამედროვე კატალოგის ხედვით. აირჩიე ტიპი, გახსენი ბარათი და დაამატე კალათაში.</p>
+        </section>
+       </div>
+       <div class="commerce-filters"><button onclick="filterProducts('all')" class="filter-btn commerce-filter-btn active" data-filter="all">ყველა</button> <button onclick="filterProducts('red')" class="filter-btn commerce-filter-btn" data-filter="red">წითელი</button> <button onclick="filterProducts('white')" class="filter-btn commerce-filter-btn" data-filter="white">თეთრი</button> <button onclick="filterProducts('amber')" class="filter-btn commerce-filter-btn" data-filter="amber">ქარვისფერი</button> <button onclick="filterProducts('rose')" class="filter-btn commerce-filter-btn" data-filter="rose">ვარდისფერი</button> <button onclick="filterProducts('chocolate')" class="filter-btn commerce-filter-btn" data-filter="chocolate">შოკოლადი</button>
+       </div>
+       <div id="products-grid" class="commerce-grid"><!-- Products will be rendered here -->
        </div>
       </div>
      </div>
