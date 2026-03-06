@@ -585,9 +585,9 @@
       document.querySelectorAll('.filter-btn').forEach(btn => {
         if (btn.dataset.filter === filter) {
           btn.classList.remove('bg-cream-200', 'text-wine-700');
-          btn.classList.add('bg-wine-700', 'text-cream-50', 'commerce-filter-active');
+          btn.classList.add('bg-wine-700', 'text-cream-50');
         } else {
-          btn.classList.remove('bg-wine-700', 'text-cream-50', 'commerce-filter-active');
+          btn.classList.remove('bg-wine-700', 'text-cream-50');
           btn.classList.add('bg-cream-200', 'text-wine-700');
         }
       });
@@ -603,29 +603,25 @@
         ? products 
         : products.filter(p => p.type === currentFilter);
       
-      grid.innerHTML = filtered.map((product) => `
-        <article class="commerce-card cursor-pointer" onclick="viewProduct('${product.id}')">
-          <h3 class="commerce-card-title">${escapeHtml(product.name)}</h3>
-          <div class="commerce-card-media">
+      grid.innerHTML = filtered.map(product => `
+        <div class="product-card bg-white rounded-2xl overflow-hidden shadow-lg cursor-pointer" onclick="viewProduct('${product.id}')">
+          <div class="aspect-[3/4] bg-gradient-to-br from-wine-100 to-cream-200 p-6 flex items-center justify-center relative overflow-hidden">
+            <div class="glass-shimmer absolute inset-0"></div>
             ${getProductVisualMarkup(product, 'card')}
           </div>
-          <div class="commerce-card-meta">
-            <div>
-              <p class="text-[11px] text-wine-600/80">${escapeHtml(product.category || '')}</p>
-              <p class="commerce-card-price">₾${product.price}</p>
+          <div class="p-5">
+            <p class="text-wine-500 text-xs font-medium mb-1">${product.category}</p>
+            <h3 class="font-display text-lg font-semibold text-wine-900 mb-1">${product.name} ${product.year}</h3>
+            <p class="text-wine-600/60 text-sm mb-3 line-clamp-2">${product.grape} • ${product.region}</p>
+            <div class="flex items-center justify-between">
+              <span class="font-display text-xl font-bold text-wine-800">₾${product.price}</span>
+              <button onclick="event.stopPropagation(); addToCart('${product.id}', '${product.name} ${product.year}', ${product.price})" 
+                      class="btn-wine px-3 py-1.5 bg-wine-700 text-cream-50 rounded-full text-xs font-medium hover:bg-wine-800">
+                დამატება
+              </button>
             </div>
-            <button onclick="event.stopPropagation(); addToCart('${product.id}', '${product.name} ${product.year || ''}', ${product.price})" class="commerce-card-add">
-              დამატება
-            </button>
           </div>
-          <div class="commerce-card-arrow-wrap">
-            <span class="commerce-card-arrow">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 17L17 7M10 7h7v7"/>
-              </svg>
-            </span>
-          </div>
-        </article>
+        </div>
       `).join('');
       applyLiquidButtons(grid);
     }
