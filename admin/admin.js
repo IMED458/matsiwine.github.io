@@ -28,6 +28,7 @@ const defaultState = {
     contact_phone: '+995 555 123 456',
     contact_address: 'კახეთი, თელავის რაიონი, სოფ. წინანდალი',
     instagram_link: 'https://instagram.com/matsi_wine_',
+    facebook_link: '',
     order_notify_email: 'matsiwine@gmail.com',
     custom_label_price: 45,
     cloudinary_cloud_name: 'dlth7j0i6',
@@ -102,14 +103,20 @@ const defaultState = {
     about_section1_text1: 'ჩვენი მეღვინეობა მდებარეობს კახეთის გულში — ალაზნის ველზე, სადაც უნიკალური მიკროკლიმატი და ნაყოფიერი ნიადაგი ქმნის იდეალურ პირობებს საუკეთესო ყურძნის მოსაყვანად.',
     about_section1_text2: 'ოჯახის მამულში დარგული ვაზები — საფერავი, მწვანე, რქაწითელი — 40 წელზე მეტია ხილს იძლევა და ყოველწლიურად გვაძლევს ღვინოს განსაკუთრებული ხასიათით.',
     about_photo1_label: 'ვენახის ფოტო',
+    about_photo1_image: '',
+    about_photo1_image_path: '',
     about_section2_title: 'ქვევრის ტრადიცია',
     about_section2_text1: 'ჩვენ ვიყენებთ ქვევრს — მიწაში ჩაფლულ თიხის ჭურჭელს, რომელშიც ღვინო ფერმენტირდება და მწიფდება ბუნებრივი ტემპერატურის კონტროლით. ეს მეთოდი UNESCO-ს მსოფლიო მემკვიდრეობის ნაწილია.',
     about_section2_text2: 'ქვევრის ღვინო გამოირჩევა ღრმა, კომპლექსური გემოთი და ხანგრძლივი დამთავრებით, რასაც ვერც ერთი თანამედროვე ტექნოლოგია ვერ იმეორებს.',
     about_photo2_label: 'ქვევრის ფოტო',
+    about_photo2_image: '',
+    about_photo2_image_path: '',
     about_section3_title: 'ჩვენი გუნდი',
     about_section3_text1: 'MATSI-ს გუნდში გაერთიანებულია სამი თაობა: ბაბუის ტრადიციული ცოდნა, მამის მეღვინეობის გამოცდილება და შვილების თანამედროვე ხედვა.',
     about_section3_text2: 'ჩვენ გვჯერა, რომ საუკეთესო ღვინო იბადება ოჯახურ გარემოში, სადაც ყოველი ბოთლი მზადდება სიყვარულით და პატივისცემით ტრადიციისადმი.',
     about_photo3_label: 'გუნდის ფოტო',
+    about_photo3_image: '',
+    about_photo3_image_path: '',
     about_values_title: 'ჩვენი ღირებულებები',
     about_value1_title: 'ბუნებრიობა',
     about_value1_text: '100% ორგანული მეურნეობა, ქიმიკატების გარეშე',
@@ -162,6 +169,11 @@ const pendingHomeCardFiles = {
   stat3: null,
   stat4: null
 };
+const pendingAboutPhotoFiles = {
+  photo1: null,
+  photo2: null,
+  photo3: null
+};
 let initialized = false;
 
 const tabs = Array.from(document.querySelectorAll('.tab'));
@@ -213,6 +225,12 @@ const homeStat1ImagePreview = document.getElementById('home-stat1-image-preview'
 const homeStat2ImagePreview = document.getElementById('home-stat2-image-preview');
 const homeStat3ImagePreview = document.getElementById('home-stat3-image-preview');
 const homeStat4ImagePreview = document.getElementById('home-stat4-image-preview');
+const aboutPhoto1ImageFile = document.getElementById('about_photo1_image_file');
+const aboutPhoto2ImageFile = document.getElementById('about_photo2_image_file');
+const aboutPhoto3ImageFile = document.getElementById('about_photo3_image_file');
+const aboutPhoto1ImagePreview = document.getElementById('about-photo1-image-preview');
+const aboutPhoto2ImagePreview = document.getElementById('about-photo2-image-preview');
+const aboutPhoto3ImagePreview = document.getElementById('about-photo3-image-preview');
 const saveStatus = document.getElementById('save-status');
 
 boot();
@@ -557,6 +575,7 @@ function bindForms() {
       state.siteMeta.contact_phone = fd.get('contact_phone') || defaultState.siteMeta.contact_phone;
       state.siteMeta.contact_address = fd.get('contact_address') || defaultState.siteMeta.contact_address;
       state.siteMeta.instagram_link = fd.get('instagram_link') || defaultState.siteMeta.instagram_link;
+      state.siteMeta.facebook_link = fd.get('facebook_link') || defaultState.siteMeta.facebook_link;
       state.siteMeta.order_notify_email = fd.get('order_notify_email') || defaultState.siteMeta.order_notify_email;
       state.siteMeta.custom_label_price = parseFloat(fd.get('custom_label_price') || `${defaultState.siteMeta.custom_label_price}`) || defaultState.siteMeta.custom_label_price;
       state.siteMeta.cloudinary_cloud_name = fd.get('cloudinary_cloud_name') || defaultState.siteMeta.cloudinary_cloud_name;
@@ -665,11 +684,37 @@ function bindForms() {
       e.preventDefault();
       const fd = new FormData(aboutForm);
       for (const key of Object.keys(defaultState.aboutContent)) {
+        if (key.endsWith('_image') || key.endsWith('_image_path')) continue;
         const value = fd.get(key);
         if (value !== null) state.aboutContent[key] = value.toString();
       }
       try {
+        const imageConfigs = [
+          { id: 'photo1', imageKey: 'about_photo1_image', pathKey: 'about_photo1_image_path', urlField: 'about_photo1_image_url', folder: 'about/section1' },
+          { id: 'photo2', imageKey: 'about_photo2_image', pathKey: 'about_photo2_image_path', urlField: 'about_photo2_image_url', folder: 'about/section2' },
+          { id: 'photo3', imageKey: 'about_photo3_image', pathKey: 'about_photo3_image_path', urlField: 'about_photo3_image_url', folder: 'about/section3' }
+        ];
+
+        for (const cfg of imageConfigs) {
+          const manualUrl = (fd.get(cfg.urlField) || '').toString().trim();
+          if (manualUrl) {
+            if (state.aboutContent[cfg.pathKey]) await safeDeleteFile(state.aboutContent[cfg.pathKey]);
+            state.aboutContent[cfg.imageKey] = manualUrl;
+            state.aboutContent[cfg.pathKey] = '';
+          }
+
+          const pendingFile = pendingAboutPhotoFiles[cfg.id];
+          if (pendingFile) {
+            if (state.aboutContent[cfg.pathKey]) await safeDeleteFile(state.aboutContent[cfg.pathKey]);
+            const uploaded = await uploadFile(pendingFile, cfg.folder);
+            state.aboutContent[cfg.imageKey] = uploaded.url;
+            state.aboutContent[cfg.pathKey] = uploaded.path;
+            pendingAboutPhotoFiles[cfg.id] = null;
+          }
+        }
+
         await saveState('About გვერდის კონტენტი შენახულია');
+        fillAboutForm();
       } catch (error) {
         if (aboutMsg) aboutMsg.textContent = error.message;
       }
@@ -773,6 +818,21 @@ function bindForms() {
     });
   });
 
+  const aboutImageInputMaps = [
+    { input: aboutPhoto1ImageFile, key: 'photo1', preview: aboutPhoto1ImagePreview },
+    { input: aboutPhoto2ImageFile, key: 'photo2', preview: aboutPhoto2ImagePreview },
+    { input: aboutPhoto3ImageFile, key: 'photo3', preview: aboutPhoto3ImagePreview }
+  ];
+
+  aboutImageInputMaps.forEach(({ input, key, preview }) => {
+    input?.addEventListener('change', (event) => {
+      const file = event.target.files?.[0];
+      if (!file) return;
+      pendingAboutPhotoFiles[key] = file;
+      if (preview) setPreview(preview, URL.createObjectURL(file));
+    });
+  });
+
   document.getElementById('apply-raw').addEventListener('click', async () => {
     try {
       const parsed = JSON.parse(rawJson.value);
@@ -808,6 +868,7 @@ function fillSettingsForm() {
   settingsForm.contact_phone.value = state.siteMeta.contact_phone || '';
   settingsForm.contact_address.value = state.siteMeta.contact_address || '';
   settingsForm.instagram_link.value = state.siteMeta.instagram_link || '';
+  settingsForm.facebook_link.value = state.siteMeta.facebook_link || '';
   settingsForm.order_notify_email.value = state.siteMeta.order_notify_email || defaultState.siteMeta.order_notify_email;
   settingsForm.custom_label_price.value = state.siteMeta.custom_label_price || defaultState.siteMeta.custom_label_price;
   settingsForm.cloudinary_cloud_name.value = state.siteMeta.cloudinary_cloud_name || defaultState.siteMeta.cloudinary_cloud_name;
@@ -866,9 +927,28 @@ function fillAboutForm() {
   if (!aboutForm) return;
   const ac = state.aboutContent || {};
   for (const key of Object.keys(defaultState.aboutContent)) {
+    if (key.endsWith('_image') || key.endsWith('_image_path')) continue;
     const input = aboutForm.elements.namedItem(key);
     if (input) input.value = ac[key] ?? defaultState.aboutContent[key];
   }
+
+  const urlMappings = [
+    { field: 'about_photo1_image_url', key: 'about_photo1_image', preview: aboutPhoto1ImagePreview },
+    { field: 'about_photo2_image_url', key: 'about_photo2_image', preview: aboutPhoto2ImagePreview },
+    { field: 'about_photo3_image_url', key: 'about_photo3_image', preview: aboutPhoto3ImagePreview }
+  ];
+
+  urlMappings.forEach(({ field, key, preview }) => {
+    const input = aboutForm.elements.namedItem(field);
+    const imageUrl = ac[key] || '';
+    if (input) input.value = imageUrl;
+    if (!preview) return;
+    if (imageUrl) {
+      setPreview(preview, imageUrl);
+    } else {
+      preview.classList.add('hidden');
+    }
+  });
 }
 
 function fillSectionsForm() {

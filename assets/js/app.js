@@ -80,14 +80,17 @@
       about_section1_text1: 'ჩვენი მეღვინეობა მდებარეობს კახეთის გულში — ალაზნის ველზე, სადაც უნიკალური მიკროკლიმატი და ნაყოფიერი ნიადაგი ქმნის იდეალურ პირობებს საუკეთესო ყურძნის მოსაყვანად.',
       about_section1_text2: 'ოჯახის მამულში დარგული ვაზები — საფერავი, მწვანე, რქაწითელი — 40 წელზე მეტია ხილს იძლევა და ყოველწლიურად გვაძლევს ღვინოს განსაკუთრებული ხასიათით.',
       about_photo1_label: 'ვენახის ფოტო',
+      about_photo1_image: '',
       about_section2_title: 'ქვევრის ტრადიცია',
       about_section2_text1: 'ჩვენ ვიყენებთ ქვევრს — მიწაში ჩაფლულ თიხის ჭურჭელს, რომელშიც ღვინო ფერმენტირდება და მწიფდება ბუნებრივი ტემპერატურის კონტროლით. ეს მეთოდი UNESCO-ს მსოფლიო მემკვიდრეობის ნაწილია.',
       about_section2_text2: 'ქვევრის ღვინო გამოირჩევა ღრმა, კომპლექსური გემოთი და ხანგრძლივი დამთავრებით, რასაც ვერც ერთი თანამედროვე ტექნოლოგია ვერ იმეორებს.',
       about_photo2_label: 'ქვევრის ფოტო',
+      about_photo2_image: '',
       about_section3_title: 'ჩვენი გუნდი',
       about_section3_text1: 'MATSI-ს გუნდში გაერთიანებულია სამი თაობა: ბაბუის ტრადიციული ცოდნა, მამის მეღვინეობის გამოცდილება და შვილების თანამედროვე ხედვა.',
       about_section3_text2: 'ჩვენ გვჯერა, რომ საუკეთესო ღვინო იბადება ოჯახურ გარემოში, სადაც ყოველი ბოთლი მზადდება სიყვარულით და პატივისცემით ტრადიციისადმი.',
       about_photo3_label: 'გუნდის ფოტო',
+      about_photo3_image: '',
       about_values_title: 'ჩვენი ღირებულებები',
       about_value1_title: 'ბუნებრიობა',
       about_value1_text: '100% ორგანული მეურნეობა, ქიმიკატების გარეშე',
@@ -111,6 +114,7 @@
       contact_phone: '+995 555 123 456',
       contact_address: 'კახეთი, თელავის რაიონი, სოფ. წინანდალი',
       instagram_link: 'https://instagram.com/matsi_wine_',
+      facebook_link: '',
       order_notify_email: DEFAULT_ORDER_EMAIL,
       custom_label_price: 45,
       cloudinary_cloud_name: 'dlth7j0i6',
@@ -389,13 +393,37 @@
       const contactPhoneEl = document.getElementById('contact-phone');
       const contactAddressEl = document.getElementById('contact-address');
       const instagramEl = document.getElementById('social-instagram');
+      const facebookEl = document.getElementById('social-facebook');
+      const footerInstagramEl = document.getElementById('footer-social-instagram');
+      const footerFacebookEl = document.getElementById('footer-social-facebook');
+      const footerEmailEl = document.getElementById('footer-contact-email');
+      const footerPhoneEl = document.getElementById('footer-contact-phone');
+      const footerAddressEl = document.getElementById('footer-contact-address');
       const logo = siteMeta.logo_url || defaultSiteMeta.logo_url;
       const bottleImage = siteMeta.hero_bottle_url || defaultSiteMeta.hero_bottle_url;
+      const contactEmail = siteMeta.contact_email || defaultSiteMeta.contact_email;
+      const contactPhone = siteMeta.contact_phone || defaultSiteMeta.contact_phone;
+      const contactAddress = siteMeta.contact_address || defaultSiteMeta.contact_address;
+      const instagramLink = (siteMeta.instagram_link || defaultSiteMeta.instagram_link || '').trim();
+      const facebookLink = (siteMeta.facebook_link || defaultSiteMeta.facebook_link || '').trim();
 
-      if (contactEmailEl) contactEmailEl.textContent = siteMeta.contact_email || defaultSiteMeta.contact_email;
-      if (contactPhoneEl) contactPhoneEl.textContent = siteMeta.contact_phone || defaultSiteMeta.contact_phone;
-      if (contactAddressEl) contactAddressEl.innerHTML = (siteMeta.contact_address || defaultSiteMeta.contact_address).replace(', ', '<br>');
-      if (instagramEl && (siteMeta.instagram_link || '').trim()) instagramEl.href = siteMeta.instagram_link.trim();
+      if (contactEmailEl) contactEmailEl.textContent = contactEmail;
+      if (contactPhoneEl) contactPhoneEl.textContent = contactPhone;
+      if (contactAddressEl) contactAddressEl.innerHTML = contactAddress.replace(', ', '<br>');
+      if (instagramEl && instagramLink) instagramEl.href = instagramLink;
+      if (facebookEl && facebookLink) facebookEl.href = facebookLink;
+
+      if (footerInstagramEl && instagramLink) footerInstagramEl.href = instagramLink;
+      if (footerFacebookEl && facebookLink) footerFacebookEl.href = facebookLink;
+      if (footerEmailEl) {
+        footerEmailEl.textContent = contactEmail;
+        footerEmailEl.href = `mailto:${contactEmail}`;
+      }
+      if (footerPhoneEl) {
+        footerPhoneEl.textContent = contactPhone;
+        footerPhoneEl.href = `tel:${contactPhone.replace(/\s+/g, '')}`;
+      }
+      if (footerAddressEl) footerAddressEl.textContent = contactAddress;
       setImageSource('loader-logo-img', logo);
       setImageSource('header-logo-img', logo);
       setImageSource('footer-logo-img', logo);
@@ -449,6 +477,22 @@
       } else {
         imageElement.classList.add('hidden');
         imageElement.removeAttribute('src');
+      }
+    }
+
+    function setAboutSectionImage(sectionNumber, imageUrl) {
+      const imageElement = document.getElementById(`about-photo${sectionNumber}-image`);
+      const fallbackElement = document.getElementById(`about-photo${sectionNumber}-fallback`);
+      if (!imageElement || !fallbackElement) return;
+
+      if (imageUrl && String(imageUrl).trim()) {
+        imageElement.src = String(imageUrl).trim();
+        imageElement.classList.remove('hidden');
+        fallbackElement.classList.add('hidden');
+      } else {
+        imageElement.classList.add('hidden');
+        imageElement.removeAttribute('src');
+        fallbackElement.classList.remove('hidden');
       }
     }
 
@@ -508,14 +552,17 @@
       setTextById('about-section1-text1', aboutContent.about_section1_text1);
       setTextById('about-section1-text2', aboutContent.about_section1_text2);
       setTextById('about-photo1-label', aboutContent.about_photo1_label);
+      setAboutSectionImage(1, aboutContent.about_photo1_image);
       setTextById('about-section2-title', aboutContent.about_section2_title);
       setTextById('about-section2-text1', aboutContent.about_section2_text1);
       setTextById('about-section2-text2', aboutContent.about_section2_text2);
       setTextById('about-photo2-label', aboutContent.about_photo2_label);
+      setAboutSectionImage(2, aboutContent.about_photo2_image);
       setTextById('about-section3-title', aboutContent.about_section3_title);
       setTextById('about-section3-text1', aboutContent.about_section3_text1);
       setTextById('about-section3-text2', aboutContent.about_section3_text2);
       setTextById('about-photo3-label', aboutContent.about_photo3_label);
+      setAboutSectionImage(3, aboutContent.about_photo3_image);
       setTextById('about-values-title', aboutContent.about_values_title);
       setTextById('about-value1-title', aboutContent.about_value1_title);
       setTextById('about-value1-text', aboutContent.about_value1_text);
