@@ -80,7 +80,7 @@
        <span class="font-display text-xl md:text-2xl font-semibold text-wine-800 tracking-wide" style="display:none;">MATSI</span> </a> <!-- Desktop Nav -->
       <div class="hidden md:flex items-center gap-8"><a href="#" onclick="navigateTo('home')" class="nav-link text-wine-700 hover:text-wine-900 font-medium transition-colors relative group"> მთავარი <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-wine-700 transition-all group-hover:w-full"></span> </a> <a href="#" onclick="navigateTo('shop')" class="nav-link text-wine-700 hover:text-wine-900 font-medium transition-colors relative group"> პროდუქტები <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-wine-700 transition-all group-hover:w-full"></span> </a> <a href="#" onclick="navigateTo('about')" class="nav-link text-wine-700 hover:text-wine-900 font-medium transition-colors relative group"> ჩვენს შესახებ <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-wine-700 transition-all group-hover:w-full"></span> </a> <a href="#" onclick="navigateTo('designer')" class="nav-link text-wine-700 hover:text-wine-900 font-medium transition-colors relative group"> შექმენი შენი დიზაინი <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-wine-700 transition-all group-hover:w-full"></span> </a> <a href="#" onclick="navigateTo('contact')" class="nav-link text-wine-700 hover:text-wine-900 font-medium transition-colors relative group"> კონტაქტი <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-wine-700 transition-all group-hover:w-full"></span> </a>
       </div><!-- Cart & Mobile Menu -->
-      <div class="flex items-center gap-4"><button onclick="navigateTo('cart')" class="relative p-2 text-wine-700 hover:text-wine-900 transition-colors">
+      <div class="flex items-center gap-4"><button onclick="navigateTo('cart')" data-no-liquid="1" class="relative p-2 text-wine-700 hover:text-wine-900 transition-colors">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
         </svg><span id="cart-count" class="absolute -top-1 -right-1 w-5 h-5 bg-wine-700 text-cream-50 text-xs rounded-full flex items-center justify-center hidden">0</span> </button> <!-- Mobile menu button --> <button id="mobile-menu-btn" onclick="toggleMobileMenu()" class="md:hidden p-2 text-wine-700">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
@@ -570,38 +570,54 @@
      </div>
     </section>
    </main><!-- Footer -->
-   <footer class="bg-wine-900 text-cream-100">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
-     <div class="grid md:grid-cols-4 gap-8 mb-8">
-      <div class="md:col-span-2">
-       <div class="flex items-center gap-3 mb-4">
+   <footer class="matsi-footer">
+    <div class="max-w-7xl mx-auto px-5 sm:px-8 lg:px-10 py-14 md:py-16">
+     <div class="matsi-footer-grid">
+      <div class="matsi-footer-brand">
+       <div class="flex items-center gap-3 mb-5">
         <img id="footer-logo-img" src="matsiwine.png" alt="Matsi Wine" class="h-10 md:h-12 w-auto object-contain" onerror="if(!this.dataset.fallback){this.dataset.fallback='1';this.src='assets/images/matsiwine.png';return;} this.style.display='none'; this.nextElementSibling.style.display='inline';">
         <span class="font-display text-2xl font-semibold" style="display:none;">MATSI WINE</span>
        </div>
-       <p class="text-cream-200/70 max-w-md">ქართული ღვინის ხელოვნება — 8000 წლიანი ტრადიციის თანამედროვე ინტერპრეტაცია</p>
+       <p class="matsi-footer-lead">ქართული ღვინის ხელოვნება — 8000 წლიანი ტრადიციის თანამედროვე ინტერპრეტაცია</p>
+       <div class="matsi-footer-social">
+        <a href="https://instagram.com/matsi_wine_" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+         <svg class="w-5 h-5" fill="currentColor" viewbox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073z"/></svg>
+        </a>
+        <a href="#" aria-label="Facebook">
+         <svg class="w-5 h-5" fill="currentColor" viewbox="0 0 24 24"><path d="M22.675 0h-21.35c-.732 0-1.325.593-1.325 1.325v21.351c0 .731.593 1.324 1.325 1.324h11.495v-9.294h-3.128v-3.622h3.128v-2.671c0-3.1 1.893-4.788 4.659-4.788 1.325 0 2.463.099 2.795.143v3.24l-1.918.001c-1.504 0-1.795.715-1.795 1.763v2.313h3.587l-.467 3.622h-3.12v9.293h6.116c.73 0 1.323-.593 1.323-1.325v-21.35c0-.732-.593-1.325-1.325-1.325z"/></svg>
+        </a>
+       </div>
       </div>
       <div>
-       <h3 class="font-semibold mb-4">ნავიგაცია</h3>
-       <ul class="space-y-2 text-cream-200/70">
-        <li><a href="#" onclick="navigateTo('home')" class="hover:text-cream-50 transition-colors">მთავარი</a></li>
-        <li><a href="#" onclick="navigateTo('shop')" class="hover:text-cream-50 transition-colors">პროდუქტები</a></li>
-        <li><a href="#" onclick="navigateTo('about')" class="hover:text-cream-50 transition-colors">ჩვენს შესახებ</a></li>
-        <li><a href="#" onclick="navigateTo('designer')" class="hover:text-cream-50 transition-colors">შექმენი შენი დიზაინი</a></li>
-        <li><a href="#" onclick="navigateTo('contact')" class="hover:text-cream-50 transition-colors">კონტაქტი</a></li>
+       <h3 class="matsi-footer-title">ნავიგაცია</h3>
+       <ul class="matsi-footer-links">
+        <li><a href="#" onclick="navigateTo('home')">მთავარი</a></li>
+        <li><a href="#" onclick="navigateTo('shop')">პროდუქტები</a></li>
+        <li><a href="#" onclick="navigateTo('about')">ჩვენს შესახებ</a></li>
+        <li><a href="#" onclick="navigateTo('designer')">შექმენი შენი დიზაინი</a></li>
+        <li><a href="#" onclick="navigateTo('contact')">კონტაქტი</a></li>
        </ul>
       </div>
       <div>
-       <h3 class="font-semibold mb-4">ინფორმაცია</h3>
-       <ul class="space-y-2 text-cream-200/70">
-        <li><a href="#" class="hover:text-cream-50 transition-colors">მიტანის პირობები</a></li>
-        <li><a href="#" class="hover:text-cream-50 transition-colors">დაბრუნების პოლიტიკა</a></li>
-        <li><a href="#" class="hover:text-cream-50 transition-colors">კონფიდენციალობა</a></li>
+       <h3 class="matsi-footer-title">ინფორმაცია</h3>
+       <ul class="matsi-footer-links">
+        <li><a href="#">მიტანის პირობები</a></li>
+        <li><a href="#">დაბრუნების პოლიტიკა</a></li>
+        <li><a href="#">კონფიდენციალობა</a></li>
+       </ul>
+      </div>
+      <div>
+       <h3 class="matsi-footer-title">კონტაქტი</h3>
+       <ul class="matsi-footer-links">
+        <li><a href="mailto:info@matsiwine.ge">info@matsiwine.ge</a></li>
+        <li><a href="tel:+995555123456">+995 555 123 456</a></li>
+        <li><span>კახეთი, საქართველო</span></li>
        </ul>
       </div>
      </div>
-     <div class="border-t border-wine-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
-      <p id="footer-copyright" class="text-cream-200/50 text-sm">© 2024 MATSI WINE. ყველა უფლება დაცულია.</p>
-      <p id="footer-drink" class="text-cream-200/50 text-sm">🍷 პასუხისმგებლობით მოიხმარეთ</p>
+     <div class="matsi-footer-bottom">
+      <p id="footer-copyright">© 2024 MATSI WINE. ყველა უფლება დაცულია.</p>
+      <p id="footer-drink">🍷 პასუხისმგებლობით მოიხმარეთ</p>
      </div>
     </div>
    </footer>
