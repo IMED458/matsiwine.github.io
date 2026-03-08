@@ -686,6 +686,10 @@ button[class*="border-2"]:hover {
   justify-content: flex-end;
 }
 
+#page-home .home-story-stat-card {
+  display: none !important;
+}
+
 .home-story-stat-card p {
   margin: 0;
 }
