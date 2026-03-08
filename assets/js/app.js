@@ -751,18 +751,47 @@
       if (prefersReducedMotion) return;
       const hero = document.querySelector('#page-home .hero-bottle-wrap');
       const image = document.querySelector('#hero-bottle-img');
-      if (!hero || !image) return;
+      const blobOne = document.getElementById('home-blob-one');
+      const blobTwo = document.getElementById('home-blob-two');
 
-      hero.addEventListener('pointermove', (event) => {
-        const rect = hero.getBoundingClientRect();
-        const x = ((event.clientX - rect.left) / rect.width - 0.5) * 2;
-        const y = ((event.clientY - rect.top) / rect.height - 0.5) * 2;
-        image.style.transform = `translate3d(${x * 8}px, ${y * 6}px, 0) rotateX(${y * -2.2}deg) rotateY(${x * 3.2}deg)`;
-      });
+      if (hero && image && hero.dataset.parallaxReady !== '1') {
+        hero.dataset.parallaxReady = '1';
 
-      hero.addEventListener('pointerleave', () => {
-        image.style.transform = '';
-      });
+        hero.addEventListener('pointermove', (event) => {
+          const rect = hero.getBoundingClientRect();
+          const x = ((event.clientX - rect.left) / rect.width - 0.5) * 2;
+          const y = ((event.clientY - rect.top) / rect.height - 0.5) * 2;
+          image.style.transform = `translate3d(${x * 8}px, ${y * 6}px, 0) rotateX(${y * -2.2}deg) rotateY(${x * 3.2}deg)`;
+        });
+
+        hero.addEventListener('pointerleave', () => {
+          image.style.transform = '';
+        });
+      }
+
+      if ((!blobOne && !blobTwo) || document.documentElement.dataset.homeScrollAnimReady === '1') return;
+      document.documentElement.dataset.homeScrollAnimReady = '1';
+
+      const updateHeroScrollParallax = () => {
+        const y = Math.max(0, Math.min(window.scrollY || 0, 500));
+        const y1 = (y / 500) * 200;
+        const y2 = (y / 500) * -150;
+        if (blobOne) blobOne.style.transform = `translate3d(0, ${y1}px, 0)`;
+        if (blobTwo) blobTwo.style.transform = `translate3d(0, ${y2}px, 0)`;
+      };
+
+      let ticking = false;
+      window.addEventListener('scroll', () => {
+        if (ticking) return;
+        ticking = true;
+        requestAnimationFrame(() => {
+          updateHeroScrollParallax();
+          ticking = false;
+        });
+      }, { passive: true });
+
+      window.addEventListener('resize', updateHeroScrollParallax, { passive: true });
+      updateHeroScrollParallax();
     }
 
     function initCardTilt(scope = document) {

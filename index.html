@@ -98,8 +98,8 @@
     <section id="page-home" class="page-section"><!-- Hero Section -->
      <div class="home-hero relative min-h-screen flex items-center pt-20 overflow-hidden">
       <div class="home-hero-bg absolute inset-0 z-0"></div>
-      <div class="home-blob home-blob-one absolute z-0"></div>
-      <div class="home-blob home-blob-two absolute z-0"></div>
+      <div id="home-blob-one" class="home-blob home-blob-one absolute z-0"></div>
+      <div id="home-blob-two" class="home-blob home-blob-two absolute z-0"></div>
       <div class="relative z-10 max-w-7xl mx-auto px-6 md:px-12 w-full">
        <div class="grid lg:grid-cols-2 gap-12 items-center">
         <div class="text-center lg:text-left">
@@ -109,21 +109,24 @@
          <div class="flex flex-wrap gap-5 justify-center lg:justify-start reveal reveal-delay-3"><button id="home-hero-btn-primary" onclick="navigateTo('shop')" class="btn-wine premium-button-primary px-10 py-5 text-sm font-bold uppercase tracking-widest inline-flex items-center gap-3"> კოლექციის ნახვა <span aria-hidden="true">→</span> </button> <button id="home-hero-btn-secondary" onclick="navigateTo('about')" class="premium-button-outline px-10 py-5 text-sm font-bold uppercase tracking-widest"> ჩვენი ისტორია </button>
          </div>
         </div>
-        <div class="hidden md:flex justify-center items-center relative home-hero-visual">
+        <div class="hidden md:flex justify-center items-center relative home-hero-visual hero-visual-entry">
          <div class="home-ring home-ring-1"></div>
          <div class="home-ring home-ring-2"></div>
          <div class="relative hero-bottle-wrap">
           <img id="hero-bottle-img" src="bottle.png" alt="Matsi Wine Bottle" class="hero-bottle-image" loading="eager" decoding="async" onerror="if(!this.dataset.fallback){this.dataset.fallback='1';this.src='assets/images/bottle.png';return;} this.style.display='none'; document.getElementById('hero-bottle-fallback').classList.remove('hidden');">
           <div id="hero-bottle-fallback" class="hidden absolute inset-0 rounded-[40px] bg-gradient-to-br from-wine-100 to-cream-200"></div>
-          <div class="home-floating-tag home-floating-tag-top">
+          <div class="home-floating-tag home-floating-tag-top home-floating-tag-enter-right">
            <p id="home-hero-tag1-kicker" class="home-floating-kicker">VINTAGE</p>
            <p id="home-hero-tag1-title" class="home-floating-title">2019 Reserve</p>
           </div>
-          <div class="home-floating-tag home-floating-tag-bottom">
+          <div class="home-floating-tag home-floating-tag-bottom home-floating-tag-enter-left">
            <p id="home-hero-tag2-kicker" class="home-floating-kicker">ORIGIN</p>
            <p id="home-hero-tag2-title" class="home-floating-title">Kakheti, Georgia</p>
           </div>
          </div>
+         <svg class="home-swirl" viewBox="0 0 100 100" aria-hidden="true">
+          <path d="M10,50 Q25,20 50,50 T90,50" />
+         </svg>
         </div>
        </div>
       </div><!-- Scroll indicator -->
