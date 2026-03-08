@@ -59,7 +59,6 @@
       story_title: 'მიწიდან სუფრამდე',
       story_text: 'MATSI WINE — ეს არის ოჯახური მეღვინეობის თანამედროვე გაგრძელება. ჩვენ ვაერთიანებთ ქვევრის უძველეს ტრადიციას ევროპული მეღვინეობის თანამედროვე მიდგომებთან, რათა შევქმნათ ღვინო, რომელიც მოგვითხრობს ქართული მიწის ისტორიას.',
       story_btn: 'მეტის გაგება',
-      story_image: '',
       stat1_value: '8000+',
       stat1_label: 'წლიანი ტრადიცია',
       stat1_image: '',
@@ -490,16 +489,6 @@
       }
     }
 
-    function setHomeStoryImage(imageUrl) {
-      const imageElement = document.getElementById('home-story-image');
-      if (!imageElement) return;
-      if (imageUrl && String(imageUrl).trim()) {
-        imageElement.src = String(imageUrl).trim();
-      } else {
-        imageElement.src = 'https://picsum.photos/seed/vineyard/1200/1500';
-      }
-    }
-
     function setAboutSectionImage(sectionNumber, imageUrl) {
       const imageElement = document.getElementById(`about-photo${sectionNumber}-image`);
       const fallbackElement = document.getElementById(`about-photo${sectionNumber}-fallback`);
@@ -549,7 +538,6 @@
       setTextById('home-story-title', homeContent.story_title);
       setTextById('home-story-text', homeContent.story_text);
       setTextById('home-story-btn', homeContent.story_btn);
-      setHomeStoryImage(homeContent.story_image);
 
       setTextById('home-stat1-value', homeContent.stat1_value);
       setTextById('home-stat1-label', homeContent.stat1_label);
@@ -763,31 +751,31 @@
         : products.filter(p => p.type === currentFilter);
       
       grid.innerHTML = filtered.map(product => `
-        <article class="product-card bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-500 border border-wine-100 cursor-pointer group" onclick="viewProduct('${product.id}')">
-          <div class="aspect-[3/4] overflow-hidden bg-cream-50 relative">
+        <div class="product-card group relative bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-2xl border border-wine-100 cursor-pointer" onclick="viewProduct('${product.id}')">
+          <div class="block aspect-[3/4] overflow-hidden bg-wine-50 relative">
             <div class="absolute inset-0 bg-gradient-to-br from-wine-100/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-            ${getProductVisualMarkup(product, 'card')}
+            <div class="w-full h-full flex items-center justify-center p-8 transition-transform duration-700 group-hover:scale-110">
+              ${getProductVisualMarkup(product, 'card')}
+            </div>
             <div class="absolute bottom-4 left-4 right-4 translate-y-12 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 flex gap-2">
-              <button onclick="event.stopPropagation(); addToCart('${product.id}', '${product.name} ${product.year}', ${product.price})" class="flex-1 bg-wine-900 text-white py-3 rounded-xl flex items-center justify-center gap-2 text-sm font-medium hover:bg-wine-800 transition-colors">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
-                </svg>
+              <button onclick="event.stopPropagation(); addToCart('${product.id}', '${product.name} ${product.year}', ${product.price}, { image_url: '${escapeHtml(product.image_url || '')}' })"
+                class="w-full premium-button-primary py-3 rounded-xl text-sm font-medium inline-flex items-center justify-center gap-2">
                 დამატება
               </button>
             </div>
           </div>
           <div class="p-6">
-            <div class="flex justify-between items-start gap-2 mb-2">
-              <div>
+            <div class="flex justify-between items-start mb-2 gap-4">
+              <div class="min-w-0">
                 <p class="text-wine-500 text-[10px] font-bold uppercase tracking-widest mb-1">${product.category}</p>
-                <h3 class="font-display text-xl font-bold text-wine-900">${product.name}</h3>
+                <h3 class="font-display text-2xl font-bold text-wine-950 truncate">${product.name}</h3>
               </div>
-              <span class="font-display text-xl font-bold text-wine-900">₾${product.price}</span>
+              <span class="font-display text-3xl font-bold text-wine-900 shrink-0">₾${product.price}</span>
             </div>
-            <p class="text-wine-600/60 text-sm mb-4 line-clamp-2 font-light">${product.grape || ''}${product.region ? ' • ' + product.region : ''}${product.year ? ' • ' + product.year : ''}</p>
-            <a href="#" onclick="event.preventDefault(); event.stopPropagation(); viewProduct('${product.id}')" class="inline-flex items-center gap-2 text-wine-900 text-xs font-bold uppercase tracking-widest group/link">დეტალები <svg class="w-3 h-3 transition-transform duration-300 group-hover/link:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg></a>
+            <p class="text-wine-700/60 text-sm mb-4 line-clamp-2 font-light">${product.grape} • ${product.region} • ${product.year}</p>
+            <div class="text-wine-950 text-xs font-bold uppercase tracking-widest inline-flex items-center gap-2">დეტალები <span aria-hidden="true">→</span></div>
           </div>
-        </article>
+        </div>
       `).join('');
       applyLiquidButtons(grid);
       refreshMotionTargets(grid);
@@ -795,11 +783,15 @@
 
     function getProductVisualMarkup(product, variant = 'card') {
       if (product.image_url) {
-        const sizeClass = variant === 'detail' ? 'w-full h-full object-contain' : 'w-full h-full object-contain';
+        const sizeClass = variant === 'detail'
+          ? 'h-full w-auto max-w-full object-contain drop-shadow-[0_45px_45px_rgba(2,6,23,0.25)]'
+          : 'w-full h-full object-contain';
         return `<img src="${product.image_url}" alt="${escapeHtml(product.name || 'Wine')}" class="${sizeClass} drop-shadow-2xl">`;
       }
 
-      const svgClass = variant === 'detail' ? 'w-32 h-80 drop-shadow-2xl' : 'w-16 h-40 drop-shadow-xl';
+      const svgClass = variant === 'detail'
+        ? 'h-full w-auto drop-shadow-[0_45px_45px_rgba(2,6,23,0.2)]'
+        : 'w-24 h-full drop-shadow-2xl';
       return `
         <svg viewBox="0 0 80 200" class="${svgClass}">
           <defs>
@@ -858,62 +850,45 @@
       
       container.innerHTML = `
         <div class="bg-white rounded-[60px] p-16 md:p-24 aspect-[4/5] flex items-center justify-center shadow-2xl border border-wine-100 relative overflow-hidden">
-          <div class="absolute inset-0 bg-gradient-to-br from-wine-100/50 to-transparent opacity-50"></div>
-          <div class="relative z-10 h-full drop-shadow-[0_45px_45px_rgba(2,6,23,0.2)]">
-            ${getProductVisualMarkup(product, 'detail')}
-          </div>
+          <div class="absolute inset-0 bg-gradient-to-br from-wine-50 to-transparent opacity-50"></div>
+          <div class="relative z-10 h-full flex items-center justify-center">${getProductVisualMarkup(product, 'detail')}</div>
         </div>
-
+        
         <div class="space-y-10">
           <div>
-            <p class="text-wine-600 font-bold uppercase tracking-[0.2em] text-xs mb-4">${product.category || ''}</p>
-            <h1 class="text-5xl md:text-6xl font-display font-bold text-wine-900 mb-4">${product.name}</h1>
-            <p class="text-2xl text-wine-700 font-display italic">${product.year || ''} • ${product.grape || ''}</p>
+            <p class="text-wine-600 font-bold uppercase tracking-[0.2em] text-xs mb-4">${product.category}</p>
+            <h1 class="font-display text-5xl md:text-6xl font-bold text-wine-950 mb-4">${product.name}</h1>
+            <p class="text-2xl text-wine-700 font-display italic">${product.year} • ${product.grape}</p>
           </div>
-
-          <p class="text-lg text-wine-600/80 font-light leading-relaxed">${product.description || ''}</p>
-
+          
+          <p class="text-lg text-wine-700/80 font-light leading-relaxed">${product.description}</p>
+          
           <div class="grid sm:grid-cols-2 gap-6">
-            <div class="glass-card p-6 rounded-3xl flex gap-4 items-start">
-              <svg class="w-6 h-6 text-wine-700 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 010-8c0-2.21 1.79-4 4-4s4 1.79 4 4a4 4 0 010 8H7z"/></svg>
-              <div>
-                <h4 class="text-xs font-bold uppercase tracking-widest text-wine-500 mb-1">არომატი</h4>
-                <p class="text-sm text-wine-900 font-medium">${product.aroma || '-'}</p>
-              </div>
+            <div class="glass-card p-6 rounded-3xl">
+              <p class="text-xs font-bold uppercase tracking-widest text-wine-700/50 mb-1">არომატი</p>
+              <p class="text-sm text-wine-950 font-medium">${product.aroma}</p>
             </div>
-            <div class="glass-card p-6 rounded-3xl flex gap-4 items-start">
-              <svg class="w-6 h-6 text-wine-700 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 3h8m-7 0v6a3 3 0 006 0V3m-8 9h8v6a4 4 0 01-8 0v-6z"/></svg>
-              <div>
-                <h4 class="text-xs font-bold uppercase tracking-widest text-wine-500 mb-1">გემო</h4>
-                <p class="text-sm text-wine-900 font-medium">${product.taste || '-'}</p>
-              </div>
+            <div class="glass-card p-6 rounded-3xl">
+              <p class="text-xs font-bold uppercase tracking-widest text-wine-700/50 mb-1">გემო</p>
+              <p class="text-sm text-wine-950 font-medium">${product.taste}</p>
             </div>
-            <div class="glass-card p-6 rounded-3xl flex gap-4 items-start">
-              <svg class="w-6 h-6 text-wine-700 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4h18M4 8h16M7 12h10M10 16h4M11 20h2"/></svg>
-              <div>
-                <h4 class="text-xs font-bold uppercase tracking-widest text-wine-500 mb-1">შეხამება</h4>
-                <p class="text-sm text-wine-900 font-medium">${product.pairing || '-'}</p>
-              </div>
+            <div class="glass-card p-6 rounded-3xl">
+              <p class="text-xs font-bold uppercase tracking-widest text-wine-700/50 mb-1">შეხამება</p>
+              <p class="text-sm text-wine-950 font-medium">${product.pairing}</p>
             </div>
-            <div class="glass-card p-6 rounded-3xl flex gap-4 items-start">
-              <svg class="w-6 h-6 text-wine-700 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 14.76V3.5a2.5 2.5 0 00-5 0v11.26a4 4 0 105 0z"/></svg>
-              <div>
-                <h4 class="text-xs font-bold uppercase tracking-widest text-wine-500 mb-1">დეტალები</h4>
-                <p class="text-sm text-wine-900 font-medium">${product.alcohol || '-'} • ${product.temperature || '-'}</p>
-              </div>
+            <div class="glass-card p-6 rounded-3xl">
+              <p class="text-xs font-bold uppercase tracking-widest text-wine-700/50 mb-1">დეტალები</p>
+              <p class="text-sm text-wine-950 font-medium">${product.alcohol} • ${product.temperature}</p>
             </div>
           </div>
-
+          
           <div class="bg-white p-8 rounded-[40px] shadow-2xl border border-wine-100 flex flex-col sm:flex-row items-center justify-between gap-8">
             <div>
-              <p class="text-xs font-bold uppercase tracking-widest text-wine-500 mb-1">ფასი</p>
-              <p class="text-5xl font-display font-bold text-wine-900">₾${product.price}</p>
+              <p class="text-xs font-bold uppercase tracking-widest text-wine-700/50 mb-1">ფასი</p>
+              <p class="text-5xl font-display font-bold text-wine-950">₾${product.price}</p>
             </div>
-            <button onclick="addToCart('${product.id}', '${product.name} ${product.year}', ${product.price})" 
-                    class="w-full sm:w-auto btn-wine py-5 px-12 flex items-center justify-center gap-3">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
-              </svg>
+            <button onclick="addToCart('${product.id}', '${product.name} ${product.year}', ${product.price}, { image_url: '${escapeHtml(product.image_url || '')}' })"
+                    class="w-full sm:w-auto premium-button-primary py-5 px-12 inline-flex items-center justify-center gap-3">
               კალათაში დამატება
             </button>
           </div>
@@ -936,26 +911,20 @@
       }
       
       isLoading = true;
-      const sourceProduct = products.find((p) => p.id === productId) || null;
-      const resolvedImageUrl = meta.image_url || sourceProduct?.image_url || '';
       
       const existingItem = cartItems.find(item => item.productId === productId);
       
       if (existingItem) {
-        const nextImageUrl = existingItem.image_url || resolvedImageUrl || '';
         if (window.dataSdk) {
           try {
             const result = await window.dataSdk.update({
               ...existingItem,
-              quantity: existingItem.quantity + 1,
-              image_url: nextImageUrl
+              quantity: existingItem.quantity + 1
             });
             if (!result.isOk) throw new Error('sdk update failed');
-            existingItem.image_url = nextImageUrl;
             showToast(`${productName} დამატებულია კალათაში`, 'success');
           } catch {
             existingItem.quantity += 1;
-            existingItem.image_url = nextImageUrl;
             saveCartToLocal();
             updateCartUI();
             updateCartCount();
@@ -963,7 +932,6 @@
           }
         } else {
           existingItem.quantity += 1;
-          existingItem.image_url = nextImageUrl;
           saveCartToLocal();
           updateCartUI();
           updateCartCount();
@@ -977,7 +945,7 @@
           productName,
           quantity: 1,
           price,
-          image_url: resolvedImageUrl,
+          image_url: meta.image_url || '',
           item_type: meta.item_type || 'product',
           createdAt: new Date().toISOString()
         };
@@ -1113,22 +1081,17 @@
       if (cartItems.length === 0) {
         checkoutFormVisible = false;
         container.innerHTML = `
-          <div class="pt-14 pb-10 min-h-[58vh] bg-cream-50 flex items-center justify-center">
-            <div class="text-center space-y-8 max-w-md px-6">
-              <div class="w-32 h-32 bg-wine-100 rounded-full flex items-center justify-center mx-auto">
-                <svg class="w-12 h-12 text-wine-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7" d="M6 7h12M9 7V5a1 1 0 011-1h4a1 1 0 011 1v2m-8 0l1 12a2 2 0 002 2h4a2 2 0 002-2l1-12" />
-                </svg>
-              </div>
-              <h2 class="font-display text-4xl font-bold text-wine-900">კალათა ცარიელია</h2>
-              <p class="text-wine-600 font-light">აღმოაჩინეთ ჩვენი კოლექცია და შეარჩიეთ საყვარელი ღვინო.</p>
-              <button onclick="navigateTo('shop')" class="btn-wine inline-flex items-center gap-3 px-8 py-4 bg-wine-900 text-white font-semibold rounded-full">
-                პროდუქტებში გადასვლა
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
-                </svg>
-              </button>
+          <div class="text-center py-16 max-w-md mx-auto">
+            <div class="w-32 h-32 mx-auto mb-8 rounded-full bg-wine-100 flex items-center justify-center">
+              <svg class="w-12 h-12 text-wine-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
+              </svg>
             </div>
+            <h2 class="font-display text-5xl font-bold text-wine-950 mb-3">კალათა ცარიელია</h2>
+            <p class="text-wine-700/70 font-light mb-8">აღმოაჩინეთ ჩვენი კოლექცია და შეარჩიეთ საყვარელი ღვინო.</p>
+            <button onclick="navigateTo('shop')" class="premium-button-primary inline-flex items-center gap-3 px-8 py-4">
+              პროდუქტებში გადასვლა <span aria-hidden="true">→</span>
+            </button>
           </div>
         `;
         applyLiquidButtons(container);
@@ -1138,13 +1101,13 @@
       
       const total = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
       const orderRows = cartItems.map((item) => `
-        <div class="py-2 border-b border-wine-200 text-sm">
+        <div class="py-2 border-b border-wine-200/70 text-sm">
           <div class="font-medium text-wine-900">${item.productName}</div>
           <div class="text-wine-600">₾${item.price} x ${item.quantity} = ₾${item.price * item.quantity}</div>
         </div>
       `).join('');
       const bankRows = BANK_ACCOUNTS.map((item, idx) => `
-        <div class="bg-cream-50 rounded-2xl p-3 flex items-start justify-between gap-3 border border-wine-200">
+        <div class="bg-cream-100 rounded-xl p-3 flex items-start justify-between gap-3">
           <div class="flex items-start gap-2">
             <span class="w-7 h-7 rounded-full bg-white border border-wine-200 flex items-center justify-center flex-shrink-0">${getBankIconMarkup(item.bank)}</span>
             <div>
@@ -1152,109 +1115,99 @@
             <p id="checkout-iban-${idx}" class="font-mono text-sm text-wine-900 break-all">${item.iban}</p>
             </div>
           </div>
-          <button type="button" onclick="copyCheckoutIban('${item.iban}')" class="px-3 py-1.5 rounded-full bg-wine-900 text-white text-xs">კოპირება</button>
+          <button type="button" onclick="copyCheckoutIban('${item.iban}')" class="px-3 py-1.5 rounded-lg bg-wine-700 text-cream-50 text-xs hover:bg-wine-800">კოპირება</button>
         </div>
       `).join('');
       
       container.innerHTML = `
-        <div class="grid lg:grid-cols-3 gap-12 mb-10">
-          <div class="lg:col-span-2 space-y-6">
-            ${cartItems.map(item => `
-              <div class="bg-white p-6 rounded-[30px] shadow-sm border border-wine-100 flex items-center gap-6">
-                <div class="w-24 h-32 bg-cream-50 rounded-2xl flex items-center justify-center flex-shrink-0 overflow-hidden border border-wine-100">
-                  ${item.image_url ? (
-                    `<img src="${item.image_url}" alt="${escapeHtml(item.productName)}" class="w-full h-full object-contain p-3">`
-                  ) : `
-                    <svg viewBox="0 0 80 200" class="w-12 h-24">
-                      <path d="M25 60 Q25 50 30 45 L30 25 Q30 20 35 20 L45 20 Q50 20 50 25 L50 45 Q55 50 55 60 L55 180 Q55 190 40 190 Q25 190 25 180 Z" fill="#020617"/>
-                    </svg>
-                  `}
-                </div>
-                <div class="flex-1 min-w-0">
-                  <h3 class="text-xl font-display font-bold text-wine-900 truncate">${item.productName}</h3>
-                  <p class="text-xs text-wine-500 uppercase tracking-widest font-bold mb-4">${item.item_type === 'custom_label' ? 'Custom Label' : (item.category || 'Wine')}</p>
-                  <div class="flex items-center gap-4">
-                    <div class="flex items-center gap-3 bg-cream-50 px-3 py-1.5 rounded-xl border border-wine-100">
-                      <button onclick="updateQuantity('${getCartItemKey(item)}', -1)" class="text-wine-700 hover:text-wine-900">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"/></svg>
-                      </button>
-                      <span class="w-6 text-center font-bold text-wine-900">${item.quantity}</span>
-                      <button onclick="updateQuantity('${getCartItemKey(item)}', 1)" class="text-wine-700 hover:text-wine-900">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
-                      </button>
-                    </div>
-                    <button onclick="removeFromCart('${getCartItemKey(item)}')" class="text-red-400 hover:text-red-500 transition-colors">
-                      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7" d="M6 7h12M9 7V5a1 1 0 011-1h4a1 1 0 011 1v2m-8 0l1 12a2 2 0 002 2h4a2 2 0 002-2l1-12"/></svg>
-                    </button>
-                  </div>
-                </div>
-                <div class="text-right">
-                  <p class="text-2xl font-display font-bold text-wine-900">₾${item.price * item.quantity}</p>
-                  <p class="text-xs text-wine-500">₾${item.price} / ცალი</p>
-                </div>
+        <div class="space-y-6 mb-8">
+          ${cartItems.map(item => `
+            <div class="bg-white p-6 rounded-[30px] shadow-sm border border-wine-100 flex items-center gap-6">
+              <div class="w-24 h-32 bg-wine-50 rounded-2xl flex items-center justify-center flex-shrink-0 overflow-hidden">
+                ${item.image_url ? `<img src="${item.image_url}" alt="${escapeHtml(item.productName)}" class="w-full h-full object-contain p-4">` : `
+                <svg viewBox="0 0 80 200" class="w-12 h-24">
+                  <path d="M25 60 Q25 50 30 45 L30 25 Q30 20 35 20 L45 20 Q50 20 50 25 L50 45 Q55 50 55 60 L55 180 Q55 190 40 190 Q25 190 25 180 Z" fill="#020617"/>
+                </svg>`}
               </div>
-            `).join('')}
-          </div>
-
-          <div class="space-y-6">
-            <div class="bg-white p-10 rounded-[40px] text-wine-900 shadow-2xl border border-wine-100">
-              <h2 class="text-2xl font-display font-bold mb-8 text-wine-900">შეკვეთის ჯამი</h2>
-              <div class="space-y-4 mb-8">
-                <div class="flex justify-between text-wine-600 font-light">
-                  <span>პროდუქტები</span>
-                  <span>₾${total}</span>
-                </div>
-                <div class="flex justify-between text-wine-600 font-light">
-                  <span>მიტანა</span>
-                  <span>უფასო</span>
-                </div>
-                <div class="pt-4 border-t border-wine-100 flex justify-between items-end">
-                  <span class="text-lg font-display text-wine-900">სულ</span>
-                  <span class="text-4xl font-display font-bold text-wine-900">₾${total}</span>
-                </div>
+              <div class="flex-1 min-w-0">
+                <h3 class="text-2xl font-display font-bold text-wine-950 truncate">${item.productName}</h3>
+                <p class="text-sm text-wine-700/50 uppercase tracking-widest font-bold mb-4">${item.item_type === 'custom_label' ? 'Custom label' : (item.category || 'პროდუქტი')}</p>
+                <p class="text-wine-700/70 text-sm">₾${item.price} / ცალი</p>
               </div>
-              <button type="button" onclick="handleCheckout()" class="w-full bg-wine-900 text-white py-5 rounded-2xl font-bold uppercase tracking-widest hover:bg-wine-800 transition-all flex items-center justify-center gap-3">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m3 0h1m-5 4h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
-                გაფორმება
-              </button>
+              <div class="flex items-center gap-3">
+                <button onclick="updateQuantity('${getCartItemKey(item)}', -1)" 
+                        class="w-8 h-8 rounded-full bg-wine-100 text-wine-700 flex items-center justify-center hover:bg-wine-200 transition-colors">
+                  −
+                </button>
+                <span class="font-semibold text-wine-950 w-8 text-center">${item.quantity}</span>
+                <button onclick="updateQuantity('${getCartItemKey(item)}', 1)" 
+                        class="w-8 h-8 rounded-full bg-wine-100 text-wine-700 flex items-center justify-center hover:bg-wine-200 transition-colors">
+                  +
+                </button>
+              </div>
+              <div class="text-right">
+                <p class="text-3xl font-display font-bold text-wine-950">₾${item.price * item.quantity}</p>
+                <button onclick="removeFromCart('${getCartItemKey(item)}')" class="text-red-400 hover:text-red-500 text-sm transition-colors">
+                  წაშლა
+                </button>
+              </div>
             </div>
-            <div class="glass-card p-8 rounded-[30px] border border-wine-100">
-              <p class="text-sm text-wine-600 font-light leading-relaxed">* მიტანა თბილისში ხორციელდება 24 საათის განმავლობაში. რეგიონებში — 2-3 სამუშაო დღეში.</p>
+          `).join('')}
+        </div>
+        
+        <div class="bg-wine-950 p-10 rounded-[40px] text-white shadow-2xl">
+          <h2 class="text-4xl font-display font-bold mb-8">შეკვეთის ჯამი</h2>
+          <div class="space-y-4 mb-8">
+            <div class="flex items-center justify-between text-white/70 font-light">
+              <span>პროდუქტები</span>
+              <span>₾${total}</span>
+            </div>
+            <div class="flex items-center justify-between text-white/70 font-light">
+              <span>მიტანა</span>
+              <span>უფასო</span>
+            </div>
+            <div class="pt-4 border-t border-white/10 flex items-center justify-between">
+              <span class="text-lg font-display">სულ</span>
+              <span class="font-display text-5xl font-bold text-white">₾${total}</span>
             </div>
           </div>
+          <button type="button" onclick="handleCheckout()" class="w-full bg-white text-wine-950 py-5 rounded-2xl font-bold uppercase tracking-widest hover:bg-wine-100 transition-all">
+            შეკვეთის გაფორმება
+          </button>
+          <p class="text-white/60 text-xs text-center mt-4">მიტანა თბილისში უფასოა ₾100+ შეკვეთაზე</p>
         </div>
 
         ${checkoutFormVisible ? `
-        <div class="bg-white rounded-[30px] p-6 md:p-8 shadow-xl border border-wine-200">
+        <div class="bg-white rounded-2xl p-6 md:p-8 shadow-lg">
           <h2 class="font-display text-3xl text-wine-900 mb-3">შეკვეთის ფორმა</h2>
           <p class="text-sm text-wine-600 mb-4">შეავსე მონაცემები, ატვირთე ქვითარი და გაგზავნე შეკვეთა.</p>
           <div class="grid md:grid-cols-2 gap-6">
             <div>
               <h3 class="font-semibold text-wine-900 mb-2">შეკვეთილი პროდუქტები</h3>
-              <div class="bg-cream-50 rounded-2xl p-3 mb-3 border border-wine-200">${orderRows}</div>
+              <div class="bg-cream-50 rounded-xl p-3 mb-3">${orderRows}</div>
               <p class="font-semibold text-wine-900">სულ გადასახდელი: ₾<span id="checkout-total">${total}</span></p>
             </div>
           </div>
           <form id="checkout-form" class="grid md:grid-cols-2 gap-4 mt-6" onsubmit="submitCheckoutOrder(event)">
             <div>
               <label class="block text-sm text-wine-700 mb-1">სახელი</label>
-              <input required name="first_name" class="w-full px-3 py-2 rounded-xl border border-wine-200">
+              <input required name="first_name" class="w-full px-3 py-2 rounded-lg border border-wine-200">
             </div>
             <div>
               <label class="block text-sm text-wine-700 mb-1">გვარი</label>
-              <input required name="last_name" class="w-full px-3 py-2 rounded-xl border border-wine-200">
+              <input required name="last_name" class="w-full px-3 py-2 rounded-lg border border-wine-200">
             </div>
             <div>
               <label class="block text-sm text-wine-700 mb-1">ტელეფონი</label>
-              <input required name="phone" class="w-full px-3 py-2 rounded-xl border border-wine-200">
+              <input required name="phone" class="w-full px-3 py-2 rounded-lg border border-wine-200">
             </div>
             <div>
               <label class="block text-sm text-wine-700 mb-1">ელფოსტა</label>
-              <input required type="email" name="email" class="w-full px-3 py-2 rounded-xl border border-wine-200">
+              <input required type="email" name="email" class="w-full px-3 py-2 rounded-lg border border-wine-200">
             </div>
             <div class="md:col-span-2">
               <label class="block text-sm text-wine-700 mb-1">მისამართი (სად იგზავნება)</label>
-              <textarea required name="address" rows="2" class="w-full px-3 py-2 rounded-xl border border-wine-200"></textarea>
+              <textarea required name="address" rows="2" class="w-full px-3 py-2 rounded-lg border border-wine-200"></textarea>
             </div>
             <div class="md:col-span-2">
               <h3 class="font-semibold text-wine-900 mb-2">ბანკის ანგარიშები</h3>
@@ -1262,11 +1215,11 @@
             </div>
             <div class="md:col-span-2">
               <label class="block text-sm text-wine-700 mb-1">გადახდის ქვითარი</label>
-              <input required type="file" accept="image/*,application/pdf" name="receipt" class="w-full px-3 py-2 rounded-xl border border-wine-200 bg-cream-50">
+              <input required type="file" accept="image/*,application/pdf" name="receipt" class="w-full px-3 py-2 rounded-lg border border-wine-200 bg-cream-50">
             </div>
             <div class="md:col-span-2 flex gap-3">
-              <button type="submit" class="btn-wine px-6 py-3 bg-wine-900 text-white rounded-full">შეკვეთის გაგზავნა</button>
-              <button type="button" onclick="toggleCheckoutForm(false)" class="px-6 py-3 rounded-full border border-wine-200 text-wine-700 hover:bg-cream-50">დახურვა</button>
+              <button type="submit" class="btn-wine px-6 py-3 bg-wine-700 text-cream-50 rounded-xl hover:bg-wine-800">შეკვეთის გაგზავნა</button>
+              <button type="button" onclick="toggleCheckoutForm(false)" class="px-6 py-3 rounded-xl border border-wine-200 text-wine-700 hover:bg-cream-100">დახურვა</button>
             </div>
             <p id="checkout-status" class="md:col-span-2 text-sm text-wine-600"></p>
           </form>
@@ -1511,12 +1464,7 @@ ${itemsText}`
       designerRefs.photoWrap = document.getElementById('designer-photo-wrap');
       designerRefs.upload = document.getElementById('designer-upload');
       designerRefs.mode = document.getElementById('designer-mode');
-      designerRefs.modeSelectBtn = document.getElementById('designer-mode-select');
-      designerRefs.modeTextBtn = document.getElementById('designer-mode-text');
-      designerRefs.modePhotoBtn = document.getElementById('designer-mode-photo');
-      designerRefs.emptyPanel = document.getElementById('designer-empty-panel');
-      designerRefs.textPanel = document.getElementById('designer-text-panel');
-      designerRefs.photoPanel = document.getElementById('designer-photo-panel');
+      designerRefs.modeButtons = Array.from(document.querySelectorAll('.designer-mode-btn'));
       designerRefs.color = document.getElementById('designer-color');
       designerRefs.size = document.getElementById('designer-size');
       designerRefs.clearDrawing = document.getElementById('designer-clear-drawing');
@@ -1537,6 +1485,7 @@ ${itemsText}`
       designerRefs.textSize = document.getElementById('designer-text-size');
       designerRefs.exportBtn = document.getElementById('designer-export');
       designerRefs.addToCartBtn = document.getElementById('designer-add-to-cart');
+      designerRefs.toggleDraw = document.getElementById('designer-toggle-draw');
       designerRefs.drawStatus = document.getElementById('designer-draw-status');
 
       if (!designerRefs.stage || !designerRefs.drawCanvas) return;
@@ -1549,9 +1498,31 @@ ${itemsText}`
     }
 
     function bindDesignerEvents() {
-      designerRefs.mode.addEventListener('change', (event) => {
-        setDesignerMode(event.target.value);
-      });
+      if (designerRefs.mode) {
+        designerRefs.mode.addEventListener('change', (event) => {
+          setDesignerMode(event.target.value);
+        });
+      }
+      if (designerRefs.modeButtons?.length) {
+        designerRefs.modeButtons.forEach((button) => {
+          button.addEventListener('click', () => {
+            const mode = button.dataset.mode;
+            if (!mode) return;
+            if (mode === 'photo' && designerRefs.upload) {
+              setDesignerMode('photo');
+              designerRefs.upload.click();
+              return;
+            }
+            if (mode === 'text') {
+              setDesignerMode('text');
+              addDesignerText();
+              return;
+            }
+            setDesignerMode(mode);
+          });
+        });
+      }
+      designerRefs.toggleDraw.addEventListener('click', toggleDesignerDrawArmed);
 
       designerRefs.color.addEventListener('input', (event) => {
         designerState.color = event.target.value;
@@ -1606,8 +1577,6 @@ ${itemsText}`
       designerRefs.drawCanvas.addEventListener('pointerdown', startDesignerDrawing);
       designerRefs.drawCanvas.addEventListener('pointermove', moveDesignerDrawing);
       designerRefs.drawCanvas.addEventListener('pointerup', endDesignerDrawing);
-      designerRefs.drawCanvas.addEventListener('pointercancel', endDesignerDrawing);
-      designerRefs.drawCanvas.addEventListener('lostpointercapture', endDesignerDrawing);
       designerRefs.drawCanvas.addEventListener('pointerleave', endDesignerDrawing);
       designerRefs.photoWrap.addEventListener('pointerdown', startDesignerPhotoDrag);
 
@@ -1621,32 +1590,40 @@ ${itemsText}`
     }
 
     function syncDesignerDrawUi() {
-      if (!designerRefs.drawStatus) return;
-      const modeLabels = { select: 'რეჟიმი: არჩევა', text: 'რეჟიმი: ტექსტი', photo: 'რეჟიმი: ფოტო', draw: 'რეჟიმი: ხატვა', erase: 'რეჟიმი: საშლელი' };
-      designerRefs.drawStatus.textContent = modeLabels[designerState.mode] || 'რეჟიმი: არჩევა';
-      designerRefs.drawStatus.className = 'px-3 py-1 rounded-full bg-cream-200 text-wine-800 text-xs';
+      if (!designerRefs.toggleDraw || !designerRefs.drawStatus) return;
+      const canDraw = designerState.mode === 'draw' || designerState.mode === 'erase';
+      if (!canDraw) {
+        designerRefs.toggleDraw.disabled = false;
+        designerRefs.toggleDraw.style.opacity = '';
+        designerRefs.toggleDraw.style.cursor = '';
+        designerRefs.toggleDraw.textContent = 'ხატვის რეჟიმი';
+        designerRefs.drawStatus.textContent = 'ხატვა გამორთულია';
+        designerRefs.drawStatus.className = 'px-3 py-1 rounded-full bg-cream-200 text-wine-800 text-xs';
+        return;
+      }
+
+      designerRefs.toggleDraw.disabled = false;
+      designerRefs.toggleDraw.style.opacity = '';
+      designerRefs.toggleDraw.style.cursor = '';
+      designerRefs.toggleDraw.textContent = designerState.drawArmed ? 'ხატვის გამორთვა' : 'ხატვის ჩართვა';
+      designerRefs.drawStatus.textContent = designerState.drawArmed ? 'ხატვა ჩართულია' : 'ხატვა გამორთულია';
+      designerRefs.drawStatus.className = designerState.drawArmed
+        ? 'px-3 py-1 rounded-full bg-green-100 text-green-800 text-xs'
+        : 'px-3 py-1 rounded-full bg-cream-200 text-wine-800 text-xs';
     }
 
-    function syncDesignerModeButtons() {
-      const modeClassActive = ['bg-wine-900', 'text-white', 'border-wine-900'];
-      const modeClassIdle = ['bg-cream-100', 'text-wine-900', 'border-wine-200'];
-      const buttons = [
-        { ref: designerRefs.modeSelectBtn, mode: 'select' },
-        { ref: designerRefs.modeTextBtn, mode: 'text' },
-        { ref: designerRefs.modePhotoBtn, mode: 'photo' }
-      ];
-      buttons.forEach((item) => {
-        if (!item.ref) return;
-        const isActive = designerState.mode === item.mode;
-        item.ref.classList.remove(...(isActive ? modeClassIdle : modeClassActive));
-        item.ref.classList.add(...(isActive ? modeClassActive : modeClassIdle));
-      });
-    }
-
-    function syncDesignerContextPanels() {
-      if (designerRefs.emptyPanel) designerRefs.emptyPanel.classList.toggle('hidden', designerState.mode !== 'select');
-      if (designerRefs.textPanel) designerRefs.textPanel.classList.toggle('hidden', designerState.mode !== 'text');
-      if (designerRefs.photoPanel) designerRefs.photoPanel.classList.toggle('hidden', designerState.mode !== 'photo');
+    function toggleDesignerDrawArmed() {
+      const canDraw = designerState.mode === 'draw' || designerState.mode === 'erase';
+      if (!canDraw) {
+        setDesignerMode('draw');
+        designerState.drawArmed = true;
+        syncDesignerDrawUi();
+        showToast('ხატვის რეჟიმი ჩართულია', 'info');
+        return;
+      }
+      designerState.drawArmed = !designerState.drawArmed;
+      syncDesignerDrawUi();
+      showToast(designerState.drawArmed ? 'ხატვა ჩართულია' : 'ხატვა გამორთულია', 'info');
     }
 
     function resizeDesignerCanvas() {
@@ -1677,67 +1654,50 @@ ${itemsText}`
 
     function setDesignerMode(mode) {
       designerState.mode = mode;
-      if (designerRefs.mode) designerRefs.mode.value = mode;
+      if (designerRefs.mode) {
+        designerRefs.mode.value = designerRefs.mode.querySelector(`option[value="${mode}"]`) ? mode : 'select';
+      }
+      if (designerRefs.modeButtons?.length) {
+        designerRefs.modeButtons.forEach((button) => {
+          button.classList.toggle('active', button.dataset.mode === mode);
+        });
+      }
 
-      const isSelect = mode === 'select';
-      const isPhoto = mode === 'photo';
-      const isLegacyDraw = mode === 'draw' || mode === 'erase';
-      if (designerRefs.drawCanvas) designerRefs.drawCanvas.style.pointerEvents = isLegacyDraw ? 'auto' : 'none';
-      if (designerRefs.textLayer) designerRefs.textLayer.style.pointerEvents = (isSelect || mode === 'text') ? 'auto' : 'none';
-      if (designerRefs.stage) designerRefs.stage.style.cursor = isPhoto ? 'move' : (isSelect ? 'grab' : 'default');
-      designerState.drawArmed = isLegacyDraw;
-      syncDesignerModeButtons();
-      syncDesignerContextPanels();
+      const isSelect = mode === 'select' || mode === 'photo' || mode === 'text';
+      if (designerRefs.drawCanvas) designerRefs.drawCanvas.style.pointerEvents = isSelect ? 'none' : 'auto';
+      if (designerRefs.textLayer) designerRefs.textLayer.style.pointerEvents = isSelect ? 'auto' : 'none';
+      if (designerRefs.stage) designerRefs.stage.style.cursor = isSelect ? 'grab' : 'crosshair';
+      if (isSelect) designerState.drawArmed = false;
       syncDesignerDrawUi();
     }
 
     function getDesignerPointer(event) {
       const rect = designerRefs.drawCanvas.getBoundingClientRect();
-      const source = event.touches?.[0] || event.changedTouches?.[0] || event;
-      const clientX = Number.isFinite(source.clientX) ? source.clientX : 0;
-      const clientY = Number.isFinite(source.clientY) ? source.clientY : 0;
-      const pageX = Number.isFinite(source.pageX) ? source.pageX : clientX + window.scrollX;
-      const pageY = Number.isFinite(source.pageY) ? source.pageY : clientY + window.scrollY;
-
-      let x = clientX - rect.left;
-      let y = clientY - rect.top;
-
-      // iOS visual/layout viewport mismatch fallback.
-      if (!Number.isFinite(x) || !Number.isFinite(y) || Math.abs(x) > rect.width * 2 || Math.abs(y) > rect.height * 2) {
-        x = pageX - (rect.left + window.scrollX);
-        y = pageY - (rect.top + window.scrollY);
-      }
-
-      x = Math.max(0, Math.min(rect.width, x));
-      y = Math.max(0, Math.min(rect.height, y));
       return {
-        x,
-        y
+        x: event.clientX - rect.left,
+        y: event.clientY - rect.top
       };
     }
 
     function startDesignerDrawing(event) {
       if (!designerCtx) return;
-      if (designerState.mode === 'select') return;
+      if (designerState.mode === 'select' || designerState.mode === 'photo' || designerState.mode === 'text') return;
       if (!designerState.drawArmed) {
-        showToast('აირჩიე რეჟიმი: ხატვა ან საშლელი', 'info');
+        showToast('ხატვის დასაწყებად დააჭირე "ხატვის ჩართვა"', 'info');
         return;
       }
-      if (event.pointerType === 'mouse' && event.button !== 0) return;
+      if (event.button !== 0) return;
       event.preventDefault();
       designerState.drawing = true;
       const point = getDesignerPointer(event);
       designerCtx.beginPath();
       designerCtx.moveTo(point.x, point.y);
-      if (typeof designerRefs.drawCanvas.setPointerCapture === 'function') {
-        designerRefs.drawCanvas.setPointerCapture(event.pointerId);
-      }
+      designerRefs.drawCanvas.setPointerCapture(event.pointerId);
     }
 
     function moveDesignerDrawing(event) {
       if (!designerState.drawing) return;
       if (!designerCtx) return;
-      event.preventDefault();
       const point = getDesignerPointer(event);
       designerCtx.lineWidth = designerState.size;
       if (designerState.mode === 'erase') {
@@ -1881,8 +1841,7 @@ ${itemsText}`
       designerState.selectedTextId = id;
       renderDesignerTextLayers();
 
-      const canDragText = designerState.mode === 'select' || designerState.mode === 'text';
-      if (!canDragText || layer.locked) return;
+      if (!['select', 'photo', 'text'].includes(designerState.mode) || layer.locked) return;
       const rect = designerRefs.stage.getBoundingClientRect();
       designerState.draggingTextId = id;
       designerState.dragOffset = {
@@ -1893,7 +1852,7 @@ ${itemsText}`
     }
 
     function handleDesignerStagePointerDown(event) {
-      if (designerState.mode !== 'select') return;
+      if (!['select', 'photo', 'text'].includes(designerState.mode)) return;
       if (event.target.closest('.designer-text-item')) return;
       designerState.selectedTextId = null;
       renderDesignerTextLayers();
@@ -1914,7 +1873,7 @@ ${itemsText}`
     }
 
     function startDesignerPhotoDrag(event) {
-      if (designerState.mode !== 'photo' && designerState.mode !== 'select') return;
+      if (!['select', 'photo', 'text'].includes(designerState.mode)) return;
       if (designerRefs.photo.classList.contains('hidden')) return;
       if (event.target.closest('.designer-text-item')) return;
       designerState.draggingPhoto = true;
