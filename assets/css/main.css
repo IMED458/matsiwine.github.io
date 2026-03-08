@@ -835,6 +835,42 @@ select:focus {
   box-shadow: 0 16px 30px -24px rgba(248, 250, 252, 0.95);
 }
 
+.contact-ref .contact-kicker {
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: #465a79;
+  margin-bottom: 14px;
+}
+
+.contact-ref .contact-title {
+  margin: 0;
+  font-family: "Noto Sans Georgian", "Manrope", sans-serif;
+  font-size: clamp(3.2rem, 6.2vw, 7rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: .98;
+  color: #020617;
+}
+
+.contact-ref .contact-title span {
+  color: #42526c;
+  font-style: italic;
+}
+
+.contact-ref .contact-main-card {
+  min-height: 292px;
+}
+
+.contact-ref .contact-mini-card {
+  min-height: 220px;
+}
+
+.contact-ref .contact-form-card label {
+  letter-spacing: .09em;
+}
+
 @media (max-width: 900px) {
   .home-cta-card {
     border-radius: 32px;
