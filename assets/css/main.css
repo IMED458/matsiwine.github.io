@@ -611,10 +611,15 @@ button[class*="border-2"]:hover {
 #page-home .product-card,
 #page-shop #products-grid > .product-card,
 #page-cart .bg-white,
-#page-product #product-detail > div,
 #page-contact .bg-white,
 #page-designer .designer-main-card,
 #page-designer .designer-side-card {
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  box-shadow: var(--shadow-soft);
+}
+
+#page-product #product-detail > div:first-child {
   background: #fff;
   border: 1px solid #e2e8f0;
   box-shadow: var(--shadow-soft);
