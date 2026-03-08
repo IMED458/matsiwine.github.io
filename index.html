@@ -295,83 +295,118 @@
      </div>
     </section><!-- ABOUT PAGE -->
     <section id="page-about" class="page-section hidden">
-     <div class="py-12 md:py-20 bg-cream-50">
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"><!-- Hero -->
-       <div class="text-center mb-16 md:mb-24">
-        <p id="about-kicker" class="text-wine-600 font-medium tracking-widest text-sm mb-4">ჩვენს შესახებ</p>
-        <h1 id="about-title" class="font-display text-4xl md:text-6xl font-bold text-wine-900 mb-6">ჩვენი ისტორია</h1>
-        <p id="about-subtitle" class="text-wine-600/70 text-lg max-w-3xl mx-auto">MATSI WINE დაარსდა 2018 წელს კახეთში, სადაც ჩვენი ოჯახი თაობების მანძილზე ინახავდა მეღვინეობის საიდუმლოებებს</p>
-       </div><!-- Story Sections -->
-       <div class="space-y-20 md:space-y-32"><!-- Section 1 -->
-        <div class="grid md:grid-cols-2 gap-12 items-center">
-         <div class="bg-wine-800 rounded-3xl aspect-video flex items-center justify-center relative overflow-hidden">
-          <img id="about-photo1-image" class="hidden absolute inset-0 w-full h-full object-cover" alt="About photo 1">
-          <div id="about-photo1-fallback" class="text-center text-cream-200/50">
-           <svg class="w-16 h-16 mx-auto mb-4" fill="currentColor" viewbox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
-           </svg>
-           <p id="about-photo1-label">ვენახის ფოტო</p>
+     <div class="pt-32 pb-24 min-h-screen bg-cream-50">
+      <div class="max-w-7xl mx-auto px-6 md:px-12">
+       <div class="text-center mb-24">
+        <p id="about-kicker" class="text-wine-600 font-bold uppercase tracking-widest text-xs mb-4">ჩვენს შესახებ</p>
+        <h1 id="about-title" class="font-display text-6xl md:text-8xl font-bold text-wine-900 mb-8">ჩვენი <span class="italic text-wine-700">ისტორია</span></h1>
+        <p id="about-subtitle" class="text-xl text-wine-600 max-w-3xl mx-auto font-light leading-relaxed">MATSI WINE დაარსდა 2018 წელს კახეთში, სადაც ჩვენი ოჯახი თაობების მანძილზე ინახავდა მეღვინეობის საიდუმლოებებს.</p>
+       </div>
+
+       <div class="space-y-32">
+        <div class="grid lg:grid-cols-2 gap-20 items-center">
+         <div class="relative">
+          <div class="aspect-square rounded-[60px] overflow-hidden shadow-2xl bg-wine-100">
+           <img id="about-photo1-image" class="hidden absolute inset-0 w-full h-full object-cover" alt="About photo 1">
+           <div id="about-photo1-fallback" class="w-full h-full flex items-center justify-center text-center text-wine-500">
+            <div>
+             <svg class="w-16 h-16 mx-auto mb-4" fill="currentColor" viewbox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" /></svg>
+             <p id="about-photo1-label">ვენახის ფოტო</p>
+            </div>
+           </div>
+          </div>
+          <div class="absolute -top-10 -left-10 w-40 h-40 bg-cream-300 rounded-full hidden md:flex items-center justify-center text-wine-900 shadow-xl">
+           <svg class="w-12 h-12" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7" d="M12 8v5l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
           </div>
          </div>
          <div>
-          <h2 id="about-section1-title" class="font-display text-3xl md:text-4xl font-bold text-wine-900 mb-6">ფესვები კახეთში</h2>
-          <p id="about-section1-text1" class="text-wine-600/80 text-lg leading-relaxed mb-4">ჩვენი მეღვინეობა მდებარეობს კახეთის გულში — ალაზნის ველზე, სადაც უნიკალური მიკროკლიმატი და ნაყოფიერი ნიადაგი ქმნის იდეალურ პირობებს საუკეთესო ყურძნის მოსაყვანად.</p>
-          <p id="about-section1-text2" class="text-wine-600/80 text-lg leading-relaxed">ოჯახის მამულში დარგული ვაზები — საფერავი, მწვანე, რქაწითელი — 40 წელზე მეტია ხილს იძლევა და ყოველწლიურად გვაძლევს ღვინოს განსაკუთრებული ხასიათით.</p>
+          <h2 id="about-section1-title" class="font-display text-4xl md:text-5xl font-bold text-wine-900 mb-8">ფესვები კახეთში</h2>
+          <div class="space-y-6 text-lg text-wine-600 font-light leading-relaxed">
+           <p id="about-section1-text1">ჩვენი მეღვინეობა მდებარეობს კახეთის გულში — ალაზნის ველზე, სადაც უნიკალური მიკროკლიმატი და ნაყოფიერი ნიადაგი ქმნის იდეალურ პირობებს საუკეთესო ყურძნის მოსაყვანად.</p>
+           <p id="about-section1-text2">ოჯახის მამულში დარგული ვაზები — საფერავი, მწვანე, რქაწითელი — 40 წელზე მეტია ხილს იძლევა და ყოველწლიურად გვაძლევს ღვინოს განსაკუთრებული ხასიათით.</p>
+          </div>
          </div>
-        </div><!-- Section 2 -->
-        <div class="grid md:grid-cols-2 gap-12 items-center md:flex-row-reverse">
-         <div class="md:order-2">
-          <div class="bg-oak-200 rounded-3xl aspect-video flex items-center justify-center relative overflow-hidden">
+        </div>
+
+        <div class="grid lg:grid-cols-2 gap-20 items-center">
+         <div class="lg:order-2 relative">
+          <div class="aspect-square rounded-[60px] overflow-hidden shadow-2xl bg-wine-100">
            <img id="about-photo2-image" class="hidden absolute inset-0 w-full h-full object-cover" alt="About photo 2">
-           <div id="about-photo2-fallback" class="text-center text-oak-500">
-            <svg class="w-16 h-16 mx-auto mb-4" fill="currentColor" viewbox="0 0 24 24"><path d="M12 3v18m-6-6l6 6 6-6M6 9h12" />
-            </svg>
-            <p id="about-photo2-label">ქვევრის ფოტო</p>
+           <div id="about-photo2-fallback" class="w-full h-full flex items-center justify-center text-center text-wine-500">
+            <div>
+             <svg class="w-16 h-16 mx-auto mb-4" fill="currentColor" viewbox="0 0 24 24"><path d="M12 3v18m-6-6l6 6 6-6M6 9h12" /></svg>
+             <p id="about-photo2-label">ქვევრის ფოტო</p>
+            </div>
+           </div>
+          </div>
+          <div class="absolute -bottom-10 -right-10 w-40 h-40 bg-wine-900 rounded-[40px] hidden md:flex items-center justify-center text-white shadow-xl">
+           <svg class="w-12 h-12" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7" d="M9 12l2 2 4-4m5-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+          </div>
+         </div>
+         <div class="lg:order-1">
+          <h2 id="about-section2-title" class="font-display text-4xl md:text-5xl font-bold text-wine-900 mb-8">ქვევრის ტრადიცია</h2>
+          <div class="space-y-6 text-lg text-wine-600 font-light leading-relaxed">
+           <p id="about-section2-text1">ჩვენ ვიყენებთ ქვევრს — მიწაში ჩაფლულ თიხის ჭურჭელს, რომელშიც ღვინო ფერმენტირდება და მწიფდება ბუნებრივი ტემპერატურის კონტროლით. ეს მეთოდი UNESCO-ს მსოფლიო მემკვიდრეობის ნაწილია.</p>
+           <p id="about-section2-text2">ქვევრის ღვინო გამოირჩევა ღრმა, კომპლექსური გემოთი და ხანგრძლივი დამთავრებით, რასაც ვერც ერთი თანამედროვე ტექნოლოგია ვერ იმეორებს.</p>
+          </div>
+         </div>
+        </div>
+
+        <div class="grid lg:grid-cols-2 gap-20 items-center">
+         <div class="relative">
+          <div class="aspect-square rounded-[60px] overflow-hidden shadow-2xl bg-wine-100">
+           <img id="about-photo3-image" class="hidden absolute inset-0 w-full h-full object-cover" alt="About photo 3">
+           <div id="about-photo3-fallback" class="w-full h-full flex items-center justify-center text-center text-wine-500">
+            <div>
+             <svg class="w-16 h-16 mx-auto mb-4" fill="currentColor" viewbox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" /></svg>
+             <p id="about-photo3-label">გუნდის ფოტო</p>
+            </div>
            </div>
           </div>
          </div>
-         <div class="md:order-1">
-          <h2 id="about-section2-title" class="font-display text-3xl md:text-4xl font-bold text-wine-900 mb-6">ქვევრის ტრადიცია</h2>
-          <p id="about-section2-text1" class="text-wine-600/80 text-lg leading-relaxed mb-4">ჩვენ ვიყენებთ ქვევრს — მიწაში ჩაფლულ თიხის ჭურჭელს, რომელშიც ღვინო ფერმენტირდება და მწიფდება ბუნებრივი ტემპერატურის კონტროლით. ეს მეთოდი UNESCO-ს მსოფლიო მემკვიდრეობის ნაწილია.</p>
-          <p id="about-section2-text2" class="text-wine-600/80 text-lg leading-relaxed">ქვევრის ღვინო გამოირჩევა ღრმა, კომპლექსური გემოთი და ხანგრძლივი დამთავრებით, რასაც ვერც ერთი თანამედროვე ტექნოლოგია ვერ იმეორებს.</p>
-         </div>
-        </div><!-- Section 3 -->
-        <div class="grid md:grid-cols-2 gap-12 items-center">
-         <div class="bg-wine-100 rounded-3xl aspect-video flex items-center justify-center relative overflow-hidden">
-          <img id="about-photo3-image" class="hidden absolute inset-0 w-full h-full object-cover" alt="About photo 3">
-          <div id="about-photo3-fallback" class="text-center text-wine-400">
-           <svg class="w-16 h-16 mx-auto mb-4" fill="currentColor" viewbox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
-           </svg>
-           <p id="about-photo3-label">გუნდის ფოტო</p>
-          </div>
-         </div>
          <div>
-          <h2 id="about-section3-title" class="font-display text-3xl md:text-4xl font-bold text-wine-900 mb-6">ჩვენი გუნდი</h2>
-          <p id="about-section3-text1" class="text-wine-600/80 text-lg leading-relaxed mb-4">MATSI-ს გუნდში გაერთიანებულია სამი თაობა: ბაბუის ტრადიციული ცოდნა, მამის მეღვინეობის გამოცდილება და შვილების თანამედროვე ხედვა.</p>
-          <p id="about-section3-text2" class="text-wine-600/80 text-lg leading-relaxed">ჩვენ გვჯერა, რომ საუკეთესო ღვინო იბადება ოჯახურ გარემოში, სადაც ყოველი ბოთლი მზადდება სიყვარულით და პატივისცემით ტრადიციისადმი.</p>
+          <h2 id="about-section3-title" class="font-display text-4xl md:text-5xl font-bold text-wine-900 mb-8">ჩვენი გუნდი</h2>
+          <div class="space-y-6 text-lg text-wine-600 font-light leading-relaxed">
+           <p id="about-section3-text1">MATSI-ს გუნდში გაერთიანებულია სამი თაობა: ბაბუის ტრადიციული ცოდნა, მამის მეღვინეობის გამოცდილება და შვილების თანამედროვე ხედვა.</p>
+           <p id="about-section3-text2">ჩვენ გვჯერა, რომ საუკეთესო ღვინო იბადება ოჯახურ გარემოში, სადაც ყოველი ბოთლი მზადდება სიყვარულით და პატივისცემით ტრადიციისადმი.</p>
+          </div>
          </div>
         </div>
-       </div><!-- Values -->
-       <div class="mt-20 md:mt-32 py-16 bg-wine-900 rounded-3xl text-center">
-        <h2 id="about-values-title" class="font-display text-3xl md:text-4xl font-bold text-cream-50 mb-12">ჩვენი ღირებულებები</h2>
-        <div class="grid sm:grid-cols-3 gap-8 px-8">
-         <div>
-          <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-wine-800 flex items-center justify-center"><span class="text-3xl">🌱</span>
-          </div>
-          <h3 id="about-value1-title" class="font-display text-xl font-semibold text-cream-50 mb-2">ბუნებრიობა</h3>
-          <p id="about-value1-text" class="text-cream-200/70">100% ორგანული მეურნეობა, ქიმიკატების გარეშე</p>
-         </div>
-         <div>
-          <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-wine-800 flex items-center justify-center"><span class="text-3xl">🏺</span>
-          </div>
-          <h3 id="about-value2-title" class="font-display text-xl font-semibold text-cream-50 mb-2">ტრადიცია</h3>
-          <p id="about-value2-text" class="text-cream-200/70">8000 წლიანი მემკვიდრეობის პატივისცემა</p>
-         </div>
-         <div>
-          <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-wine-800 flex items-center justify-center"><span class="text-3xl">✨</span>
-          </div>
-          <h3 id="about-value3-title" class="font-display text-xl font-semibold text-cream-50 mb-2">ხარისხი</h3>
-          <p id="about-value3-text" class="text-cream-200/70">ყოველ ბოთლში — მხოლოდ საუკეთესო</p>
-         </div>
+       </div>
+
+       <div class="mt-48">
+        <h2 id="about-values-title" class="font-display text-4xl md:text-5xl font-bold text-wine-900 mb-10 text-center">ჩვენი ღირებულებები</h2>
+       </div>
+       <div class="mt-0 grid sm:grid-cols-2 lg:grid-cols-3 gap-12">
+        <div class="glass-card p-10 rounded-[40px] hover:bg-white transition-colors duration-500">
+         <svg class="w-10 h-10 text-wine-700 mb-6" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7" d="M5 14c6 0 6-9 6-9s0 9 6 9a6 6 0 11-12 0z" /></svg>
+         <h3 id="about-value1-title" class="text-2xl font-display font-bold text-wine-900 mb-4">ბუნებრიობა</h3>
+         <p id="about-value1-text" class="text-wine-600 font-light">100% ორგანული მეურნეობა, ქიმიკატების გარეშე</p>
+        </div>
+        <div class="glass-card p-10 rounded-[40px] hover:bg-white transition-colors duration-500">
+         <svg class="w-10 h-10 text-wine-700 mb-6" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7" d="M9 12l2 2 4-4m5-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+         <h3 id="about-value2-title" class="text-2xl font-display font-bold text-wine-900 mb-4">ხარისხი</h3>
+         <p id="about-value2-text" class="text-wine-600 font-light">ყოველ ბოთლში — მხოლოდ საუკეთესო</p>
+        </div>
+        <div class="glass-card p-10 rounded-[40px] hover:bg-white transition-colors duration-500">
+         <svg class="w-10 h-10 text-wine-700 mb-6" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7" d="M17 20h5V4H2v16h5m10 0v-6a2 2 0 00-2-2h-6a2 2 0 00-2 2v6m10 0H7" /></svg>
+         <h3 id="about-value3-title" class="text-2xl font-display font-bold text-wine-900 mb-4">გუნდი</h3>
+         <p id="about-value3-text" class="text-wine-600 font-light">სამი თაობის გამოცდილება და ცოდნა</p>
+        </div>
+        <div class="glass-card p-10 rounded-[40px] hover:bg-white transition-colors duration-500">
+         <svg class="w-10 h-10 text-wine-700 mb-6" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7" d="M3 12h18M12 3a15.3 15.3 0 014 9 15.3 15.3 0 01-4 9 15.3 15.3 0 01-4-9 15.3 15.3 0 014-9z" /></svg>
+         <h3 class="text-2xl font-display font-bold text-wine-900 mb-4">ექსპორტი</h3>
+         <p class="text-wine-600 font-light">ქართული ღვინის პოპულარიზაცია მსოფლიოში</p>
+        </div>
+        <div class="glass-card p-10 rounded-[40px] hover:bg-white transition-colors duration-500">
+         <svg class="w-10 h-10 text-wine-700 mb-6" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7" d="M12 2l7 4v6c0 5-3.5 9.74-7 10-3.5-.26-7-5-7-10V6l7-4z" /></svg>
+         <h3 class="text-2xl font-display font-bold text-wine-900 mb-4">ავთენტურობა</h3>
+         <p class="text-wine-600 font-light">უძველესი რეცეპტების დაცვა</p>
+        </div>
+        <div class="glass-card p-10 rounded-[40px] hover:bg-white transition-colors duration-500">
+         <svg class="w-10 h-10 text-wine-700 mb-6" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7" d="M12 8v5l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+         <h3 class="text-2xl font-display font-bold text-wine-900 mb-4">მემკვიდრეობა</h3>
+         <p class="text-wine-600 font-light">8000 წლიანი ისტორიის გაგრძელება</p>
         </div>
        </div>
       </div>
