@@ -474,6 +474,17 @@
       element.textContent = String(value);
     }
 
+    function getCartIconSvg(sizeClass = 'w-4 h-4') {
+      return `<svg class="${sizeClass}" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M16 11V7a4 4 0 0 0-8 0v4M5 9h14l1 12H4L5 9z"/></svg>`;
+    }
+
+    function setAddToCartButtonLabel(id, value) {
+      const element = document.getElementById(id);
+      if (!element || value === undefined || value === null) return;
+      element.classList.add('inline-flex', 'items-center', 'justify-center', 'gap-2');
+      element.innerHTML = `${getCartIconSvg('w-4 h-4')}<span>${escapeHtml(String(value))}</span>`;
+    }
+
     function setHtmlById(id, value) {
       const element = document.getElementById(id);
       if (!element || value === undefined || value === null) return;
@@ -552,21 +563,21 @@
       setTextById('home-card1-title', homeContent.card1_title);
       setTextById('home-card1-desc', homeContent.card1_desc);
       setTextById('home-card1-price', homeContent.card1_price);
-      setTextById('home-card1-btn', homeContent.card1_btn);
+      setAddToCartButtonLabel('home-card1-btn', homeContent.card1_btn);
       setFeaturedCardImage(1, homeContent.card1_image);
 
       setTextById('home-card2-category', homeContent.card2_category);
       setTextById('home-card2-title', homeContent.card2_title);
       setTextById('home-card2-desc', homeContent.card2_desc);
       setTextById('home-card2-price', homeContent.card2_price);
-      setTextById('home-card2-btn', homeContent.card2_btn);
+      setAddToCartButtonLabel('home-card2-btn', homeContent.card2_btn);
       setFeaturedCardImage(2, homeContent.card2_image);
 
       setTextById('home-card3-category', homeContent.card3_category);
       setTextById('home-card3-title', homeContent.card3_title);
       setTextById('home-card3-desc', homeContent.card3_desc);
       setTextById('home-card3-price', homeContent.card3_price);
-      setTextById('home-card3-btn', homeContent.card3_btn);
+      setAddToCartButtonLabel('home-card3-btn', homeContent.card3_btn);
       setFeaturedCardImage(3, homeContent.card3_image);
 
       setTextById('home-story-kicker', homeContent.story_kicker);
@@ -805,7 +816,8 @@
             <div class="absolute bottom-4 left-4 right-4 translate-y-12 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 flex gap-2">
               <button onclick="event.stopPropagation(); addToCart('${product.id}', '${product.name} ${product.year}', ${product.price}, { image_url: '${escapeHtml(product.image_url || '')}' })"
                 class="w-full premium-button-primary py-3 rounded-xl text-sm font-medium inline-flex items-center justify-center gap-2">
-                დამატება
+                ${getCartIconSvg('w-4 h-4')}
+                <span>დამატება</span>
               </button>
             </div>
           </div>
