@@ -10,6 +10,17 @@
   --brand-800: #1e293b;
   --brand-900: #0f172a;
   --brand-950: #020617;
+  --accent-50: #fafafa;
+  --accent-100: #f4f4f5;
+  --accent-200: #e4e4e7;
+  --accent-300: #d4d4d8;
+  --accent-400: #a1a1aa;
+  --accent-500: #71717a;
+  --accent-600: #52525b;
+  --accent-700: #3f3f46;
+  --accent-800: #27272a;
+  --accent-900: #18181b;
+  --accent-950: #09090b;
   --white: #ffffff;
   --shadow-soft: 0 22px 45px -28px rgba(2, 6, 23, 0.25);
   --shadow-strong: 0 45px 90px -35px rgba(2, 6, 23, 0.35);
@@ -39,6 +50,7 @@ body.matsi-neo {
 
 .font-display {
   font-family: "Cormorant Garamond", "Noto Sans Georgian", serif !important;
+  font-optical-sizing: auto;
 }
 
 #main-content h1,
@@ -148,9 +160,10 @@ body.matsi-neo {
 .nav-link {
   text-transform: uppercase;
   letter-spacing: 0.12em;
-  font-size: 0.74rem;
+  font-size: 0.78rem;
   font-weight: 700;
   color: rgba(15, 23, 42, 0.7) !important;
+  line-height: 1.2;
 }
 
 .nav-link:hover,
@@ -231,7 +244,7 @@ body.matsi-neo {
   border: 1px solid rgba(255, 255, 255, 0.2);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  box-shadow: var(--shadow-soft);
+  box-shadow: 0 20px 45px -30px rgba(2, 6, 23, 0.25);
 }
 
 .premium-button-primary,
@@ -240,15 +253,16 @@ button[class*="bg-wine-700"] {
   border-radius: 999px !important;
   border: 1px solid rgba(2, 6, 23, 0.1) !important;
   background: var(--brand-950) !important;
-  color: #ffffff !important;
+  color: var(--accent-100) !important;
   transition: all 0.3s ease;
   font-family: "Noto Sans Georgian", "Manrope", "Inter", sans-serif;
-  font-size: 0.95rem;
+  font-size: 0.92rem;
   line-height: 1.25;
-  letter-spacing: 0.02em !important;
+  letter-spacing: 0.045em !important;
   text-transform: none !important;
   white-space: normal;
   text-align: center;
+  font-weight: 600;
 }
 
 .premium-button-primary:hover,
@@ -274,12 +288,13 @@ button[class*="border-2"] {
   color: var(--brand-950) !important;
   transition: all 0.3s ease;
   font-family: "Noto Sans Georgian", "Manrope", "Inter", sans-serif;
-  font-size: 0.95rem;
+  font-size: 0.92rem;
   line-height: 1.25;
-  letter-spacing: 0.02em !important;
+  letter-spacing: 0.045em !important;
   text-transform: none !important;
   white-space: normal;
   text-align: center;
+  font-weight: 600;
 }
 
 .premium-button-outline:hover,
@@ -769,18 +784,39 @@ button[class*="border-2"]:hover {
 }
 
 .about-value-card {
-  background: rgba(255, 255, 255, 0.72);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background: #ffffff;
+  border: 1px solid rgba(226, 232, 240, 0.95);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   border-radius: var(--radius-xl);
   padding: 2.5rem;
-  box-shadow: var(--shadow-soft);
+  min-height: 280px;
+  box-shadow: 0 24px 50px -34px rgba(2, 6, 23, 0.28);
   transition: background-color 0.3s ease;
 }
 
 .about-value-card:hover {
-  background: #fff;
+  background: #ffffff;
+}
+
+.about-value-card svg {
+  width: 2.75rem;
+  height: 2.75rem;
+  color: #475569;
+  margin-bottom: 1.35rem;
+}
+
+.about-value-card h3 {
+  font-size: clamp(2.05rem, 3vw, 2.55rem);
+  line-height: 1.05;
+  letter-spacing: -0.012em;
+  margin-bottom: 0.75rem;
+}
+
+.about-value-card p {
+  font-size: 0.99rem;
+  line-height: 1.45;
+  color: rgba(71, 85, 105, 0.78);
 }
 
 /* Contact */
@@ -841,9 +877,9 @@ button[class*="border-2"]:hover {
 }
 
 .product-detail-description {
-  font-size: clamp(1.03rem, 1.15vw, 1.16rem);
+  font-size: clamp(0.92rem, 1.02vw, 1.01rem);
   max-width: 100%;
-  line-height: 1.5;
+  line-height: 1.42;
   letter-spacing: 0.005em;
   overflow-wrap: normal;
   word-break: keep-all;
@@ -1115,7 +1151,8 @@ button[class*="border-2"]:hover {
   border: 1px solid #e2e8f0;
 }
 
-#page-cart .bg-wine-900 {
+#page-cart .bg-wine-900,
+#page-cart .bg-wine-950 {
   background: var(--brand-950) !important;
   color: #fff !important;
   border-radius: var(--radius-xl);
@@ -1123,13 +1160,25 @@ button[class*="border-2"]:hover {
 
 #page-cart .bg-wine-900 .text-cream-200,
 #page-cart .bg-wine-900 .text-cream-200\/60,
-#page-cart .bg-wine-900 .text-cream-50 {
-  color: rgba(255, 255, 255, 0.74) !important;
+#page-cart .bg-wine-900 .text-cream-50,
+#page-cart .bg-wine-950 .text-white\/70,
+#page-cart .bg-wine-950 .text-white\/60 {
+  color: rgba(255, 255, 255, 0.82) !important;
 }
 
 #page-cart .bg-wine-900 .font-display.text-3xl.font-bold,
-#page-cart .bg-wine-900 .font-display.text-4xl.font-bold {
+#page-cart .bg-wine-900 .font-display.text-4xl.font-bold,
+#page-cart .bg-wine-950 .font-display.text-5xl.font-bold {
   color: #fff !important;
+}
+
+#page-contact h1 {
+  font-size: clamp(2.45rem, 6.2vw, 5.2rem);
+  line-height: 1.06;
+}
+
+#page-contact h1 span {
+  white-space: nowrap;
 }
 
 /* Toast */

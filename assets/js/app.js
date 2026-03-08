@@ -31,7 +31,7 @@
     ];
 
     const defaultHomeContent = {
-      hero_kicker: 'ქართული ღვინის ტრადიცია',
+      hero_kicker: 'ქართული ღვინის ხელოვნება',
       hero_btn_primary: 'კოლექციის ნახვა',
       hero_btn_secondary: 'ჩვენი ისტორია',
       hero_tag1_kicker: 'VINTAGE',
@@ -868,17 +868,19 @@
         : products.filter(p => p.type === currentFilter);
       
       grid.innerHTML = filtered.map(product => `
-        <div class="product-card group relative bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-2xl border border-wine-100 cursor-pointer" onclick="viewProduct('${product.id}')">
+        <div class="product-card group relative bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-500 border border-wine-100 cursor-pointer" onclick="viewProduct('${product.id}')">
           <div class="block aspect-[3/4] overflow-hidden bg-wine-50 relative">
-            <div class="absolute inset-0 bg-gradient-to-br from-wine-100/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+            <div class="absolute inset-0 bg-gradient-to-br from-wine-100/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+            ${product.image_url ? `
+            <img src="${escapeHtml(product.image_url)}" alt="${escapeHtml(product.name)}" class="w-full h-full object-contain p-8 transition-transform duration-700 group-hover:scale-110">` : `
             <div class="w-full h-full flex items-center justify-center p-8 transition-transform duration-700 group-hover:scale-110">
               ${getProductVisualMarkup(product, 'card')}
-            </div>
+            </div>`}
             <div class="absolute bottom-4 left-4 right-4 translate-y-12 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 flex gap-2">
               <button onclick="event.stopPropagation(); addToCart('${product.id}', '${product.name} ${product.year}', ${product.price}, { image_url: '${escapeHtml(product.image_url || '')}' })"
-                class="w-full premium-button-primary py-3 rounded-xl text-sm font-medium inline-flex items-center justify-center gap-2">
+                      class="flex-1 bg-wine-950 text-white py-3 rounded-xl flex items-center justify-center gap-2 text-sm font-medium hover:bg-wine-800 transition-colors">
                 ${getCartIconSvg('w-4 h-4')}
-                <span>დამატება</span>
+                დამატება
               </button>
             </div>
           </div>
@@ -886,12 +888,14 @@
             <div class="flex justify-between items-start mb-2 gap-4">
               <div class="min-w-0">
                 <p class="text-wine-500 text-[10px] font-bold uppercase tracking-widest mb-1">${product.category}</p>
-                <h3 class="font-display text-xl font-bold text-wine-950 product-card-title">${product.name}</h3>
+                <h3 class="font-display text-xl font-bold text-wine-950 group-hover:text-wine-700 transition-colors product-card-title">${product.name}</h3>
               </div>
               <span class="font-display text-xl font-bold text-wine-900 shrink-0">₾${product.price}</span>
             </div>
-            <p class="text-wine-700/60 text-sm mb-4 line-clamp-2 font-light">${product.grape} • ${product.region} • ${product.year}</p>
-            <div class="text-wine-950 text-xs font-bold uppercase tracking-widest inline-flex items-center gap-2">დეტალები <span aria-hidden="true">→</span></div>
+            <p class="text-wine-700/60 text-sm mb-4 line-clamp-2 font-light">${product.grape || '-'} • ${product.region || '-'}${product.year ? ` • ${product.year}` : ''}</p>
+            <div class="inline-flex items-center gap-2 text-wine-950 text-xs font-bold uppercase tracking-widest">დეტალები
+              <svg class="w-3 h-3 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+            </div>
           </div>
         </div>
       `).join('');
@@ -975,39 +979,39 @@
         <div class="space-y-10">
           <div>
             <p class="text-wine-600 font-bold uppercase tracking-[0.2em] text-xs mb-4">${product.category}</p>
-            <h1 class="font-display font-bold text-wine-950 mb-4 product-detail-title">${product.name}</h1>
-            <p class="text-2xl text-wine-700 font-display italic product-detail-meta">${product.year} • ${product.grape}</p>
+            <h1 class="font-display text-5xl md:text-6xl font-bold text-wine-950 mb-4 product-detail-title">${product.name}</h1>
+            <p class="text-2xl text-wine-700 font-display italic product-detail-meta">${product.year || ''}${product.grape ? ` • ${product.grape}` : ''}</p>
           </div>
           
-          <p class="text-lg text-wine-700/80 font-light leading-relaxed product-detail-description">${product.description}</p>
+          <p class="text-wine-700/80 font-light leading-relaxed product-detail-description">${product.description || ''}</p>
           
           <div class="grid sm:grid-cols-2 gap-6">
             <div class="glass-card p-6 rounded-3xl flex gap-4 items-start">
               <svg class="w-6 h-6 text-wine-700 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.9" d="M12 2.7s7 6.3 7 11.1a7 7 0 0 1-14 0c0-4.8 7-11.1 7-11.1z"/></svg>
               <div>
                 <p class="text-xs font-bold uppercase tracking-widest text-wine-700/50 mb-1 product-detail-spec-title">არომატი</p>
-                <p class="text-sm text-wine-950 font-medium product-detail-spec-text">${product.aroma}</p>
+                <p class="text-sm text-wine-950 font-medium product-detail-spec-text">${product.aroma || '-'}</p>
               </div>
             </div>
             <div class="glass-card p-6 rounded-3xl flex gap-4 items-start">
               <svg class="w-6 h-6 text-wine-700 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.9" d="M8 3h8M10 3v7a2 2 0 0 1-.6 1.4L7 13.8A4.5 4.5 0 1 0 13.4 20l2.4-2.4A2 2 0 0 0 16 16.2V3"/></svg>
               <div>
                 <p class="text-xs font-bold uppercase tracking-widest text-wine-700/50 mb-1 product-detail-spec-title">გემო</p>
-                <p class="text-sm text-wine-950 font-medium product-detail-spec-text">${product.taste}</p>
+                <p class="text-sm text-wine-950 font-medium product-detail-spec-text">${product.taste || '-'}</p>
               </div>
             </div>
             <div class="glass-card p-6 rounded-3xl flex gap-4 items-start">
               <svg class="w-6 h-6 text-wine-700 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.9" d="M4 4h16M5 8h14M9 12v8M15 12v8M7 12h10"/></svg>
               <div>
                 <p class="text-xs font-bold uppercase tracking-widest text-wine-700/50 mb-1 product-detail-spec-title">შეხამება</p>
-                <p class="text-sm text-wine-950 font-medium product-detail-spec-text">${product.pairing}</p>
+                <p class="text-sm text-wine-950 font-medium product-detail-spec-text">${product.pairing || '-'}</p>
               </div>
             </div>
             <div class="glass-card p-6 rounded-3xl flex gap-4 items-start">
               <svg class="w-6 h-6 text-wine-700 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.9" d="M12 3v10m0 0a4 4 0 1 0 4 4m-4-4a4 4 0 1 1-4 4"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.9" d="M9 6h6"/></svg>
               <div>
                 <p class="text-xs font-bold uppercase tracking-widest text-wine-700/50 mb-1 product-detail-spec-title">დეტალები</p>
-                <p class="text-sm text-wine-950 font-medium product-detail-spec-text">${product.alcohol} • ${product.temperature}</p>
+                <p class="text-sm text-wine-950 font-medium product-detail-spec-text">${product.alcohol || '-'}${product.temperature ? ` • ${product.temperature}` : ''}</p>
               </div>
             </div>
           </div>
@@ -1289,23 +1293,23 @@
         <div class="bg-wine-950 p-10 rounded-[40px] text-white shadow-2xl">
           <h2 class="text-4xl font-display font-bold mb-8">შეკვეთის ჯამი</h2>
           <div class="space-y-4 mb-8">
-            <div class="flex items-center justify-between text-white/70 font-light">
+            <div class="flex items-center justify-between text-white/80 font-light">
               <span>პროდუქტები</span>
               <span>₾${total}</span>
             </div>
-            <div class="flex items-center justify-between text-white/70 font-light">
+            <div class="flex items-center justify-between text-white/80 font-light">
               <span>მიტანა</span>
               <span>უფასო</span>
             </div>
             <div class="pt-4 border-t border-white/10 flex items-center justify-between">
               <span class="text-lg font-display">სულ</span>
-              <span class="font-display text-5xl font-bold text-white">₾${total}</span>
+              <span class="font-display text-5xl font-bold text-wine-300">₾${total}</span>
             </div>
           </div>
           <button type="button" onclick="handleCheckout()" class="w-full bg-white text-wine-950 py-5 rounded-2xl font-bold uppercase tracking-widest hover:bg-wine-100 transition-all">
             შეკვეთის გაფორმება
           </button>
-          <p class="text-white/60 text-xs text-center mt-4">მიტანა თბილისში უფასოა ₾100+ შეკვეთაზე</p>
+          <p class="text-white/75 text-xs text-center mt-4">მიტანა თბილისში უფასოა ₾100+ შეკვეთაზე</p>
         </div>
 
         ${checkoutFormVisible ? `
