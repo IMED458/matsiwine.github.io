@@ -1492,6 +1492,9 @@ ${itemsText}`
       designerRefs.photoWrap = document.getElementById('designer-photo-wrap');
       designerRefs.upload = document.getElementById('designer-upload');
       designerRefs.mode = document.getElementById('designer-mode');
+      designerRefs.modeSelectBtn = document.getElementById('designer-mode-select');
+      designerRefs.modeDrawBtn = document.getElementById('designer-mode-draw');
+      designerRefs.modeEraseBtn = document.getElementById('designer-mode-erase');
       designerRefs.color = document.getElementById('designer-color');
       designerRefs.size = document.getElementById('designer-size');
       designerRefs.clearDrawing = document.getElementById('designer-clear-drawing');
@@ -1512,7 +1515,6 @@ ${itemsText}`
       designerRefs.textSize = document.getElementById('designer-text-size');
       designerRefs.exportBtn = document.getElementById('designer-export');
       designerRefs.addToCartBtn = document.getElementById('designer-add-to-cart');
-      designerRefs.toggleDraw = document.getElementById('designer-toggle-draw');
       designerRefs.drawStatus = document.getElementById('designer-draw-status');
 
       if (!designerRefs.stage || !designerRefs.drawCanvas) return;
@@ -1528,7 +1530,6 @@ ${itemsText}`
       designerRefs.mode.addEventListener('change', (event) => {
         setDesignerMode(event.target.value);
       });
-      designerRefs.toggleDraw.addEventListener('click', toggleDesignerDrawArmed);
 
       designerRefs.color.addEventListener('input', (event) => {
         designerState.color = event.target.value;
@@ -1598,37 +1599,36 @@ ${itemsText}`
     }
 
     function syncDesignerDrawUi() {
-      if (!designerRefs.toggleDraw || !designerRefs.drawStatus) return;
+      if (!designerRefs.drawStatus) return;
       const canDraw = designerState.mode === 'draw' || designerState.mode === 'erase';
       if (!canDraw) {
-        designerRefs.toggleDraw.disabled = true;
-        designerRefs.toggleDraw.style.opacity = '0.6';
-        designerRefs.toggleDraw.style.cursor = 'not-allowed';
-        designerRefs.toggleDraw.textContent = 'ხატვა მიუწვდომელია';
-        designerRefs.drawStatus.textContent = 'აირჩიე ხატვა ან საშლელი';
+        designerRefs.drawStatus.textContent = 'რეჟიმი: არჩევა';
         designerRefs.drawStatus.className = 'px-3 py-1 rounded-full bg-cream-200 text-wine-800 text-xs';
         return;
       }
 
-      designerRefs.toggleDraw.disabled = false;
-      designerRefs.toggleDraw.style.opacity = '';
-      designerRefs.toggleDraw.style.cursor = '';
-      designerRefs.toggleDraw.textContent = designerState.drawArmed ? 'ხატვის გამორთვა' : 'ხატვის ჩართვა';
-      designerRefs.drawStatus.textContent = designerState.drawArmed ? 'ხატვა ჩართულია' : 'ხატვა გამორთულია';
+      designerRefs.drawStatus.textContent = designerState.mode === 'erase'
+        ? 'რეჟიმი: საშლელი'
+        : 'რეჟიმი: ხატვა';
       designerRefs.drawStatus.className = designerState.drawArmed
         ? 'px-3 py-1 rounded-full bg-green-100 text-green-800 text-xs'
         : 'px-3 py-1 rounded-full bg-cream-200 text-wine-800 text-xs';
     }
 
-    function toggleDesignerDrawArmed() {
-      const canDraw = designerState.mode === 'draw' || designerState.mode === 'erase';
-      if (!canDraw) {
-        showToast('ჯერ აირჩიე რეჟიმი: ხატვა ან საშლელი', 'info');
-        return;
-      }
-      designerState.drawArmed = !designerState.drawArmed;
-      syncDesignerDrawUi();
-      showToast(designerState.drawArmed ? 'ხატვა ჩართულია' : 'ხატვა გამორთულია', 'info');
+    function syncDesignerModeButtons() {
+      const modeClassActive = ['bg-wine-900', 'text-white', 'border-wine-900'];
+      const modeClassIdle = ['bg-cream-100', 'text-wine-900', 'border-wine-200'];
+      const buttons = [
+        { ref: designerRefs.modeSelectBtn, mode: 'select' },
+        { ref: designerRefs.modeDrawBtn, mode: 'draw' },
+        { ref: designerRefs.modeEraseBtn, mode: 'erase' }
+      ];
+      buttons.forEach((item) => {
+        if (!item.ref) return;
+        const isActive = designerState.mode === item.mode;
+        item.ref.classList.remove(...(isActive ? modeClassIdle : modeClassActive));
+        item.ref.classList.add(...(isActive ? modeClassActive : modeClassIdle));
+      });
     }
 
     function resizeDesignerCanvas() {
@@ -1665,7 +1665,8 @@ ${itemsText}`
       if (designerRefs.drawCanvas) designerRefs.drawCanvas.style.pointerEvents = isSelect ? 'none' : 'auto';
       if (designerRefs.textLayer) designerRefs.textLayer.style.pointerEvents = isSelect ? 'auto' : 'none';
       if (designerRefs.stage) designerRefs.stage.style.cursor = isSelect ? 'grab' : 'crosshair';
-      if (isSelect) designerState.drawArmed = false;
+      designerState.drawArmed = !isSelect;
+      syncDesignerModeButtons();
       syncDesignerDrawUi();
     }
 
@@ -1698,7 +1699,7 @@ ${itemsText}`
       if (!designerCtx) return;
       if (designerState.mode === 'select') return;
       if (!designerState.drawArmed) {
-        showToast('ხატვის დასაწყებად დააჭირე "ხატვის ჩართვა"', 'info');
+        showToast('აირჩიე რეჟიმი: ხატვა ან საშლელი', 'info');
         return;
       }
       if (event.pointerType === 'mouse' && event.button !== 0) return;
