@@ -1235,3 +1235,357 @@ body.matsi-neo #page-home .tracking-widest {
   font-weight: 700 !important;
   color: #64748b !important;
 }
+
+/* =====================================================
+   ZIP MASTER VISUAL PORT (full design skin, functionality untouched)
+   ===================================================== */
+body.matsi-neo {
+  --zip-brand-50: #f8fafc;
+  --zip-brand-100: #f1f5f9;
+  --zip-brand-200: #e2e8f0;
+  --zip-brand-300: #cbd5e1;
+  --zip-brand-400: #94a3b8;
+  --zip-brand-500: #64748b;
+  --zip-brand-600: #475569;
+  --zip-brand-700: #334155;
+  --zip-brand-800: #1e293b;
+  --zip-brand-900: #0f172a;
+  --zip-brand-950: #020617;
+  --zip-radius-card: 30px;
+  --zip-radius-xl: 44px;
+  --zip-shadow-soft: 0 16px 36px -26px rgba(15, 23, 42, 0.25);
+  --zip-shadow-strong: 0 28px 60px -42px rgba(2, 6, 23, 0.5);
+  font-family: 'Manrope', 'Inter', 'Noto Sans Georgian', sans-serif !important;
+  color: var(--zip-brand-900) !important;
+  background: var(--zip-brand-50) !important;
+}
+
+body.matsi-neo .font-display,
+body.matsi-neo h1,
+body.matsi-neo h2,
+body.matsi-neo h3,
+body.matsi-neo h4 {
+  font-family: 'Cormorant Garamond', 'Noto Serif Georgian', serif !important;
+}
+
+body.matsi-neo #main-nav {
+  background: rgba(255, 255, 255, 0.82) !important;
+  border-bottom: 1px solid var(--zip-brand-200) !important;
+  box-shadow: 0 8px 24px -22px rgba(15, 23, 42, 0.35) !important;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+body.matsi-neo #main-nav .nav-link {
+  color: rgba(15, 23, 42, 0.72) !important;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 700 !important;
+  font-size: 12px !important;
+}
+
+body.matsi-neo #main-nav .nav-link:hover,
+body.matsi-neo #main-nav .nav-link.active {
+  color: var(--zip-brand-900) !important;
+}
+
+body.matsi-neo #main-nav .nav-link span {
+  background: var(--zip-brand-700) !important;
+  height: 2px !important;
+}
+
+body.matsi-neo #mobile-menu {
+  background: #fff;
+  border-top: 1px solid var(--zip-brand-200);
+  border-radius: 0 0 16px 16px;
+}
+
+body.matsi-neo #mobile-menu a {
+  color: var(--zip-brand-900) !important;
+  font-family: 'Cormorant Garamond', 'Noto Serif Georgian', serif;
+  font-size: 1.15rem;
+}
+
+body.matsi-neo #page-home > div:first-child {
+  background:
+    radial-gradient(680px 360px at 90% 10%, rgba(148, 163, 184, 0.18), transparent 65%),
+    radial-gradient(600px 320px at 8% 82%, rgba(203, 213, 225, 0.22), transparent 60%),
+    linear-gradient(180deg, #f3f7fb 0%, #f8fafc 100%) !important;
+  border-radius: 0;
+  border-bottom: 1px solid var(--zip-brand-200);
+  box-shadow: none !important;
+}
+
+body.matsi-neo #page-home #home-hero-kicker,
+body.matsi-neo #page-home .text-wine-300 {
+  color: var(--zip-brand-600) !important;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .3em;
+  font-size: .72rem !important;
+}
+
+body.matsi-neo #page-home #hero-title {
+  color: var(--zip-brand-950) !important;
+  font-size: clamp(3.2rem, 9vw, 8.2rem) !important;
+  line-height: .9 !important;
+  letter-spacing: -0.02em;
+}
+
+body.matsi-neo #page-home #hero-subtitle {
+  color: rgba(15, 23, 42, .64) !important;
+  font-size: clamp(1rem, 2.2vw, 1.35rem);
+  font-weight: 300;
+  max-width: 38rem;
+}
+
+body.matsi-neo #page-home #hero-title-logo {
+  width: clamp(280px, 44vw, 620px);
+  height: clamp(118px, 16vw, 210px);
+  object-fit: contain;
+  filter: drop-shadow(0 16px 24px rgba(15, 23, 42, 0.12));
+}
+
+body.matsi-neo #wine-canvas { opacity: .28; }
+
+body.matsi-neo .hero-bottle-wrap {
+  border-radius: 999px;
+  border: 1px solid rgba(203, 213, 225, .55);
+  background: rgba(255,255,255,.46);
+  box-shadow: var(--zip-shadow-strong);
+}
+
+body.matsi-neo .hero-bottle-image {
+  filter: drop-shadow(0 35px 35px rgba(2, 6, 23, 0.30));
+}
+
+body.matsi-neo #page-home > div:nth-child(2),
+body.matsi-neo #page-home > div:nth-child(3),
+body.matsi-neo #page-shop > div,
+body.matsi-neo #page-about > div,
+body.matsi-neo #page-contact > div,
+body.matsi-neo #page-product > div,
+body.matsi-neo #page-designer > div,
+body.matsi-neo #page-cart > div {
+  background: var(--zip-brand-50) !important;
+}
+
+body.matsi-neo #page-home > div:nth-child(2) h2,
+body.matsi-neo #page-home > div:nth-child(3) h2,
+body.matsi-neo #page-shop h1,
+body.matsi-neo #page-about h1,
+body.matsi-neo #page-contact h1,
+body.matsi-neo #page-designer h1,
+body.matsi-neo #page-cart h1,
+body.matsi-neo #page-product h1 {
+  color: var(--zip-brand-950) !important;
+  font-size: clamp(2.2rem, 5vw, 4.5rem);
+  letter-spacing: -0.02em;
+  line-height: .95;
+}
+
+body.matsi-neo .product-card,
+body.matsi-neo #products-grid > div {
+  background: #fff !important;
+  border: 1px solid var(--zip-brand-200) !important;
+  border-radius: 30px !important;
+  box-shadow: var(--zip-shadow-soft) !important;
+}
+
+body.matsi-neo .product-card:hover,
+body.matsi-neo #products-grid > div:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 24px 48px -32px rgba(15, 23, 42, 0.35) !important;
+  border-color: var(--zip-brand-300) !important;
+}
+
+body.matsi-neo .product-card > div:first-child,
+body.matsi-neo #products-grid > div > div:first-child {
+  background: #f8fafc !important;
+}
+
+body.matsi-neo .filter-btn {
+  padding: .75rem 1.7rem !important;
+  border-radius: 999px !important;
+  border: 1px solid var(--zip-brand-200) !important;
+  background: #fff !important;
+  color: rgba(15, 23, 42, 0.66) !important;
+  text-transform: uppercase;
+  font-size: 11px !important;
+  letter-spacing: .08em;
+  font-weight: 700 !important;
+}
+
+body.matsi-neo .filter-btn.active,
+body.matsi-neo .filter-btn.bg-wine-700 {
+  background: var(--zip-brand-950) !important;
+  border-color: var(--zip-brand-950) !important;
+  color: #fff !important;
+}
+
+body.matsi-neo .btn-wine,
+body.matsi-neo button[class*="bg-wine-700"],
+body.matsi-neo button[class*="bg-cream-50"],
+body.matsi-neo #page-shop button,
+body.matsi-neo #page-cart button,
+body.matsi-neo #page-contact button,
+body.matsi-neo #page-designer button,
+body.matsi-neo #page-product button {
+  border-radius: 999px !important;
+  background: var(--zip-brand-950) !important;
+  border: 1px solid var(--zip-brand-950) !important;
+  color: #fff !important;
+  box-shadow: 0 12px 24px -16px rgba(2, 6, 23, 0.5) !important;
+  font-weight: 700 !important;
+  letter-spacing: .01em;
+  transition: all .25s ease;
+}
+
+body.matsi-neo .btn-wine:hover,
+body.matsi-neo button[class*="bg-wine-700"]:hover,
+body.matsi-neo button[class*="bg-cream-50"]:hover,
+body.matsi-neo #page-shop button:hover,
+body.matsi-neo #page-cart button:hover,
+body.matsi-neo #page-contact button:hover,
+body.matsi-neo #page-designer button:hover,
+body.matsi-neo #page-product button:hover {
+  transform: translateY(-1px);
+  background: var(--zip-brand-900) !important;
+  border-color: var(--zip-brand-900) !important;
+}
+
+body.matsi-neo #main-nav button[onclick*="navigateTo('cart')"] {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  color: var(--zip-brand-900) !important;
+}
+
+body.matsi-neo #cart-count {
+  background: var(--zip-brand-700) !important;
+  color: #fff !important;
+  border: 2px solid #fff;
+}
+
+body.matsi-neo #page-about .space-y-20 > div,
+body.matsi-neo #page-contact .grid.md\:grid-cols-2 > div,
+body.matsi-neo #page-product #product-detail > div,
+body.matsi-neo #page-designer .grid.lg\:grid-cols-2 > div,
+body.matsi-neo #page-cart #cart-content > div,
+body.matsi-neo #page-cart .bg-white,
+body.matsi-neo #page-contact .bg-white {
+  background: #fff !important;
+  border: 1px solid var(--zip-brand-200) !important;
+  border-radius: var(--zip-radius-card) !important;
+  box-shadow: var(--zip-shadow-soft) !important;
+}
+
+body.matsi-neo #page-about .aspect-video,
+body.matsi-neo #page-contact .aspect-video,
+body.matsi-neo #page-product #product-detail > div:first-child,
+body.matsi-neo #page-designer #designer-canvas-wrap {
+  border-radius: var(--zip-radius-xl) !important;
+  border: 1px solid var(--zip-brand-200) !important;
+  background: var(--zip-brand-100) !important;
+}
+
+body.matsi-neo #page-about .mt-20 {
+  background: var(--zip-brand-950) !important;
+  border-radius: 50px !important;
+  border: 1px solid rgba(148, 163, 184, 0.12) !important;
+  box-shadow: var(--zip-shadow-strong) !important;
+}
+
+body.matsi-neo #page-about .mt-20 h2,
+body.matsi-neo #page-about .mt-20 h3,
+body.matsi-neo #page-about .mt-20 p,
+body.matsi-neo #page-about .mt-20 .text-cream-50,
+body.matsi-neo #page-about .mt-20 .text-cream-200\/70 {
+  color: #fff !important;
+}
+
+body.matsi-neo input,
+body.matsi-neo textarea,
+body.matsi-neo select {
+  border: 1px solid var(--zip-brand-200) !important;
+  border-radius: 16px !important;
+  background: var(--zip-brand-50) !important;
+  color: var(--zip-brand-900) !important;
+}
+
+body.matsi-neo input:focus,
+body.matsi-neo textarea:focus,
+body.matsi-neo select:focus {
+  border-color: var(--zip-brand-700) !important;
+  box-shadow: 0 0 0 3px rgba(51, 65, 85, 0.16) !important;
+}
+
+body.matsi-neo #page-designer .designer-stage,
+body.matsi-neo #page-designer #designer-canvas-wrap {
+  box-shadow: 0 24px 44px -28px rgba(2, 6, 23, .35) !important;
+}
+
+body.matsi-neo #toast-container > div {
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,.35);
+  box-shadow: 0 16px 32px -24px rgba(2,6,23,.45);
+}
+
+body.matsi-neo .matsi-footer {
+  margin-top: 90px;
+  background: var(--zip-brand-950) !important;
+  border-radius: 0 !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+body.matsi-neo .matsi-footer::before {
+  background-image: none;
+}
+
+body.matsi-neo .matsi-footer .matsi-footer-title {
+  color: #94a3b8 !important;
+  text-transform: none;
+  font-size: 1.15rem;
+  letter-spacing: 0;
+  font-weight: 700;
+}
+
+body.matsi-neo .matsi-footer .matsi-footer-lead,
+body.matsi-neo .matsi-footer .matsi-footer-links a,
+body.matsi-neo .matsi-footer .matsi-footer-links span,
+body.matsi-neo .matsi-footer-bottom p {
+  color: rgba(255, 255, 255, .62) !important;
+}
+
+body.matsi-neo .matsi-footer .matsi-footer-links a:hover {
+  color: #fff !important;
+  transform: none;
+}
+
+body.matsi-neo .matsi-footer .matsi-footer-social a {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,.12);
+  background: rgba(255,255,255,.05);
+}
+
+body.matsi-neo .matsi-footer .matsi-footer-social a:hover {
+  background: rgba(255,255,255,.16);
+  border-color: rgba(255,255,255,.24);
+}
+
+body.matsi-neo .matsi-footer-bottom {
+  border-top: 1px solid rgba(255,255,255,.08);
+}
+
+@media (max-width: 900px) {
+  body.matsi-neo #page-home #hero-title { font-size: clamp(2.8rem, 14vw, 4.6rem) !important; }
+  body.matsi-neo #page-home #hero-subtitle { font-size: 1rem; }
+  body.matsi-neo #page-home #hero-title-logo {
+    width: clamp(230px, 72vw, 430px);
+    height: clamp(108px, 30vw, 180px);
+  }
+  body.matsi-neo .hero-bottle-wrap { height: 420px; }
+}
