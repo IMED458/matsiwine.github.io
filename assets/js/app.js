@@ -1080,17 +1080,22 @@
       if (cartItems.length === 0) {
         checkoutFormVisible = false;
         container.innerHTML = `
-          <div class="text-center py-20 bg-white rounded-[36px] border border-wine-200 shadow-xl">
-            <div class="w-24 h-24 mx-auto mb-6 rounded-full bg-wine-100 flex items-center justify-center">
-              <svg class="w-12 h-12 text-wine-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
-              </svg>
+          <div class="pt-14 pb-10 min-h-[58vh] bg-cream-50 flex items-center justify-center">
+            <div class="text-center space-y-8 max-w-md px-6">
+              <div class="w-32 h-32 bg-wine-100 rounded-full flex items-center justify-center mx-auto">
+                <svg class="w-12 h-12 text-wine-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7" d="M6 7h12M9 7V5a1 1 0 011-1h4a1 1 0 011 1v2m-8 0l1 12a2 2 0 002 2h4a2 2 0 002-2l1-12" />
+                </svg>
+              </div>
+              <h2 class="font-display text-4xl font-bold text-wine-900">კალათა ცარიელია</h2>
+              <p class="text-wine-600 font-light">აღმოაჩინეთ ჩვენი კოლექცია და შეარჩიეთ საყვარელი ღვინო.</p>
+              <button onclick="navigateTo('shop')" class="btn-wine inline-flex items-center gap-3 px-8 py-4 bg-wine-900 text-white font-semibold rounded-full">
+                პროდუქტებში გადასვლა
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+                </svg>
+              </button>
             </div>
-            <h2 class="font-display text-3xl font-semibold text-wine-900 mb-2">კალათა ცარიელია</h2>
-            <p class="text-wine-600 mb-8">აღმოაჩინეთ ჩვენი კოლექცია და შეარჩიეთ საყვარელი ღვინო</p>
-            <button onclick="navigateTo('shop')" class="btn-wine px-8 py-4 bg-wine-900 text-white font-semibold rounded-full">
-              პროდუქტებში გადასვლა
-            </button>
           </div>
         `;
         applyLiquidButtons(container);
@@ -1119,49 +1124,71 @@
       `).join('');
       
       container.innerHTML = `
-        <div class="space-y-4 mb-8">
-          ${cartItems.map(item => `
-            <div class="bg-white rounded-[30px] p-4 md:p-6 shadow-xl border border-wine-200 flex items-center gap-4">
-              <div class="w-16 h-20 bg-wine-100 rounded-2xl flex items-center justify-center flex-shrink-0">
-                ${item.image_url ? `<img src="${item.image_url}" alt="${escapeHtml(item.productName)}" class="w-full h-full object-cover rounded-xl">` : `
-                <svg viewBox="0 0 80 200" class="w-8 h-16">
-                  <path d="M25 60 Q25 50 30 45 L30 25 Q30 20 35 20 L45 20 Q50 20 50 25 L50 45 Q55 50 55 60 L55 180 Q55 190 40 190 Q25 190 25 180 Z" fill="#5a1f29"/>
-                </svg>`}
+        <div class="grid lg:grid-cols-3 gap-12 mb-10">
+          <div class="lg:col-span-2 space-y-6">
+            ${cartItems.map(item => `
+              <div class="bg-white p-6 rounded-[30px] shadow-sm border border-wine-100 flex items-center gap-6">
+                <div class="w-24 h-32 bg-cream-50 rounded-2xl flex items-center justify-center flex-shrink-0 overflow-hidden border border-wine-100">
+                  ${item.image_url ? (
+                    `<img src="${item.image_url}" alt="${escapeHtml(item.productName)}" class="w-full h-full object-contain p-3">`
+                  ) : `
+                    <svg viewBox="0 0 80 200" class="w-12 h-24">
+                      <path d="M25 60 Q25 50 30 45 L30 25 Q30 20 35 20 L45 20 Q50 20 50 25 L50 45 Q55 50 55 60 L55 180 Q55 190 40 190 Q25 190 25 180 Z" fill="#020617"/>
+                    </svg>
+                  `}
+                </div>
+                <div class="flex-1 min-w-0">
+                  <h3 class="text-xl font-display font-bold text-wine-900 truncate">${item.productName}</h3>
+                  <p class="text-xs text-wine-500 uppercase tracking-widest font-bold mb-4">${item.item_type === 'custom_label' ? 'Custom Label' : (item.category || 'Wine')}</p>
+                  <div class="flex items-center gap-4">
+                    <div class="flex items-center gap-3 bg-cream-50 px-3 py-1.5 rounded-xl border border-wine-100">
+                      <button onclick="updateQuantity('${getCartItemKey(item)}', -1)" class="text-wine-700 hover:text-wine-900">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 12H4"/></svg>
+                      </button>
+                      <span class="w-6 text-center font-bold text-wine-900">${item.quantity}</span>
+                      <button onclick="updateQuantity('${getCartItemKey(item)}', 1)" class="text-wine-700 hover:text-wine-900">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                      </button>
+                    </div>
+                    <button onclick="removeFromCart('${getCartItemKey(item)}')" class="text-red-400 hover:text-red-500 transition-colors">
+                      <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.7" d="M6 7h12M9 7V5a1 1 0 011-1h4a1 1 0 011 1v2m-8 0l1 12a2 2 0 002 2h4a2 2 0 002-2l1-12"/></svg>
+                    </button>
+                  </div>
+                </div>
+                <div class="text-right">
+                  <p class="text-2xl font-display font-bold text-wine-900">₾${item.price * item.quantity}</p>
+                  <p class="text-xs text-wine-500">₾${item.price} / ცალი</p>
+                </div>
               </div>
-              <div class="flex-grow min-w-0">
-                <h3 class="font-display text-2xl font-semibold text-wine-900 truncate">${item.productName}</h3>
-                <p class="text-wine-600 text-sm">₾${item.price} თითოეული</p>
-              </div>
-              <div class="flex items-center gap-3">
-                <button onclick="updateQuantity('${getCartItemKey(item)}', -1)" 
-                        class="w-8 h-8 rounded-full bg-wine-100 text-wine-700 flex items-center justify-center">
-                  −
-                </button>
-                <span class="font-semibold text-wine-900 w-8 text-center">${item.quantity}</span>
-                <button onclick="updateQuantity('${getCartItemKey(item)}', 1)" 
-                        class="w-8 h-8 rounded-full bg-wine-100 text-wine-700 flex items-center justify-center">
-                  +
-                </button>
-              </div>
-              <div class="text-right">
-                <p class="font-display text-xl font-bold text-wine-900">₾${item.price * item.quantity}</p>
-                <button onclick="removeFromCart('${getCartItemKey(item)}')" class="text-wine-500 hover:text-wine-700 text-sm transition-colors">
-                  წაშლა
-                </button>
-              </div>
-            </div>
-          `).join('')}
-        </div>
-        
-        <div class="bg-wine-900 rounded-[36px] p-6 md:p-8 text-white shadow-2xl">
-          <div class="flex items-center justify-between mb-6">
-            <span class="text-white/70">ჯამი:</span>
-            <span class="font-display text-3xl font-bold">₾${total}</span>
+            `).join('')}
           </div>
-          <button type="button" onclick="handleCheckout()" class="btn-wine w-full py-4 bg-white text-wine-900 font-semibold rounded-full transition-all">
-            შეკვეთის გაფორმება
-          </button>
-          <p class="text-white/60 text-xs text-center mt-4">მიტანა თბილისში უფასოა ₾100+ შეკვეთაზე</p>
+
+          <div class="space-y-6">
+            <div class="bg-wine-900 p-10 rounded-[40px] text-white shadow-2xl">
+              <h2 class="text-2xl font-display font-bold mb-8">შეკვეთის ჯამი</h2>
+              <div class="space-y-4 mb-8">
+                <div class="flex justify-between text-white/60 font-light">
+                  <span>პროდუქტები</span>
+                  <span>₾${total}</span>
+                </div>
+                <div class="flex justify-between text-white/60 font-light">
+                  <span>მიტანა</span>
+                  <span>უფასო</span>
+                </div>
+                <div class="pt-4 border-t border-white/10 flex justify-between items-end">
+                  <span class="text-lg font-display">სულ</span>
+                  <span class="text-4xl font-display font-bold text-cream-200">₾${total}</span>
+                </div>
+              </div>
+              <button type="button" onclick="handleCheckout()" class="w-full bg-white text-wine-900 py-5 rounded-2xl font-bold uppercase tracking-widest hover:bg-cream-100 transition-all flex items-center justify-center gap-3">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m3 0h1m-5 4h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                გაფორმება
+              </button>
+            </div>
+            <div class="glass-card p-8 rounded-[30px] border border-wine-100">
+              <p class="text-sm text-wine-600 font-light leading-relaxed">* მიტანა თბილისში ხორციელდება 24 საათის განმავლობაში. რეგიონებში — 2-3 სამუშაო დღეში.</p>
+            </div>
+          </div>
         </div>
 
         ${checkoutFormVisible ? `
