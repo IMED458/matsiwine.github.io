@@ -757,24 +757,31 @@
         : products.filter(p => p.type === currentFilter);
       
       grid.innerHTML = filtered.map(product => `
-        <div class="product-card bg-white rounded-2xl overflow-hidden shadow-lg cursor-pointer" onclick="viewProduct('${product.id}')">
-          <div class="aspect-[3/4] bg-gradient-to-br from-wine-100 to-cream-200 p-6 flex items-center justify-center relative overflow-hidden">
-            <div class="glass-shimmer absolute inset-0"></div>
+        <article class="product-card zip-product-card cursor-pointer" onclick="viewProduct('${product.id}')">
+          <div class="zip-product-media">
+            <div class="zip-product-glow"></div>
             ${getProductVisualMarkup(product, 'card')}
-          </div>
-          <div class="p-5">
-            <p class="text-wine-500 text-xs font-medium mb-1">${product.category}</p>
-            <h3 class="font-display text-lg font-semibold text-wine-900 mb-1">${product.name} ${product.year}</h3>
-            <p class="text-wine-600/60 text-sm mb-3 line-clamp-2">${product.grape} • ${product.region}</p>
-            <div class="flex items-center justify-between">
-              <span class="font-display text-xl font-bold text-wine-800">₾${product.price}</span>
-              <button onclick="event.stopPropagation(); addToCart('${product.id}', '${product.name} ${product.year}', ${product.price})" 
-                      class="btn-wine px-3 py-1.5 bg-wine-700 text-cream-50 rounded-full text-xs font-medium hover:bg-wine-800">
+            <div class="zip-quick-actions">
+              <button onclick="event.stopPropagation(); addToCart('${product.id}', '${product.name} ${product.year}', ${product.price})" class="zip-quick-add-btn">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
+                </svg>
                 დამატება
               </button>
             </div>
           </div>
-        </div>
+          <div class="zip-product-body">
+            <div class="flex justify-between items-start gap-2 mb-2">
+              <div>
+                <p class="text-wine-500 text-[10px] font-bold uppercase tracking-widest mb-1">${product.category}</p>
+                <h3 class="font-display text-xl font-bold text-wine-900">${product.name}</h3>
+              </div>
+              <span class="font-display text-xl font-bold text-wine-900">₾${product.price}</span>
+            </div>
+            <p class="text-wine-600/70 text-sm mb-4 line-clamp-2">${product.grape || ''}${product.region ? ' • ' + product.region : ''}${product.year ? ' • ' + product.year : ''}</p>
+            <a href="#" onclick="event.preventDefault(); event.stopPropagation(); viewProduct('${product.id}')" class="zip-details-link">დეტალები →</a>
+          </div>
+        </article>
       `).join('');
       applyLiquidButtons(grid);
       refreshMotionTargets(grid);
