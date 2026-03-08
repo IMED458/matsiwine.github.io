@@ -845,46 +845,60 @@
       if (!container) return;
       
       container.innerHTML = `
-        <div class="relative bg-cream-50 rounded-[40px] p-10 md:p-14 flex items-center justify-center overflow-hidden border border-wine-200 shadow-2xl">
-          <div class="absolute inset-0 bg-gradient-to-br from-wine-100/50 to-transparent opacity-80"></div>
-          ${getProductVisualMarkup(product, 'detail')}
+        <div class="bg-white rounded-[60px] p-16 md:p-24 aspect-[4/5] flex items-center justify-center shadow-2xl border border-wine-100 relative overflow-hidden">
+          <div class="absolute inset-0 bg-gradient-to-br from-wine-100/50 to-transparent opacity-50"></div>
+          <div class="relative z-10 h-full drop-shadow-[0_45px_45px_rgba(2,6,23,0.2)]">
+            ${getProductVisualMarkup(product, 'detail')}
+          </div>
         </div>
-        
-        <div class="space-y-7">
+
+        <div class="space-y-10">
           <div>
-            <p class="text-wine-600 font-bold uppercase tracking-widest text-xs mb-3">${product.category}</p>
-            <h1 class="font-display text-4xl md:text-6xl font-bold text-wine-900 mb-3">${product.name}</h1>
-            <p class="text-wine-600 text-xl font-light">${product.year} • ${product.grape}</p>
+            <p class="text-wine-600 font-bold uppercase tracking-[0.2em] text-xs mb-4">${product.category || ''}</p>
+            <h1 class="text-5xl md:text-6xl font-display font-bold text-wine-900 mb-4">${product.name}</h1>
+            <p class="text-2xl text-wine-700 font-display italic">${product.year || ''} • ${product.grape || ''}</p>
           </div>
-          
-          <p class="text-wine-600/80 text-lg leading-relaxed font-light">${product.description || ''}</p>
-          
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div class="bg-cream-50 rounded-2xl p-4 border border-wine-200">
-              <p class="text-wine-500 text-[10px] font-bold uppercase tracking-widest mb-1">არომატი</p>
-              <p class="text-wine-900 text-sm">${product.aroma || '-'}</p>
+
+          <p class="text-lg text-wine-600/80 font-light leading-relaxed">${product.description || ''}</p>
+
+          <div class="grid sm:grid-cols-2 gap-6">
+            <div class="glass-card p-6 rounded-3xl flex gap-4 items-start">
+              <svg class="w-6 h-6 text-wine-700 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 010-8c0-2.21 1.79-4 4-4s4 1.79 4 4a4 4 0 010 8H7z"/></svg>
+              <div>
+                <h4 class="text-xs font-bold uppercase tracking-widest text-wine-500 mb-1">არომატი</h4>
+                <p class="text-sm text-wine-900 font-medium">${product.aroma || '-'}</p>
+              </div>
             </div>
-            <div class="bg-cream-50 rounded-2xl p-4 border border-wine-200">
-              <p class="text-wine-500 text-[10px] font-bold uppercase tracking-widest mb-1">გემო</p>
-              <p class="text-wine-900 text-sm">${product.taste || '-'}</p>
+            <div class="glass-card p-6 rounded-3xl flex gap-4 items-start">
+              <svg class="w-6 h-6 text-wine-700 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 3h8m-7 0v6a3 3 0 006 0V3m-8 9h8v6a4 4 0 01-8 0v-6z"/></svg>
+              <div>
+                <h4 class="text-xs font-bold uppercase tracking-widest text-wine-500 mb-1">გემო</h4>
+                <p class="text-sm text-wine-900 font-medium">${product.taste || '-'}</p>
+              </div>
             </div>
-            <div class="bg-cream-50 rounded-2xl p-4 border border-wine-200">
-              <p class="text-wine-500 text-[10px] font-bold uppercase tracking-widest mb-1">შეხამება</p>
-              <p class="text-wine-900 text-sm">${product.pairing || '-'}</p>
+            <div class="glass-card p-6 rounded-3xl flex gap-4 items-start">
+              <svg class="w-6 h-6 text-wine-700 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4h18M4 8h16M7 12h10M10 16h4M11 20h2"/></svg>
+              <div>
+                <h4 class="text-xs font-bold uppercase tracking-widest text-wine-500 mb-1">შეხამება</h4>
+                <p class="text-sm text-wine-900 font-medium">${product.pairing || '-'}</p>
+              </div>
             </div>
-            <div class="bg-cream-50 rounded-2xl p-4 border border-wine-200">
-              <p class="text-wine-500 text-[10px] font-bold uppercase tracking-widest mb-1">დეტალები</p>
-              <p class="text-wine-900 text-sm">${product.alcohol || '-'} • ${product.temperature || '-'}</p>
+            <div class="glass-card p-6 rounded-3xl flex gap-4 items-start">
+              <svg class="w-6 h-6 text-wine-700 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 14.76V3.5a2.5 2.5 0 00-5 0v11.26a4 4 0 105 0z"/></svg>
+              <div>
+                <h4 class="text-xs font-bold uppercase tracking-widest text-wine-500 mb-1">დეტალები</h4>
+                <p class="text-sm text-wine-900 font-medium">${product.alcohol || '-'} • ${product.temperature || '-'}</p>
+              </div>
             </div>
           </div>
-          
-          <div class="bg-white rounded-[30px] p-6 shadow-xl border border-wine-200">
-            <div class="flex items-center justify-between mb-4">
-              <span class="font-display text-4xl font-bold text-wine-900">₾${product.price}</span>
-              <p class="text-wine-500 text-sm">${product.region || ''}</p>
+
+          <div class="bg-white p-8 rounded-[40px] shadow-2xl border border-wine-100 flex flex-col sm:flex-row items-center justify-between gap-8">
+            <div>
+              <p class="text-xs font-bold uppercase tracking-widest text-wine-500 mb-1">ფასი</p>
+              <p class="text-5xl font-display font-bold text-wine-900">₾${product.price}</p>
             </div>
             <button onclick="addToCart('${product.id}', '${product.name} ${product.year}', ${product.price})" 
-                    class="btn-wine w-full py-4 bg-wine-900 text-white font-semibold rounded-full transition-all flex items-center justify-center gap-2">
+                    class="w-full sm:w-auto btn-wine py-5 px-12 flex items-center justify-center gap-3">
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
               </svg>
