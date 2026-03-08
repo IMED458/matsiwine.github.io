@@ -1583,6 +1583,8 @@ ${itemsText}`
       designerRefs.drawCanvas.addEventListener('pointerdown', startDesignerDrawing);
       designerRefs.drawCanvas.addEventListener('pointermove', moveDesignerDrawing);
       designerRefs.drawCanvas.addEventListener('pointerup', endDesignerDrawing);
+      designerRefs.drawCanvas.addEventListener('pointercancel', endDesignerDrawing);
+      designerRefs.drawCanvas.addEventListener('lostpointercapture', endDesignerDrawing);
       designerRefs.drawCanvas.addEventListener('pointerleave', endDesignerDrawing);
       designerRefs.photoWrap.addEventListener('pointerdown', startDesignerPhotoDrag);
 
@@ -1669,9 +1671,26 @@ ${itemsText}`
 
     function getDesignerPointer(event) {
       const rect = designerRefs.drawCanvas.getBoundingClientRect();
+      const source = event.touches?.[0] || event.changedTouches?.[0] || event;
+      const clientX = Number.isFinite(source.clientX) ? source.clientX : 0;
+      const clientY = Number.isFinite(source.clientY) ? source.clientY : 0;
+      const pageX = Number.isFinite(source.pageX) ? source.pageX : clientX + window.scrollX;
+      const pageY = Number.isFinite(source.pageY) ? source.pageY : clientY + window.scrollY;
+
+      let x = clientX - rect.left;
+      let y = clientY - rect.top;
+
+      // iOS visual/layout viewport mismatch fallback.
+      if (!Number.isFinite(x) || !Number.isFinite(y) || Math.abs(x) > rect.width * 2 || Math.abs(y) > rect.height * 2) {
+        x = pageX - (rect.left + window.scrollX);
+        y = pageY - (rect.top + window.scrollY);
+      }
+
+      x = Math.max(0, Math.min(rect.width, x));
+      y = Math.max(0, Math.min(rect.height, y));
       return {
-        x: event.clientX - rect.left,
-        y: event.clientY - rect.top
+        x,
+        y
       };
     }
 
@@ -1682,18 +1701,21 @@ ${itemsText}`
         showToast('ხატვის დასაწყებად დააჭირე "ხატვის ჩართვა"', 'info');
         return;
       }
-      if (event.button !== 0) return;
+      if (event.pointerType === 'mouse' && event.button !== 0) return;
       event.preventDefault();
       designerState.drawing = true;
       const point = getDesignerPointer(event);
       designerCtx.beginPath();
       designerCtx.moveTo(point.x, point.y);
-      designerRefs.drawCanvas.setPointerCapture(event.pointerId);
+      if (typeof designerRefs.drawCanvas.setPointerCapture === 'function') {
+        designerRefs.drawCanvas.setPointerCapture(event.pointerId);
+      }
     }
 
     function moveDesignerDrawing(event) {
       if (!designerState.drawing) return;
       if (!designerCtx) return;
+      event.preventDefault();
       const point = getDesignerPointer(event);
       designerCtx.lineWidth = designerState.size;
       if (designerState.mode === 'erase') {

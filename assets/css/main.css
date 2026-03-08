@@ -611,6 +611,8 @@ select:focus {
     radial-gradient(circle at 16% 10%, rgba(255, 255, 255, 0.7), transparent 44%),
     linear-gradient(160deg, #f9fbff 0%, #edf2f9 100%);
   box-shadow: var(--shadow-lift);
+  touch-action: none;
+  overscroll-behavior: contain;
 }
 
 .designer-photo-wrap,
@@ -630,6 +632,7 @@ select:focus {
 
 .designer-draw-canvas {
   touch-action: none;
+  overscroll-behavior: contain;
   z-index: 2;
 }
 
