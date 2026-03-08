@@ -461,105 +461,125 @@
      </div>
     </section><!-- DESIGNER PAGE -->
     <section id="page-designer" class="page-section hidden">
-     <div class="py-10 md:py-16 bg-cream-50 min-h-screen">
+     <div class="pt-28 pb-20 min-h-screen bg-cream-50 text-wine-900">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-       <div class="mb-8 text-center">
-        <p class="text-wine-600 font-medium tracking-widest text-sm mb-2">CREATE YOUR OWN LABEL</p>
-        <h1 class="font-display text-4xl md:text-5xl font-bold text-wine-900 mb-3">შექმენი შენი დიზაინი</h1>
-        <p class="text-wine-600/80 max-w-3xl mx-auto">ატვირთე ფოტო, დახატე ხელით, დაამატე ტექსტი და შექმენი საკუთარი უნიკალური ეტიკეტი.</p>
-       </div>
-       <div class="grid lg:grid-cols-2 gap-8 items-start">
-        <div class="bg-white rounded-3xl p-5 md:p-8 shadow-xl">
-         <div id="designer-stage" class="designer-stage">
-          <div id="designer-photo-wrap" class="designer-photo-wrap">
-           <img id="designer-photo" alt="Uploaded label photo" class="designer-photo hidden">
+       <div class="flex flex-col lg:flex-row gap-10">
+        <div class="flex-1 space-y-6">
+         <div class="flex items-center justify-between gap-4">
+          <div>
+           <h1 class="font-display text-4xl md:text-5xl font-bold text-wine-900 mb-1">Label Studio</h1>
+           <p class="text-wine-500 text-xs font-semibold uppercase tracking-widest">შექმენი შენი უნიკალური დიზაინი</p>
           </div>
-          <canvas id="designer-draw-canvas" class="designer-draw-canvas"></canvas>
-          <div id="designer-text-layer" class="designer-text-layer"></div>
-          <div class="designer-safe-zone"></div>
+          <div class="flex gap-2">
+           <button id="designer-reset" type="button" class="w-11 h-11 rounded-2xl bg-white border border-wine-200 text-wine-700 inline-flex items-center justify-center shadow-sm" title="Reset">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
+           </button>
+           <button id="designer-export" type="button" class="w-11 h-11 rounded-2xl bg-white border border-wine-200 text-wine-700 inline-flex items-center justify-center shadow-sm" title="Export PNG">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5m0 0l5-5m-5 5V3" /></svg>
+           </button>
+          </div>
          </div>
-         <div class="mt-4 flex flex-wrap items-center gap-3 text-xs text-wine-600">
-          <span class="px-2 py-1 rounded-full bg-cream-200">90x120mm</span>
-          <span class="px-2 py-1 rounded-full bg-cream-200">Bleed 3mm</span>
-          <span class="px-2 py-1 rounded-full bg-cream-200">Safe 5mm</span>
-          <span class="px-2 py-1 rounded-full bg-cream-200">300 DPI target</span>
+         <div class="relative bg-white rounded-[30px] overflow-hidden border border-wine-200 shadow-[0_50px_100px_-20px_rgba(0,0,0,0.1)] mx-auto max-w-[500px]">
+          <div id="designer-stage" class="designer-stage">
+           <div id="designer-photo-wrap" class="designer-photo-wrap">
+            <img id="designer-photo" alt="Uploaded label photo" class="designer-photo hidden">
+           </div>
+           <canvas id="designer-draw-canvas" class="designer-draw-canvas"></canvas>
+           <div id="designer-text-layer" class="designer-text-layer"></div>
+           <div class="designer-safe-zone"></div>
+          </div>
+         </div>
+         <div class="flex flex-wrap items-center justify-center gap-2 text-xs text-wine-600">
+          <span class="px-3 py-1 rounded-full bg-white border border-wine-200">90x120mm</span>
+          <span class="px-3 py-1 rounded-full bg-white border border-wine-200">Bleed 3mm</span>
+          <span class="px-3 py-1 rounded-full bg-white border border-wine-200">Safe 5mm</span>
+          <span class="px-3 py-1 rounded-full bg-white border border-wine-200">300 DPI target</span>
          </div>
         </div>
-        <div class="space-y-4">
-         <div class="bg-white rounded-2xl p-5 shadow-lg">
-          <h2 class="font-display text-2xl text-wine-900 mb-4">ფოტო</h2>
-          <div class="flex flex-wrap gap-3 mb-4">
-           <input id="designer-upload" type="file" accept="image/*" class="block w-full text-sm text-wine-700 file:mr-3 file:py-2 file:px-4 file:rounded-full file:border-0 file:bg-wine-700 file:text-cream-50 hover:file:bg-wine-800">
+        <aside class="w-full lg:w-[24rem] space-y-4">
+         <div class="bg-white p-2 rounded-3xl border border-wine-200 flex gap-2 shadow-sm">
+          <button type="button" onclick="(function(){const s=document.getElementById('designer-mode');if(s){s.value='select';s.dispatchEvent(new Event('change'));}})()" class="flex-1 py-3 rounded-2xl flex flex-col items-center gap-1 bg-wine-900 text-white">
+           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 15l-2 5L9 9l11 4-5 2z" /></svg>
+           <span class="text-[10px] uppercase font-bold tracking-tight">Select</span>
+          </button>
+          <button type="button" onclick="(function(){const s=document.getElementById('designer-mode');if(s){s.value='draw';s.dispatchEvent(new Event('change'));}})()" class="flex-1 py-3 rounded-2xl flex flex-col items-center gap-1 hover:bg-cream-100">
+           <svg class="w-5 h-5 text-wine-800" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5h2M12 4v2m-7 7h2m-1-1v2m12-2h2m-1-1v2M5 5l14 14" /></svg>
+           <span class="text-[10px] uppercase font-bold tracking-tight text-wine-700">Draw</span>
+          </button>
+          <button type="button" onclick="(function(){const s=document.getElementById('designer-mode');if(s){s.value='erase';s.dispatchEvent(new Event('change'));}})()" class="flex-1 py-3 rounded-2xl flex flex-col items-center gap-1 hover:bg-cream-100">
+           <svg class="w-5 h-5 text-wine-800" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 20H7l-4-4 9-9a2 2 0 012.828 0l5.172 5.172a2 2 0 010 2.828L14 20" /></svg>
+           <span class="text-[10px] uppercase font-bold tracking-tight text-wine-700">Erase</span>
+          </button>
+         </div>
+
+         <div class="bg-white p-6 rounded-[40px] border border-wine-200 shadow-sm space-y-5">
+          <div>
+           <h2 class="font-display text-2xl font-bold text-wine-900 mb-3">ფოტოს მართვა</h2>
+           <input id="designer-upload" type="file" accept="image/*" class="block w-full text-sm text-wine-700 file:mr-3 file:py-2 file:px-4 file:rounded-full file:border-0 file:bg-wine-900 file:text-white">
           </div>
           <div class="grid grid-cols-3 gap-3">
-           <label class="text-sm text-wine-700">ზუმი
-            <input id="designer-photo-scale" type="range" min="50" max="200" value="100" class="w-full">
+           <label class="text-xs text-wine-600 uppercase tracking-wider">Zoom
+            <input id="designer-photo-scale" type="range" min="50" max="200" value="100" class="w-full mt-2">
            </label>
-           <label class="text-sm text-wine-700">X
-            <input id="designer-photo-x" type="range" min="-100" max="100" value="0" class="w-full">
+           <label class="text-xs text-wine-600 uppercase tracking-wider">X
+            <input id="designer-photo-x" type="range" min="-100" max="100" value="0" class="w-full mt-2">
            </label>
-           <label class="text-sm text-wine-700">Y
-            <input id="designer-photo-y" type="range" min="-100" max="100" value="0" class="w-full">
+           <label class="text-xs text-wine-600 uppercase tracking-wider">Y
+            <input id="designer-photo-y" type="range" min="-100" max="100" value="0" class="w-full mt-2">
            </label>
           </div>
-         </div>
-         <div class="bg-white rounded-2xl p-5 shadow-lg">
-         <h2 class="font-display text-2xl text-wine-900 mb-4">ხატვა და ედითინგი</h2>
-          <p class="text-sm text-wine-600 mb-3">1) აირჩიე რეჟიმი 2) დააჭირე „ხატვის ჩართვა“ 3) შემდეგ დახატე ბოთლზე.</p>
-          <div class="grid sm:grid-cols-2 gap-3 mb-4">
-           <label class="text-sm text-wine-700">მოდი
-            <select id="designer-mode" class="w-full mt-1 px-3 py-2 rounded-lg border border-wine-200">
-             <option value="select">არჩევა/გადაადგილება</option>
-             <option value="draw">ხატვა</option>
-             <option value="erase">საშლელი</option>
+          <div class="grid sm:grid-cols-2 gap-3">
+           <label class="text-xs text-wine-600 uppercase tracking-wider">Mode
+            <select id="designer-mode" class="w-full mt-2 px-3 py-2 rounded-xl border border-wine-200 bg-cream-50">
+             <option value="select">Select</option>
+             <option value="draw">Draw</option>
+             <option value="erase">Erase</option>
             </select>
            </label>
-           <label class="text-sm text-wine-700">ფერი
-            <input id="designer-color" type="color" value="#722f37" class="w-full h-10 mt-1 rounded-lg border border-wine-200">
+           <label class="text-xs text-wine-600 uppercase tracking-wider">Brush
+            <input id="designer-color" type="color" value="#722f37" class="w-full h-10 mt-2 rounded-xl border border-wine-200">
            </label>
           </div>
-          <label class="text-sm text-wine-700 block mb-4">ხაზის სისქე
-           <input id="designer-size" type="range" min="1" max="30" value="6" class="w-full">
+          <label class="text-xs text-wine-600 uppercase tracking-wider block">Size
+           <input id="designer-size" type="range" min="1" max="30" value="6" class="w-full mt-2">
           </label>
-          <div class="flex flex-wrap items-center gap-2 mb-4">
-           <button id="designer-toggle-draw" type="button" class="px-4 py-2 rounded-full bg-wine-700 text-cream-50 hover:bg-wine-800">ხატვის ჩართვა</button>
+          <div class="flex flex-wrap items-center gap-2">
+           <button id="designer-toggle-draw" type="button" class="px-4 py-2 rounded-full bg-wine-900 text-white">ხატვის ჩართვა</button>
            <span id="designer-draw-status" class="px-3 py-1 rounded-full bg-cream-200 text-wine-800 text-xs">ხატვა გამორთულია</span>
           </div>
           <div class="flex flex-wrap gap-2">
-           <button id="designer-undo" type="button" class="px-4 py-2 rounded-full bg-cream-200 text-wine-800 hover:bg-cream-300">Undo</button>
-           <button id="designer-redo" type="button" class="px-4 py-2 rounded-full bg-cream-200 text-wine-800 hover:bg-cream-300">Redo</button>
-           <button id="designer-clear-drawing" type="button" class="px-4 py-2 rounded-full bg-wine-100 text-wine-800 hover:bg-wine-200">ნახატის გასუფთავება</button>
-           <button id="designer-reset" type="button" class="px-4 py-2 rounded-full bg-cream-200 text-wine-800 hover:bg-cream-300">Reset</button>
+           <button id="designer-undo" type="button" class="px-4 py-2 rounded-full bg-cream-100 text-wine-800 border border-wine-200">Undo</button>
+           <button id="designer-redo" type="button" class="px-4 py-2 rounded-full bg-cream-100 text-wine-800 border border-wine-200">Redo</button>
+           <button id="designer-clear-drawing" type="button" class="px-4 py-2 rounded-full bg-cream-100 text-wine-800 border border-wine-200">Clear</button>
           </div>
          </div>
-         <div class="bg-white rounded-2xl p-5 shadow-lg">
-          <h2 class="font-display text-2xl text-wine-900 mb-4">ტექსტი / Layers</h2>
-          <div class="grid sm:grid-cols-2 gap-3 mb-3">
-           <label class="text-sm text-wine-700">ტექსტის ფერი
-            <input id="designer-text-color" type="color" value="#3d1219" class="w-full h-10 mt-1 rounded-lg border border-wine-200">
+
+         <div class="bg-white p-6 rounded-[40px] border border-wine-200 shadow-sm space-y-5">
+          <h2 class="font-display text-2xl font-bold text-wine-900">ტექსტის მართვა</h2>
+          <div class="grid sm:grid-cols-2 gap-3">
+           <label class="text-xs text-wine-600 uppercase tracking-wider">Text Color
+            <input id="designer-text-color" type="color" value="#3d1219" class="w-full h-10 mt-2 rounded-xl border border-wine-200">
            </label>
-           <label class="text-sm text-wine-700">ზომა
+           <label class="text-xs text-wine-600 uppercase tracking-wider">Text Size
             <input id="designer-text-size" type="range" min="12" max="72" value="28" class="w-full mt-2">
            </label>
           </div>
           <div class="flex flex-wrap gap-2">
-           <button id="designer-add-text" class="px-4 py-2 rounded-full bg-wine-700 text-cream-50 hover:bg-wine-800">ტექსტის დამატება</button>
-           <button id="designer-edit-text" class="px-4 py-2 rounded-full bg-wine-100 text-wine-800 hover:bg-wine-200">ტექსტის შეცვლა</button>
-           <button id="designer-delete-text" class="px-4 py-2 rounded-full bg-red-100 text-red-700 hover:bg-red-200">წაშლა</button>
-           <button id="designer-lock-text" class="px-4 py-2 rounded-full bg-cream-200 text-wine-800 hover:bg-cream-300">Lock</button>
-           <button id="designer-unlock-text" class="px-4 py-2 rounded-full bg-cream-200 text-wine-800 hover:bg-cream-300">Unlock</button>
-           <button id="designer-front-text" class="px-4 py-2 rounded-full bg-cream-200 text-wine-800 hover:bg-cream-300">წინ</button>
-           <button id="designer-back-text" class="px-4 py-2 rounded-full bg-cream-200 text-wine-800 hover:bg-cream-300">უკან</button>
+           <button id="designer-add-text" class="px-4 py-2 rounded-full bg-wine-900 text-white">ტექსტის დამატება</button>
+           <button id="designer-edit-text" class="px-4 py-2 rounded-full bg-cream-100 text-wine-800 border border-wine-200">შეცვლა</button>
+           <button id="designer-delete-text" class="px-4 py-2 rounded-full bg-red-100 text-red-700">წაშლა</button>
+           <button id="designer-lock-text" class="px-4 py-2 rounded-full bg-cream-100 text-wine-800 border border-wine-200">Lock</button>
+           <button id="designer-unlock-text" class="px-4 py-2 rounded-full bg-cream-100 text-wine-800 border border-wine-200">Unlock</button>
+           <button id="designer-front-text" class="px-4 py-2 rounded-full bg-cream-100 text-wine-800 border border-wine-200">წინ</button>
+           <button id="designer-back-text" class="px-4 py-2 rounded-full bg-cream-100 text-wine-800 border border-wine-200">უკან</button>
           </div>
          </div>
-         <div class="bg-wine-900 rounded-2xl p-5 shadow-lg">
-         <h2 class="font-display text-2xl text-cream-50 mb-4">ექსპორტი</h2>
-         <p class="text-cream-200/80 text-sm mb-4">PNG preview ექსპორტი ერთი კლიკით.</p>
-          <button id="designer-export" class="w-full py-3 rounded-xl bg-cream-50 text-wine-800 font-semibold hover:bg-cream-100 mb-4">PNG ჩამოტვირთვა</button>
-          <button id="designer-add-to-cart" class="w-full py-3 rounded-xl bg-wine-700 text-cream-50 font-semibold hover:bg-wine-800 mb-4">კალათაში დამატება</button>
-          <p class="text-cream-200/80 text-xs">შეკვეთის გასაფორმებლად გამოიყენე კალათა.</p>
-         </div>
-        </div>
+
+         <button id="designer-add-to-cart" class="w-full bg-wine-900 text-white py-5 rounded-[25px] font-bold uppercase tracking-widest flex items-center justify-center gap-3 shadow-xl">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" /></svg>
+          კალათაში დამატება
+         </button>
+        </aside>
        </div>
       </div>
      </div>
