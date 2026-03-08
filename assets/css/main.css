@@ -1265,6 +1265,16 @@ button[class*="border-2"]:hover {
   color: rgba(255, 255, 255, 0.7);
 }
 
+#footer-created-by a {
+  color: rgba(255, 255, 255, 0.88);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+#footer-created-by a:hover {
+  color: #ffffff;
+}
+
 .matsi-footer-social {
   display: flex;
   gap: 0.65rem;
