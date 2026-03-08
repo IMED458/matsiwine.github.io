@@ -1516,12 +1516,6 @@ ${itemsText}`
       designerRefs.panelSelect = document.getElementById('designer-panel-select');
       designerRefs.panelPhoto = document.getElementById('designer-panel-photo');
       designerRefs.panelText = document.getElementById('designer-panel-text');
-      designerRefs.panelDraw = document.getElementById('designer-panel-draw');
-      designerRefs.color = document.getElementById('designer-color');
-      designerRefs.size = document.getElementById('designer-size');
-      designerRefs.clearDrawing = document.getElementById('designer-clear-drawing');
-      designerRefs.undo = document.getElementById('designer-undo');
-      designerRefs.redo = document.getElementById('designer-redo');
       designerRefs.reset = document.getElementById('designer-reset');
       designerRefs.photoScale = document.getElementById('designer-photo-scale');
       designerRefs.photoX = document.getElementById('designer-photo-x');
@@ -1539,12 +1533,8 @@ ${itemsText}`
       designerRefs.photoCenter = document.getElementById('designer-photo-center');
       designerRefs.exportBtn = document.getElementById('designer-export');
       designerRefs.addToCartBtn = document.getElementById('designer-add-to-cart');
-      designerRefs.toggleDraw = document.getElementById('designer-toggle-draw');
-      designerRefs.drawStatus = document.getElementById('designer-draw-status');
-      designerRefs.drawModeBtn = document.getElementById('designer-mode-draw');
-      designerRefs.eraseModeBtn = document.getElementById('designer-mode-erase');
 
-      if (!designerRefs.stage || !designerRefs.drawCanvas) return;
+      if (!designerRefs.stage) return;
 
       resizeDesignerCanvas();
       bindDesignerEvents();
@@ -1567,38 +1557,6 @@ ${itemsText}`
             if (!mode) return;
             setDesignerMode(mode);
           });
-        });
-      }
-
-      if (designerRefs.drawModeBtn) {
-        designerRefs.drawModeBtn.addEventListener('click', () => {
-          setDesignerMode('draw');
-          designerState.drawArmed = true;
-          syncDesignerDrawUi();
-        });
-      }
-
-      if (designerRefs.eraseModeBtn) {
-        designerRefs.eraseModeBtn.addEventListener('click', () => {
-          setDesignerMode('erase');
-          designerState.drawArmed = true;
-          syncDesignerDrawUi();
-        });
-      }
-
-      if (designerRefs.toggleDraw) {
-        designerRefs.toggleDraw.addEventListener('click', toggleDesignerDrawArmed);
-      }
-
-      if (designerRefs.color) {
-        designerRefs.color.addEventListener('input', (event) => {
-          designerState.color = event.target.value;
-        });
-      }
-
-      if (designerRefs.size) {
-        designerRefs.size.addEventListener('input', (event) => {
-          designerState.size = parseInt(event.target.value, 10);
         });
       }
 
@@ -1632,16 +1590,6 @@ ${itemsText}`
         designerRefs.photoCenter.addEventListener('click', centerDesignerPhoto);
       }
 
-      if (designerRefs.clearDrawing) {
-        designerRefs.clearDrawing.addEventListener('click', () => {
-          clearDesignerDrawing();
-          pushDesignerHistory();
-          showToast('ნახატი გასუფთავდა', 'info');
-        });
-      }
-      if (designerRefs.undo) designerRefs.undo.addEventListener('click', undoDesignerDrawing);
-      if (designerRefs.redo) designerRefs.redo.addEventListener('click', redoDesignerDrawing);
-
       if (designerRefs.reset) designerRefs.reset.addEventListener('click', resetDesigner);
       if (designerRefs.addText) designerRefs.addText.addEventListener('click', addDesignerText);
       if (designerRefs.editText) designerRefs.editText.addEventListener('click', editSelectedDesignerText);
@@ -1667,11 +1615,13 @@ ${itemsText}`
         });
       }
 
-      designerRefs.drawCanvas.addEventListener('pointerdown', startDesignerDrawing);
-      designerRefs.drawCanvas.addEventListener('pointermove', moveDesignerDrawing);
-      designerRefs.drawCanvas.addEventListener('pointerup', endDesignerDrawing);
-      designerRefs.drawCanvas.addEventListener('pointerleave', endDesignerDrawing);
-      designerRefs.drawCanvas.addEventListener('pointercancel', endDesignerDrawing);
+      if (designerRefs.drawCanvas) {
+        designerRefs.drawCanvas.addEventListener('pointerdown', startDesignerDrawing);
+        designerRefs.drawCanvas.addEventListener('pointermove', moveDesignerDrawing);
+        designerRefs.drawCanvas.addEventListener('pointerup', endDesignerDrawing);
+        designerRefs.drawCanvas.addEventListener('pointerleave', endDesignerDrawing);
+        designerRefs.drawCanvas.addEventListener('pointercancel', endDesignerDrawing);
+      }
       designerRefs.photoWrap.addEventListener('pointerdown', startDesignerPhotoDrag);
 
       designerRefs.textLayer.addEventListener('pointerdown', startDesignerTextDrag);
@@ -1685,35 +1635,6 @@ ${itemsText}`
       window.addEventListener('keydown', handleDesignerHotkeys);
     }
 
-    function syncDesignerDrawUi() {
-      if (!designerRefs.toggleDraw || !designerRefs.drawStatus) return;
-      const canDraw = designerState.mode === 'draw' || designerState.mode === 'erase';
-      if (designerRefs.drawModeBtn) {
-        designerRefs.drawModeBtn.classList.toggle('active', designerState.mode === 'draw');
-      }
-      if (designerRefs.eraseModeBtn) {
-        designerRefs.eraseModeBtn.classList.toggle('active', designerState.mode === 'erase');
-      }
-      if (!canDraw) {
-        designerRefs.toggleDraw.disabled = false;
-        designerRefs.toggleDraw.style.opacity = '';
-        designerRefs.toggleDraw.style.cursor = '';
-        designerRefs.toggleDraw.textContent = 'ხატვის ჩართვა';
-        designerRefs.drawStatus.textContent = 'ხატვა გამორთულია';
-        designerRefs.drawStatus.className = 'designer-status-pill';
-        return;
-      }
-
-      designerRefs.toggleDraw.disabled = false;
-      designerRefs.toggleDraw.style.opacity = '';
-      designerRefs.toggleDraw.style.cursor = '';
-      designerRefs.toggleDraw.textContent = designerState.drawArmed ? 'ხატვის გამორთვა' : 'ხატვის ჩართვა';
-      designerRefs.drawStatus.textContent = designerState.drawArmed ? 'ხატვა ჩართულია' : 'ხატვა გამორთულია';
-      designerRefs.drawStatus.className = designerState.drawArmed
-        ? 'designer-status-pill bg-green-100 text-green-800'
-        : 'designer-status-pill';
-    }
-
     function syncDesignerPanels() {
       const mode = designerState.mode;
       if (designerRefs.panelSelect) {
@@ -1725,20 +1646,6 @@ ${itemsText}`
       if (designerRefs.panelText) {
         designerRefs.panelText.classList.toggle('hidden', mode !== 'text');
       }
-    }
-
-    function toggleDesignerDrawArmed() {
-      const canDraw = designerState.mode === 'draw' || designerState.mode === 'erase';
-      if (!canDraw) {
-        setDesignerMode('draw');
-        designerState.drawArmed = true;
-        syncDesignerDrawUi();
-        showToast('ხატვის რეჟიმი ჩართულია', 'info');
-        return;
-      }
-      designerState.drawArmed = !designerState.drawArmed;
-      syncDesignerDrawUi();
-      showToast(designerState.drawArmed ? 'ხატვა ჩართულია' : 'ხატვა გამორთულია', 'info');
     }
 
     function resizeDesignerCanvas() {
@@ -1768,6 +1675,9 @@ ${itemsText}`
     }
 
     function setDesignerMode(mode) {
+      if (!['select', 'text', 'photo'].includes(mode)) {
+        mode = 'select';
+      }
       designerState.mode = mode;
       if (designerRefs.mode) {
         designerRefs.mode.value = designerRefs.mode.querySelector(`option[value="${mode}"]`) ? mode : 'select';
@@ -1778,21 +1688,17 @@ ${itemsText}`
         });
       }
 
-      const isDrawMode = mode === 'draw' || mode === 'erase';
-      if (designerRefs.drawCanvas) designerRefs.drawCanvas.style.pointerEvents = isDrawMode ? 'auto' : 'none';
-      if (designerRefs.textLayer) designerRefs.textLayer.style.pointerEvents = isDrawMode ? 'none' : 'auto';
+      if (designerRefs.drawCanvas) designerRefs.drawCanvas.style.pointerEvents = 'none';
+      if (designerRefs.textLayer) designerRefs.textLayer.style.pointerEvents = 'auto';
       if (designerRefs.stage) {
-        if (isDrawMode) {
-          designerRefs.stage.style.cursor = 'crosshair';
-        } else if (mode === 'photo') {
+        if (mode === 'photo') {
           designerRefs.stage.style.cursor = 'grab';
         } else {
           designerRefs.stage.style.cursor = 'default';
         }
       }
-      if (!isDrawMode) designerState.drawArmed = false;
+      designerState.drawArmed = false;
       syncDesignerPanels();
-      syncDesignerDrawUi();
     }
 
     function getDesignerPointer(event) {
@@ -2125,14 +2031,6 @@ ${itemsText}`
 
     function handleDesignerHotkeys(event) {
       if (currentPage !== 'designer') return;
-      if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'z') {
-        event.preventDefault();
-        if (event.shiftKey) {
-          redoDesignerDrawing();
-        } else {
-          undoDesignerDrawing();
-        }
-      }
       if ((event.key === 'Delete' || event.key === 'Backspace') && designerState.selectedTextId) {
         const activeTag = (document.activeElement?.tagName || '').toLowerCase();
         if (!['input', 'textarea', 'select'].includes(activeTag)) {
@@ -2200,11 +2098,6 @@ ${itemsText}`
 
     function resetDesigner() {
       designerState.mode = 'select';
-      designerState.drawArmed = false;
-      designerState.color = '#722f37';
-      designerState.size = 6;
-      designerState.drawing = false;
-      designerState.drawingPointerId = null;
       designerState.photoScale = 100;
       designerState.photoX = 0;
       designerState.photoY = 0;
@@ -2215,8 +2108,6 @@ ${itemsText}`
       designerState.draggingTextId = null;
       designerState.textDragPointerId = null;
       if (designerRefs.mode) designerRefs.mode.value = 'select';
-      if (designerRefs.color) designerRefs.color.value = '#722f37';
-      if (designerRefs.size) designerRefs.size.value = '6';
       if (designerRefs.textColor) designerRefs.textColor.value = '#3d1219';
       if (designerRefs.textSize) designerRefs.textSize.value = '28';
       if (designerRefs.textInput) designerRefs.textInput.value = 'MATSI WINE';
@@ -2227,10 +2118,6 @@ ${itemsText}`
         designerRefs.photo.classList.add('hidden');
       }
       updateDesignerPhotoTransform();
-      clearDesignerDrawing();
-      designerState.drawHistory = [];
-      designerState.drawHistoryIndex = -1;
-      pushDesignerHistory();
       setDesignerMode('select');
       renderDesignerTextLayers();
       showToast('დიზაინერი განულდა', 'info');
@@ -2267,7 +2154,9 @@ ${itemsText}`
         ctx.drawImage(img, drawX, drawY, drawW, drawH);
       }
 
-      ctx.drawImage(designerRefs.drawCanvas, 0, 0, exportWidth, exportHeight);
+      if (designerRefs.drawCanvas) {
+        ctx.drawImage(designerRefs.drawCanvas, 0, 0, exportWidth, exportHeight);
+      }
 
       designerState.textLayers.forEach((layer) => {
         ctx.fillStyle = layer.color;

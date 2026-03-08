@@ -518,7 +518,6 @@
            <div id="designer-photo-wrap" class="designer-photo-wrap">
             <img id="designer-photo" alt="Uploaded label photo" class="designer-photo hidden">
            </div>
-           <canvas id="designer-draw-canvas" class="designer-draw-canvas"></canvas>
            <div id="designer-text-layer" class="designer-text-layer"></div>
            <div class="designer-safe-zone"></div>
           </div>
@@ -579,34 +578,10 @@
             <input id="designer-text-size" type="range" min="12" max="120" value="28">
            </div>
           </div>
-          <div id="designer-panel-draw" class="designer-panel-block space-y-4">
-           <h3 class="designer-panel-title">ხატვა</h3>
-           <div class="designer-quick-grid">
-            <button id="designer-mode-draw" type="button" class="designer-mini-btn designer-tool-btn">ფანქარი</button>
-            <button id="designer-mode-erase" type="button" class="designer-mini-btn designer-tool-btn">საშლელი</button>
-           </div>
-           <button id="designer-toggle-draw" type="button" class="designer-mini-btn">ხატვის ჩართვა</button>
-           <span id="designer-draw-status" class="designer-status-pill">ხატვა გამორთულია</span>
-           <div class="designer-control-row">
-            <label for="designer-color">ფანქრის ფერი</label>
-            <input id="designer-color" type="color" value="#334155">
-           </div>
-           <div class="designer-control-row">
-            <label for="designer-size">ფანქრის ზომა</label>
-            <input id="designer-size" type="range" min="1" max="40" value="6">
-           </div>
-           <div class="designer-quick-grid">
-            <button id="designer-undo" type="button" class="designer-mini-btn">Undo</button>
-            <button id="designer-redo" type="button" class="designer-mini-btn">Redo</button>
-            <button id="designer-clear-drawing" type="button" class="designer-mini-btn">გასუფთავება</button>
-           </div>
-          </div>
           <select id="designer-mode" class="hidden">
            <option value="select">select</option>
            <option value="text">text</option>
            <option value="photo">photo</option>
-           <option value="draw">draw</option>
-           <option value="erase">erase</option>
           </select>
          </div>
          <button id="designer-add-to-cart" class="w-full premium-button-primary py-5 font-bold uppercase tracking-widest inline-flex items-center justify-center gap-3">🛒 კალათაში დამატება</button>
