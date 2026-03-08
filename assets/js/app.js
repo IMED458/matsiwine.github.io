@@ -1881,7 +1881,8 @@ ${itemsText}`
       designerState.selectedTextId = id;
       renderDesignerTextLayers();
 
-      if (designerState.mode !== 'select' || layer.locked) return;
+      const canDragText = designerState.mode === 'select' || designerState.mode === 'text';
+      if (!canDragText || layer.locked) return;
       const rect = designerRefs.stage.getBoundingClientRect();
       designerState.draggingTextId = id;
       designerState.dragOffset = {
