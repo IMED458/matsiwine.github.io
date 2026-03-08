@@ -41,6 +41,18 @@ body.matsi-neo {
   font-family: "Cormorant Garamond", "Noto Sans Georgian", serif !important;
 }
 
+#main-content h1,
+#main-content h2,
+#main-content h3,
+#main-content h4,
+#main-content p,
+#main-content span,
+#main-content button,
+#main-content label {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
 .app-wrapper {
   width: 100%;
   min-height: 100%;
@@ -196,6 +208,13 @@ button[class*="bg-wine-700"] {
   background: var(--brand-950) !important;
   color: #ffffff !important;
   transition: all 0.3s ease;
+  font-family: "Noto Sans Georgian", "Manrope", "Inter", sans-serif;
+  font-size: 0.95rem;
+  line-height: 1.25;
+  letter-spacing: 0.02em !important;
+  text-transform: none !important;
+  white-space: normal;
+  text-align: center;
 }
 
 .premium-button-primary:hover,
@@ -220,6 +239,13 @@ button[class*="border-2"] {
   background: transparent !important;
   color: var(--brand-950) !important;
   transition: all 0.3s ease;
+  font-family: "Noto Sans Georgian", "Manrope", "Inter", sans-serif;
+  font-size: 0.95rem;
+  line-height: 1.25;
+  letter-spacing: 0.02em !important;
+  text-transform: none !important;
+  white-space: normal;
+  text-align: center;
 }
 
 .premium-button-outline:hover,
@@ -656,7 +682,29 @@ button[class*="border-2"]:hover {
 #page-shop h1,
 #page-cart h1 {
   letter-spacing: -0.015em;
-  line-height: 1.05;
+  line-height: 1.12;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.product-card-title {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  line-height: 1.12;
+}
+
+.product-detail-title {
+  font-size: clamp(2.3rem, 6.5vw, 4.3rem);
+  line-height: 1.08;
+  letter-spacing: -0.012em;
+  max-width: 100%;
+}
+
+.product-detail-description {
+  max-width: 100%;
+  line-height: 1.6;
 }
 
 /* Designer */
@@ -1117,6 +1165,21 @@ button[class*="border-2"]:hover {
 
   #hero-subtitle {
     font-size: 1rem !important;
+  }
+
+  .product-detail-title {
+    font-size: clamp(2rem, 11vw, 3rem);
+    line-height: 1.08;
+  }
+
+  .premium-button-primary,
+  .premium-button-outline,
+  .btn-wine,
+  .filter-btn {
+    font-size: 0.88rem !important;
+    line-height: 1.2;
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
   }
 
   .designer-mode-switch {

@@ -825,7 +825,7 @@
             <div class="flex justify-between items-start mb-2 gap-4">
               <div class="min-w-0">
                 <p class="text-wine-500 text-[10px] font-bold uppercase tracking-widest mb-1">${product.category}</p>
-                <h3 class="font-display text-2xl font-bold text-wine-950 truncate">${product.name}</h3>
+                <h3 class="font-display text-2xl font-bold text-wine-950 product-card-title">${product.name}</h3>
               </div>
               <span class="font-display text-3xl font-bold text-wine-900 shrink-0">₾${product.price}</span>
             </div>
@@ -914,11 +914,11 @@
         <div class="space-y-10">
           <div>
             <p class="text-wine-600 font-bold uppercase tracking-[0.2em] text-xs mb-4">${product.category}</p>
-            <h1 class="font-display text-5xl md:text-6xl font-bold text-wine-950 mb-4">${product.name}</h1>
+            <h1 class="font-display font-bold text-wine-950 mb-4 product-detail-title">${product.name}</h1>
             <p class="text-2xl text-wine-700 font-display italic">${product.year} • ${product.grape}</p>
           </div>
           
-          <p class="text-lg text-wine-700/80 font-light leading-relaxed">${product.description}</p>
+          <p class="text-lg text-wine-700/80 font-light leading-relaxed product-detail-description">${product.description}</p>
           
           <div class="grid sm:grid-cols-2 gap-6">
             <div class="glass-card p-6 rounded-3xl">
