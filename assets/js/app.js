@@ -1512,8 +1512,11 @@ ${itemsText}`
       designerRefs.upload = document.getElementById('designer-upload');
       designerRefs.mode = document.getElementById('designer-mode');
       designerRefs.modeSelectBtn = document.getElementById('designer-mode-select');
-      designerRefs.modeDrawBtn = document.getElementById('designer-mode-draw');
-      designerRefs.modeEraseBtn = document.getElementById('designer-mode-erase');
+      designerRefs.modeTextBtn = document.getElementById('designer-mode-text');
+      designerRefs.modePhotoBtn = document.getElementById('designer-mode-photo');
+      designerRefs.emptyPanel = document.getElementById('designer-empty-panel');
+      designerRefs.textPanel = document.getElementById('designer-text-panel');
+      designerRefs.photoPanel = document.getElementById('designer-photo-panel');
       designerRefs.color = document.getElementById('designer-color');
       designerRefs.size = document.getElementById('designer-size');
       designerRefs.clearDrawing = document.getElementById('designer-clear-drawing');
@@ -1619,19 +1622,9 @@ ${itemsText}`
 
     function syncDesignerDrawUi() {
       if (!designerRefs.drawStatus) return;
-      const canDraw = designerState.mode === 'draw' || designerState.mode === 'erase';
-      if (!canDraw) {
-        designerRefs.drawStatus.textContent = 'რეჟიმი: არჩევა';
-        designerRefs.drawStatus.className = 'px-3 py-1 rounded-full bg-cream-200 text-wine-800 text-xs';
-        return;
-      }
-
-      designerRefs.drawStatus.textContent = designerState.mode === 'erase'
-        ? 'რეჟიმი: საშლელი'
-        : 'რეჟიმი: ხატვა';
-      designerRefs.drawStatus.className = designerState.drawArmed
-        ? 'px-3 py-1 rounded-full bg-green-100 text-green-800 text-xs'
-        : 'px-3 py-1 rounded-full bg-cream-200 text-wine-800 text-xs';
+      const modeLabels = { select: 'რეჟიმი: არჩევა', text: 'რეჟიმი: ტექსტი', photo: 'რეჟიმი: ფოტო', draw: 'რეჟიმი: ხატვა', erase: 'რეჟიმი: საშლელი' };
+      designerRefs.drawStatus.textContent = modeLabels[designerState.mode] || 'რეჟიმი: არჩევა';
+      designerRefs.drawStatus.className = 'px-3 py-1 rounded-full bg-cream-200 text-wine-800 text-xs';
     }
 
     function syncDesignerModeButtons() {
@@ -1639,8 +1632,8 @@ ${itemsText}`
       const modeClassIdle = ['bg-cream-100', 'text-wine-900', 'border-wine-200'];
       const buttons = [
         { ref: designerRefs.modeSelectBtn, mode: 'select' },
-        { ref: designerRefs.modeDrawBtn, mode: 'draw' },
-        { ref: designerRefs.modeEraseBtn, mode: 'erase' }
+        { ref: designerRefs.modeTextBtn, mode: 'text' },
+        { ref: designerRefs.modePhotoBtn, mode: 'photo' }
       ];
       buttons.forEach((item) => {
         if (!item.ref) return;
@@ -1648,6 +1641,12 @@ ${itemsText}`
         item.ref.classList.remove(...(isActive ? modeClassIdle : modeClassActive));
         item.ref.classList.add(...(isActive ? modeClassActive : modeClassIdle));
       });
+    }
+
+    function syncDesignerContextPanels() {
+      if (designerRefs.emptyPanel) designerRefs.emptyPanel.classList.toggle('hidden', designerState.mode !== 'select');
+      if (designerRefs.textPanel) designerRefs.textPanel.classList.toggle('hidden', designerState.mode !== 'text');
+      if (designerRefs.photoPanel) designerRefs.photoPanel.classList.toggle('hidden', designerState.mode !== 'photo');
     }
 
     function resizeDesignerCanvas() {
@@ -1681,11 +1680,14 @@ ${itemsText}`
       if (designerRefs.mode) designerRefs.mode.value = mode;
 
       const isSelect = mode === 'select';
-      if (designerRefs.drawCanvas) designerRefs.drawCanvas.style.pointerEvents = isSelect ? 'none' : 'auto';
-      if (designerRefs.textLayer) designerRefs.textLayer.style.pointerEvents = isSelect ? 'auto' : 'none';
-      if (designerRefs.stage) designerRefs.stage.style.cursor = isSelect ? 'grab' : 'crosshair';
-      designerState.drawArmed = !isSelect;
+      const isPhoto = mode === 'photo';
+      const isLegacyDraw = mode === 'draw' || mode === 'erase';
+      if (designerRefs.drawCanvas) designerRefs.drawCanvas.style.pointerEvents = isLegacyDraw ? 'auto' : 'none';
+      if (designerRefs.textLayer) designerRefs.textLayer.style.pointerEvents = (isSelect || mode === 'text') ? 'auto' : 'none';
+      if (designerRefs.stage) designerRefs.stage.style.cursor = isPhoto ? 'move' : (isSelect ? 'grab' : 'default');
+      designerState.drawArmed = isLegacyDraw;
       syncDesignerModeButtons();
+      syncDesignerContextPanels();
       syncDesignerDrawUi();
     }
 
@@ -1911,7 +1913,7 @@ ${itemsText}`
     }
 
     function startDesignerPhotoDrag(event) {
-      if (designerState.mode !== 'select') return;
+      if (designerState.mode !== 'photo' && designerState.mode !== 'select') return;
       if (designerRefs.photo.classList.contains('hidden')) return;
       if (event.target.closest('.designer-text-item')) return;
       designerState.draggingPhoto = true;
