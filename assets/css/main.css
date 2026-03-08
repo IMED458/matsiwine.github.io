@@ -129,7 +129,16 @@ body.matsi-neo {
 
 /* Nav */
 #main-nav {
-  background: rgba(255, 255, 255, 0.8) !important;
+  background: rgba(255, 255, 255, 0) !important;
+  backdrop-filter: blur(0);
+  -webkit-backdrop-filter: blur(0);
+  border-bottom: 1px solid transparent !important;
+  box-shadow: none;
+  transition: background-color 0.45s ease, backdrop-filter 0.45s ease, border-color 0.45s ease, box-shadow 0.45s ease;
+}
+
+#main-nav.is-scrolled {
+  background: rgba(255, 255, 255, 0.82) !important;
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border-bottom: 1px solid rgba(203, 213, 225, 0.75) !important;
@@ -804,8 +813,8 @@ button[class*="border-2"]:hover {
 #page-cart h1 {
   letter-spacing: -0.015em;
   line-height: 1.12;
-  overflow-wrap: anywhere;
-  word-break: break-word;
+  overflow-wrap: normal;
+  word-break: normal;
 }
 
 .product-card-title {

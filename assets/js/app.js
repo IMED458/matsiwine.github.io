@@ -709,6 +709,21 @@
       menu.classList.toggle('hidden');
     }
 
+    function initNavbarScroll() {
+      const nav = document.getElementById('main-nav');
+      if (!nav) return;
+
+      const apply = () => {
+        nav.classList.toggle('is-scrolled', (window.scrollY || 0) > 20);
+      };
+
+      if (nav.dataset.scrollBound !== '1') {
+        nav.dataset.scrollBound = '1';
+        window.addEventListener('scroll', apply, { passive: true });
+      }
+      apply();
+    }
+
     function initMotionEnhancements() {
       if (!prefersReducedMotion && 'IntersectionObserver' in window) {
         revealObserver = new IntersectionObserver((entries, observer) => {
@@ -3209,6 +3224,7 @@ ${itemsText}`
       applySectionVisibility();
       renderProducts();
       applyLiquidButtons(document);
+      initNavbarScroll();
       initMotionEnhancements();
 
       const initialPage = getPageFromLocation();
