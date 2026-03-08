@@ -825,9 +825,9 @@
             <div class="flex justify-between items-start mb-2 gap-4">
               <div class="min-w-0">
                 <p class="text-wine-500 text-[10px] font-bold uppercase tracking-widest mb-1">${product.category}</p>
-                <h3 class="font-display text-2xl font-bold text-wine-950 product-card-title">${product.name}</h3>
+                <h3 class="font-display text-xl font-bold text-wine-950 product-card-title">${product.name}</h3>
               </div>
-              <span class="font-display text-3xl font-bold text-wine-900 shrink-0">₾${product.price}</span>
+              <span class="font-display text-xl font-bold text-wine-900 shrink-0">₾${product.price}</span>
             </div>
             <p class="text-wine-700/60 text-sm mb-4 line-clamp-2 font-light">${product.grape} • ${product.region} • ${product.year}</p>
             <div class="text-wine-950 text-xs font-bold uppercase tracking-widest inline-flex items-center gap-2">დეტალები <span aria-hidden="true">→</span></div>
@@ -915,27 +915,27 @@
           <div>
             <p class="text-wine-600 font-bold uppercase tracking-[0.2em] text-xs mb-4">${product.category}</p>
             <h1 class="font-display font-bold text-wine-950 mb-4 product-detail-title">${product.name}</h1>
-            <p class="text-2xl text-wine-700 font-display italic">${product.year} • ${product.grape}</p>
+            <p class="text-2xl text-wine-700 font-display italic product-detail-meta">${product.year} • ${product.grape}</p>
           </div>
           
           <p class="text-lg text-wine-700/80 font-light leading-relaxed product-detail-description">${product.description}</p>
           
           <div class="grid sm:grid-cols-2 gap-6">
             <div class="glass-card p-6 rounded-3xl">
-              <p class="text-xs font-bold uppercase tracking-widest text-wine-700/50 mb-1">არომატი</p>
-              <p class="text-sm text-wine-950 font-medium">${product.aroma}</p>
+              <p class="text-xs font-bold uppercase tracking-widest text-wine-700/50 mb-1 product-detail-spec-title">არომატი</p>
+              <p class="text-sm text-wine-950 font-medium product-detail-spec-text">${product.aroma}</p>
             </div>
             <div class="glass-card p-6 rounded-3xl">
-              <p class="text-xs font-bold uppercase tracking-widest text-wine-700/50 mb-1">გემო</p>
-              <p class="text-sm text-wine-950 font-medium">${product.taste}</p>
+              <p class="text-xs font-bold uppercase tracking-widest text-wine-700/50 mb-1 product-detail-spec-title">გემო</p>
+              <p class="text-sm text-wine-950 font-medium product-detail-spec-text">${product.taste}</p>
             </div>
             <div class="glass-card p-6 rounded-3xl">
-              <p class="text-xs font-bold uppercase tracking-widest text-wine-700/50 mb-1">შეხამება</p>
-              <p class="text-sm text-wine-950 font-medium">${product.pairing}</p>
+              <p class="text-xs font-bold uppercase tracking-widest text-wine-700/50 mb-1 product-detail-spec-title">შეხამება</p>
+              <p class="text-sm text-wine-950 font-medium product-detail-spec-text">${product.pairing}</p>
             </div>
             <div class="glass-card p-6 rounded-3xl">
-              <p class="text-xs font-bold uppercase tracking-widest text-wine-700/50 mb-1">დეტალები</p>
-              <p class="text-sm text-wine-950 font-medium">${product.alcohol} • ${product.temperature}</p>
+              <p class="text-xs font-bold uppercase tracking-widest text-wine-700/50 mb-1 product-detail-spec-title">დეტალები</p>
+              <p class="text-sm text-wine-950 font-medium product-detail-spec-text">${product.alcohol} • ${product.temperature}</p>
             </div>
           </div>
           

@@ -702,9 +702,34 @@ button[class*="border-2"]:hover {
   max-width: 100%;
 }
 
+.product-detail-meta {
+  font-size: clamp(1.8rem, 3vw, 2.12rem);
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  overflow-wrap: normal;
+  word-break: keep-all;
+}
+
 .product-detail-description {
+  font-size: clamp(1.03rem, 1.15vw, 1.16rem);
   max-width: 100%;
-  line-height: 1.6;
+  line-height: 1.5;
+  letter-spacing: 0.005em;
+  overflow-wrap: normal;
+  word-break: keep-all;
+}
+
+.product-detail-spec-title {
+  font-size: 0.66rem;
+  line-height: 1.2;
+  letter-spacing: 0.14em;
+}
+
+.product-detail-spec-text {
+  font-size: 0.93rem;
+  line-height: 1.38;
+  overflow-wrap: normal;
+  word-break: keep-all;
 }
 
 /* Designer */
@@ -1170,6 +1195,25 @@ button[class*="border-2"]:hover {
   .product-detail-title {
     font-size: clamp(2rem, 11vw, 3rem);
     line-height: 1.08;
+  }
+
+  .product-detail-meta {
+    font-size: clamp(1.42rem, 7.2vw, 1.8rem);
+  }
+
+  .product-detail-description {
+    font-size: 0.94rem;
+    line-height: 1.45;
+  }
+
+  .product-detail-spec-title {
+    font-size: 0.6rem;
+    letter-spacing: 0.12em;
+  }
+
+  .product-detail-spec-text {
+    font-size: 0.85rem;
+    line-height: 1.32;
   }
 
   .premium-button-primary,
