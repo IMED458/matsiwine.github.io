@@ -95,31 +95,50 @@
    </nav><!-- Toast Container -->
    <div id="toast-container" class="fixed top-24 right-4 z-50 flex flex-col gap-2"></div><!-- Main Content -->
    <main id="main-content" class="pt-16 md:pt-20"><!-- HOME PAGE -->
-    <section id="page-home" class="page-section"><!-- Hero Section with 3D -->
-     <div class="relative min-h-[600px] md:min-h-[700px] overflow-hidden bg-gradient-to-br from-wine-900 via-wine-800 to-wine-950"><!-- Hero Content -->
-      <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-32">
-       <div class="grid md:grid-cols-2 gap-12 items-center">
-        <div class="text-center md:text-left">
+    <section id="page-home" class="page-section"><!-- Hero Section -->
+     <div class="relative min-h-screen flex items-center pt-20 overflow-hidden bg-cream-50">
+      <div class="absolute inset-0 z-0">
+       <div class="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-wine-100/50 via-transparent to-cream-50"></div>
+       <div class="absolute top-20 right-[-10%] w-[60%] aspect-square bg-wine-200/20 rounded-full blur-3xl"></div>
+       <div class="absolute bottom-20 left-[-5%] w-[40%] aspect-square bg-oak-200/20 rounded-full blur-3xl"></div>
+      </div>
+      <div class="relative z-10 max-w-7xl mx-auto px-6 md:px-12 py-20 md:py-32">
+       <div class="grid lg:grid-cols-2 gap-12 items-center">
+        <div class="text-center lg:text-left">
          <p id="home-hero-kicker" class="text-wine-300 font-medium tracking-widest text-sm mb-4 reveal">ქართული ღვინის ტრადიცია</p>
          <h1 id="hero-title" data-hero-logo="1" class="font-display text-5xl md:text-7xl lg:text-8xl font-bold text-cream-50 mb-6 reveal reveal-delay-1" aria-label="MATSI WINE">
           <img id="hero-title-logo" src="matsiwine.png" alt="MATSI WINE" class="hero-title-logo" onerror="if(!this.dataset.fallback){this.dataset.fallback='1';this.src='assets/images/matsiwine.png';return;} this.style.display='none'; document.getElementById('hero-title-fallback').classList.remove('hidden');">
           <span id="hero-title-fallback" class="hidden">MATSI<br>WINE</span>
          </h1>
-         <p id="hero-subtitle" class="text-cream-200/80 text-lg md:text-xl max-w-lg mx-auto md:mx-0 mb-8 reveal reveal-delay-2">8000 წლიანი მეღვინეობის ისტორია თანამედროვე ინტერპრეტაციაში — ყოველ ბოთლში ქართული მიწის სული</p>
-         <div class="flex flex-col sm:flex-row gap-4 justify-center md:justify-start reveal reveal-delay-3"><button id="home-hero-btn-primary" onclick="navigateTo('shop')" class="btn-wine px-8 py-4 bg-cream-50 text-wine-800 font-semibold rounded-full hover:bg-cream-100 transition-all"> კოლექციის ნახვა </button> <button id="home-hero-btn-secondary" onclick="navigateTo('about')" class="px-8 py-4 border-2 border-cream-50/30 text-cream-50 font-semibold rounded-full hover:bg-cream-50/10 transition-all"> ჩვენი ისტორია </button>
+         <p id="hero-subtitle" class="text-cream-200/80 text-lg md:text-xl max-w-lg mx-auto lg:mx-0 mb-10 reveal reveal-delay-2">8000 წლიანი მეღვინეობის ისტორია თანამედროვე ინტერპრეტაციაში — ყოველ ბოთლში ქართული მიწის სული და ტრადიცია.</p>
+         <div class="flex flex-wrap gap-6 justify-center lg:justify-start reveal reveal-delay-3"><button id="home-hero-btn-primary" onclick="navigateTo('shop')" class="btn-wine px-8 py-4 bg-cream-50 text-wine-800 font-semibold rounded-full hover:bg-cream-100 transition-all inline-flex items-center gap-3"> კოლექციის ნახვა <svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" /></svg></button> <button id="home-hero-btn-secondary" onclick="navigateTo('about')" class="px-8 py-4 border-2 border-wine-900/20 text-wine-900 font-semibold rounded-full hover:bg-wine-900 hover:text-white transition-all"> ჩვენი ისტორია </button>
          </div>
-        </div><!-- 3D Bottle Placeholder -->
-        <div class="hidden md:flex justify-center items-center">
-         <div class="relative hero-bottle-wrap">
+        </div>
+        <div class="hidden lg:flex justify-center items-center">
+         <div class="relative w-full max-w-[500px] aspect-[4/5]">
+          <div class="absolute inset-0 border border-wine-200/30 rounded-full"></div>
+          <div class="absolute inset-[10%] border border-oak-200/30 rounded-full"></div>
+          <div class="absolute inset-0 flex items-center justify-center">
+           <div class="relative z-10 h-[80%] drop-shadow-[0_35px_35px_rgba(2,6,23,0.3)]">
           <img id="hero-bottle-img" src="bottle.png" alt="Matsi Wine Bottle" class="hero-bottle-image" loading="eager" decoding="async" onerror="if(!this.dataset.fallback){this.dataset.fallback='1';this.src='assets/images/bottle.png';return;} this.style.display='none'; document.getElementById('hero-bottle-fallback').classList.remove('hidden');">
           <div id="hero-bottle-fallback" class="hidden absolute inset-0 rounded-3xl bg-gradient-to-t from-wine-700/20 to-transparent"></div>
+            <div class="absolute top-[20%] right-[-20%] glass-card p-4 rounded-2xl hidden xl:block">
+             <p class="text-[10px] font-bold text-wine-500 uppercase tracking-widest mb-1">Vintage</p>
+             <p class="font-display text-xl font-bold text-wine-900">2019 Reserve</p>
+            </div>
+            <div class="absolute bottom-[30%] left-[-20%] glass-card p-4 rounded-2xl hidden xl:block">
+             <p class="text-[10px] font-bold text-wine-500 uppercase tracking-widest mb-1">Origin</p>
+             <p class="font-display text-xl font-bold text-wine-900">Kakheti, Georgia</p>
+            </div>
+           </div>
+          </div>
          </div>
         </div>
        </div>
       </div><!-- Scroll indicator -->
-      <div class="absolute bottom-8 left-1/2 -translate-x-1/2 text-cream-200/60 animate-bounce">
-       <svg class="w-6 h-6" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-       </svg>
+      <div class="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2">
+       <span class="text-[10px] uppercase tracking-[0.3em] text-wine-900/40">Scroll</span>
+       <div class="w-[1px] h-12 bg-gradient-to-b from-wine-900/40 to-transparent"></div>
       </div>
      </div><!-- Featured Collection -->
      <div class="py-20 md:py-32 bg-cream-50">
@@ -223,42 +242,57 @@
        </div>
       </div>
      </div><!-- Story Teaser -->
-     <div class="py-20 md:py-32 bg-wine-900 relative overflow-hidden">
-      <div class="absolute inset-0 opacity-20 pointer-events-none">
-       <div class="absolute inset-0" style="background-image: radial-gradient(circle at center, rgba(70, 92, 124, 0.16) 1px, transparent 1px); background-size: 24px 24px;"></div>
-      </div>
-      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-       <div class="grid md:grid-cols-2 gap-12 items-center">
+     <div class="py-32 bg-white relative overflow-hidden">
+      <div class="max-w-7xl mx-auto px-6 md:px-12 relative z-10">
+       <div class="grid lg:grid-cols-2 gap-20 items-center">
+        <div class="relative">
+         <div class="aspect-[4/5] rounded-[40px] overflow-hidden shadow-2xl bg-wine-100">
+          <img src="https://picsum.photos/seed/vineyard/1200/1500" alt="Vineyard" class="w-full h-full object-cover">
+         </div>
+         <div class="absolute -bottom-10 -right-10 w-64 h-64 bg-wine-900 rounded-[30px] p-8 flex-col justify-end text-white shadow-2xl hidden md:flex">
+          <p id="home-stat1-value" class="text-4xl font-display font-bold mb-2">8000+</p>
+          <img id="home-stat1-image" class="hidden w-full h-20 object-cover rounded-xl mb-2" alt="Stat 1">
+          <p id="home-stat1-label" class="text-sm font-light opacity-70">წლიანი უწყვეტი მეღვინეობის ტრადიცია</p>
+         </div>
+        </div>
         <div>
          <p id="home-story-kicker" class="text-wine-400 font-medium tracking-widest text-sm mb-4">ჩვენი ფილოსოფია</p>
-         <h2 id="home-story-title" class="font-display text-4xl md:text-5xl font-bold text-cream-50 mb-6">მიწიდან სუფრამდე</h2>
-         <p id="home-story-text" class="text-cream-200/70 text-lg leading-relaxed mb-8">MATSI WINE — ეს არის ოჯახური მეღვინეობის თანამედროვე გაგრძელება. ჩვენ ვაერთიანებთ ქვევრის უძველეს ტრადიციას ევროპული მეღვინეობის თანამედროვე მიდგომებთან, რათა შევქმნათ ღვინო, რომელიც მოგვითხრობს ქართული მიწის ისტორიას.</p><button id="home-story-btn" onclick="navigateTo('about')" class="px-6 py-3 border-2 border-cream-50/30 text-cream-50 font-medium rounded-full hover:bg-cream-50/10 transition-all inline-flex items-center gap-2"> მეტის გაგება 
+         <h2 id="home-story-title" class="font-display text-5xl md:text-6xl font-bold text-wine-900 mb-8 leading-tight">მიწიდან სუფრამდე, <span class="text-wine-700 italic">სიყვარულით.</span></h2>
+         <p id="home-story-text" class="text-lg text-wine-600 font-light leading-relaxed mb-10">MATSI WINE — ეს არის ოჯახური მეღვინეობის თანამედროვე გაგრძელება. ჩვენ ვაერთიანებთ ქვევრის უძველეს ტრადიციას ევროპული მეღვინეობის თანამედროვე მიდგომებთან, რათა შევქმნათ ღვინო, რომელიც მოგვითხრობს ქართული მიწის ისტორიას.</p>
+         <div class="grid sm:grid-cols-2 gap-8 mb-12">
+          <div class="flex gap-4">
+           <div class="w-12 h-12 rounded-2xl bg-cream-50 flex items-center justify-center flex-shrink-0 border border-wine-100">
+            <svg class="w-6 h-6 text-wine-700" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M5 14c6 0 6-9 6-9s0 9 6 9a6 6 0 11-12 0z" /></svg>
+           </div>
+           <div>
+            <h4 class="font-display text-xl font-bold text-wine-900 mb-1">ორგანული</h4>
+            <p class="text-sm text-wine-600">100% ნატურალური მეურნეობა</p>
+           </div>
+          </div>
+          <div class="flex gap-4">
+           <div class="w-12 h-12 rounded-2xl bg-cream-50 flex items-center justify-center flex-shrink-0 border border-wine-100">
+            <svg class="w-6 h-6 text-wine-700" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M9 12l2 2 4-4m5-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+           </div>
+           <div>
+            <h4 class="font-display text-xl font-bold text-wine-900 mb-1">ხარისხი</h4>
+            <p class="text-sm text-wine-600">საერთაშორისო აღიარება</p>
+           </div>
+          </div>
+         </div>
+         <button id="home-story-btn" onclick="navigateTo('about')" class="premium-button-outline inline-flex items-center gap-3"> ჩვენი ისტორია 
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
           </svg></button>
-        </div>
-        <div class="grid grid-cols-2 gap-4">
-         <div class="bg-wine-800/50 rounded-2xl p-6 text-center">
-         <div id="home-stat1-value" class="font-display text-4xl font-bold text-cream-50 mb-2">
-           8000+
-          </div>
-          <img id="home-stat1-image" class="hidden w-full h-20 object-cover rounded-xl mb-2" alt="Stat 1">
-          <p id="home-stat1-label" class="text-cream-300/70 text-sm">წლიანი ტრადიცია</p>
-         </div>
-         <div class="bg-wine-800/50 rounded-2xl p-6 text-center">
+         <div class="hidden">
           <div id="home-stat2-value" class="font-display text-4xl font-bold text-cream-50 mb-2">
            525
           </div>
           <img id="home-stat2-image" class="hidden w-full h-20 object-cover rounded-xl mb-2" alt="Stat 2">
           <p id="home-stat2-label" class="text-cream-300/70 text-sm">ქართული ჯიში</p>
-         </div>
-         <div class="bg-wine-800/50 rounded-2xl p-6 text-center">
           <div id="home-stat3-value" class="font-display text-4xl font-bold text-cream-50 mb-2">
            100%
           </div>
           <img id="home-stat3-image" class="hidden w-full h-20 object-cover rounded-xl mb-2" alt="Stat 3">
           <p id="home-stat3-label" class="text-cream-300/70 text-sm">ორგანული</p>
-         </div>
-         <div class="bg-wine-800/50 rounded-2xl p-6 text-center">
           <div id="home-stat4-value" class="font-display text-4xl font-bold text-cream-50 mb-2">
            🏆
           </div>
@@ -266,6 +300,20 @@
           <p id="home-stat4-label" class="text-cream-300/70 text-sm">საერთაშორისო ჯილდოები</p>
          </div>
         </div>
+       </div>
+      </div>
+     </div>
+
+     <div class="py-32 relative bg-cream-50">
+      <div class="max-w-5xl mx-auto px-6 text-center">
+       <div class="bg-wine-900 rounded-[50px] p-16 md:p-24 text-white relative overflow-hidden shadow-2xl">
+        <div class="absolute inset-0 opacity-10 pointer-events-none" style="background-image: radial-gradient(circle at 2px 2px, white 1px, transparent 0); background-size: 40px 40px;"></div>
+        <h2 class="text-4xl md:text-6xl font-display font-bold mb-8 relative z-10">შექმენი შენი <br> <span class="text-cream-200 italic">უნიკალური</span> ეტიკეტი</h2>
+        <p class="text-lg text-white/70 font-light mb-12 max-w-2xl mx-auto relative z-10">გახადე საჩუქარი გამორჩეული. გამოიყენე ჩვენი ონლაინ სტუდია საკუთარი დიზაინის შესაქმნელად.</p>
+        <button onclick="navigateTo('designer')" class="inline-flex items-center gap-4 bg-white text-wine-900 px-10 py-5 rounded-full font-bold uppercase tracking-widest hover:bg-cream-100 transition-all shadow-xl relative z-10">
+         დაიწყე დიზაინი
+         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+        </button>
        </div>
       </div>
      </div>
