@@ -1589,3 +1589,193 @@ body.matsi-neo .matsi-footer-bottom {
   }
   body.matsi-neo .hero-bottle-wrap { height: 420px; }
 }
+
+/* =====================================================
+   Midnight & Steel Luxury Theme (UI only, logic untouched)
+   ===================================================== */
+body.matsi-neo {
+  --brand-950: #020617;
+  --brand-900: #0f172a;
+  --brand-800: #1e293b;
+  --brand-700: #334155;
+  --brand-600: #475569;
+  --brand-500: #64748b;
+  --brand-300: #cbd5e1;
+  --brand-200: #e2e8f0;
+  --brand-100: #f1f5f9;
+  --brand-50: #f8fafc;
+  --accent-500: #71717a;
+  --accent-300: #d4d4d8;
+  background: var(--brand-50) !important;
+  color: var(--brand-900) !important;
+  font-family: "Manrope", "Inter", "Noto Sans Georgian", sans-serif !important;
+}
+
+body.matsi-neo .font-display,
+body.matsi-neo h1,
+body.matsi-neo h2,
+body.matsi-neo h3,
+body.matsi-neo h4 {
+  font-family: "Cormorant Garamond", "Noto Serif Georgian", serif !important;
+}
+
+body.matsi-neo .tracking-widest {
+  letter-spacing: .17em !important;
+  text-transform: uppercase;
+}
+
+body.matsi-neo #page-home > div:nth-child(1),
+body.matsi-neo #page-home > div:nth-child(2),
+body.matsi-neo #page-home > div:nth-child(3),
+body.matsi-neo #page-shop > div,
+body.matsi-neo #page-about > div,
+body.matsi-neo #page-contact > div,
+body.matsi-neo #page-product > div,
+body.matsi-neo #page-designer > div,
+body.matsi-neo #page-cart > div {
+  background: var(--brand-50) !important;
+}
+
+body.matsi-neo #main-nav {
+  background: rgba(248, 250, 252, 0.9) !important;
+  border-bottom: 1px solid rgba(226, 232, 240, 0.9) !important;
+  box-shadow: 0 10px 24px -20px rgba(2, 6, 23, .35) !important;
+}
+
+body.matsi-neo #main-nav .nav-link {
+  color: rgba(2, 6, 23, .72) !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
+body.matsi-neo #main-nav .nav-link:hover {
+  color: var(--brand-900) !important;
+}
+
+body.matsi-neo #main-nav .nav-link span {
+  background: var(--brand-700) !important;
+}
+
+body.matsi-neo .glass-card,
+body.matsi-neo .product-card,
+body.matsi-neo #products-grid > div,
+body.matsi-neo #product-detail > div,
+body.matsi-neo #page-about .space-y-20 > div,
+body.matsi-neo #page-contact .grid.md\:grid-cols-2 > div,
+body.matsi-neo #page-designer .grid.lg\:grid-cols-2 > div,
+body.matsi-neo #page-cart #cart-content > div,
+body.matsi-neo #page-cart .bg-white {
+  background: rgba(255, 255, 255, 0.7) !important;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  box-shadow: 0 20px 45px -34px rgba(2, 6, 23, .32) !important;
+}
+
+body.matsi-neo #page-home > div:nth-child(2),
+body.matsi-neo #page-home > div:nth-child(3),
+body.matsi-neo #page-about > div,
+body.matsi-neo #page-contact > div,
+body.matsi-neo #page-designer > div {
+  padding-top: clamp(84px, 9vw, 128px) !important;
+  padding-bottom: clamp(84px, 9vw, 128px) !important;
+}
+
+body.matsi-neo .btn-wine,
+body.matsi-neo button[class*="bg-wine-700"],
+body.matsi-neo button[class*="bg-cream-50"],
+body.matsi-neo .premium-button-primary {
+  border-radius: 999px !important;
+  background: var(--brand-950) !important;
+  color: #fff !important;
+  border: 1px solid var(--brand-950) !important;
+  transition: all .25s ease !important;
+  box-shadow: 0 14px 24px -18px rgba(2, 6, 23, .55) !important;
+}
+
+body.matsi-neo .btn-wine:hover,
+body.matsi-neo button[class*="bg-wine-700"]:hover,
+body.matsi-neo button[class*="bg-cream-50"]:hover,
+body.matsi-neo .premium-button-primary:hover {
+  background: var(--brand-900) !important;
+  border-color: var(--brand-900) !important;
+}
+
+body.matsi-neo .btn-wine:active,
+body.matsi-neo button:active,
+body.matsi-neo .premium-button-primary:active {
+  transform: scale(.95) !important;
+}
+
+body.matsi-neo .premium-button-outline,
+body.matsi-neo button[class*="border-2"] {
+  border-radius: 999px !important;
+  border: 2px solid rgba(2, 6, 23, 0.2) !important;
+  color: var(--brand-900) !important;
+  background: transparent !important;
+}
+
+body.matsi-neo .premium-button-outline:hover,
+body.matsi-neo button[class*="border-2"]:hover {
+  background: var(--brand-950) !important;
+  color: #fff !important;
+}
+
+body.matsi-neo .matsi-liquid-btn {
+  border-radius: 999px !important;
+  background: var(--brand-950) !important;
+  border: 1px solid var(--brand-950) !important;
+  color: #fff !important;
+  box-shadow: 0 14px 24px -18px rgba(2, 6, 23, .55) !important;
+}
+
+body.matsi-neo .matsi-liquid-btn::after,
+body.matsi-neo .matsi-liquid-btn::before {
+  display: none !important;
+}
+
+body.matsi-neo #page-home .hero-bottle-image {
+  animation: matsi-float 6s ease-in-out infinite;
+}
+
+@keyframes matsi-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-12px); }
+}
+
+body.matsi-neo .reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity .65s ease, transform .65s ease;
+}
+
+body.matsi-neo .reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+body.matsi-neo #page-home h2 span,
+body.matsi-neo #page-about h1 span,
+body.matsi-neo #page-shop h1 span {
+  font-style: italic;
+  color: var(--brand-700) !important;
+}
+
+body.matsi-neo .matsi-footer {
+  background: var(--brand-950) !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+}
+
+body.matsi-neo .matsi-footer .matsi-footer-title {
+  color: var(--accent-300) !important;
+}
+
+body.matsi-neo .matsi-footer .matsi-footer-links a,
+body.matsi-neo .matsi-footer .matsi-footer-links span,
+body.matsi-neo .matsi-footer .matsi-footer-lead,
+body.matsi-neo .matsi-footer-bottom p {
+  color: rgba(241, 245, 249, 0.66) !important;
+}
