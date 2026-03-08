@@ -924,20 +924,26 @@
       }
       
       isLoading = true;
+      const sourceProduct = products.find((p) => p.id === productId) || null;
+      const resolvedImageUrl = meta.image_url || sourceProduct?.image_url || '';
       
       const existingItem = cartItems.find(item => item.productId === productId);
       
       if (existingItem) {
+        const nextImageUrl = existingItem.image_url || resolvedImageUrl || '';
         if (window.dataSdk) {
           try {
             const result = await window.dataSdk.update({
               ...existingItem,
-              quantity: existingItem.quantity + 1
+              quantity: existingItem.quantity + 1,
+              image_url: nextImageUrl
             });
             if (!result.isOk) throw new Error('sdk update failed');
+            existingItem.image_url = nextImageUrl;
             showToast(`${productName} დამატებულია კალათაში`, 'success');
           } catch {
             existingItem.quantity += 1;
+            existingItem.image_url = nextImageUrl;
             saveCartToLocal();
             updateCartUI();
             updateCartCount();
@@ -945,6 +951,7 @@
           }
         } else {
           existingItem.quantity += 1;
+          existingItem.image_url = nextImageUrl;
           saveCartToLocal();
           updateCartUI();
           updateCartCount();
@@ -958,7 +965,7 @@
           productName,
           quantity: 1,
           price,
-          image_url: meta.image_url || '',
+          image_url: resolvedImageUrl,
           item_type: meta.item_type || 'product',
           createdAt: new Date().toISOString()
         };
@@ -1178,23 +1185,23 @@
           </div>
 
           <div class="space-y-6">
-            <div class="bg-wine-900 p-10 rounded-[40px] text-white shadow-2xl">
-              <h2 class="text-2xl font-display font-bold mb-8">შეკვეთის ჯამი</h2>
+            <div class="bg-white p-10 rounded-[40px] text-wine-900 shadow-2xl border border-wine-100">
+              <h2 class="text-2xl font-display font-bold mb-8 text-wine-900">შეკვეთის ჯამი</h2>
               <div class="space-y-4 mb-8">
-                <div class="flex justify-between text-white/60 font-light">
+                <div class="flex justify-between text-wine-600 font-light">
                   <span>პროდუქტები</span>
                   <span>₾${total}</span>
                 </div>
-                <div class="flex justify-between text-white/60 font-light">
+                <div class="flex justify-between text-wine-600 font-light">
                   <span>მიტანა</span>
                   <span>უფასო</span>
                 </div>
-                <div class="pt-4 border-t border-white/10 flex justify-between items-end">
-                  <span class="text-lg font-display">სულ</span>
-                  <span class="text-4xl font-display font-bold text-cream-200">₾${total}</span>
+                <div class="pt-4 border-t border-wine-100 flex justify-between items-end">
+                  <span class="text-lg font-display text-wine-900">სულ</span>
+                  <span class="text-4xl font-display font-bold text-wine-900">₾${total}</span>
                 </div>
               </div>
-              <button type="button" onclick="handleCheckout()" class="w-full bg-white text-wine-900 py-5 rounded-2xl font-bold uppercase tracking-widest hover:bg-cream-100 transition-all flex items-center justify-center gap-3">
+              <button type="button" onclick="handleCheckout()" class="w-full bg-wine-900 text-white py-5 rounded-2xl font-bold uppercase tracking-widest hover:bg-wine-800 transition-all flex items-center justify-center gap-3">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m3 0h1m-5 4h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
                 გაფორმება
               </button>
