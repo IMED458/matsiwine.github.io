@@ -1144,3 +1144,94 @@ body.matsi-neo .matsi-footer .matsi-footer-links span {
 body.matsi-neo .matsi-footer .matsi-footer-links a:hover {
   color: #fff !important;
 }
+
+/* Full zip-style transfer for remaining pages (design only, no behavior changes) */
+body.matsi-neo #page-about,
+body.matsi-neo #page-contact,
+body.matsi-neo #page-product,
+body.matsi-neo #page-designer,
+body.matsi-neo #page-cart {
+  background:
+    radial-gradient(900px 500px at 4% 0%, rgba(219, 234, 254, 0.34), transparent 62%),
+    radial-gradient(900px 520px at 98% 8%, rgba(226, 232, 240, 0.36), transparent 60%),
+    linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
+}
+
+body.matsi-neo #page-about h1,
+body.matsi-neo #page-contact h1,
+body.matsi-neo #page-product h1,
+body.matsi-neo #page-designer h1,
+body.matsi-neo #page-cart h1 {
+  color: #0f172a !important;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+}
+
+body.matsi-neo #page-about p,
+body.matsi-neo #page-contact p,
+body.matsi-neo #page-product p,
+body.matsi-neo #page-designer p,
+body.matsi-neo #page-cart p,
+body.matsi-neo #page-about li,
+body.matsi-neo #page-contact li,
+body.matsi-neo #page-product li,
+body.matsi-neo #page-designer li,
+body.matsi-neo #page-cart li {
+  color: rgba(15, 23, 42, 0.76) !important;
+}
+
+body.matsi-neo #page-about .rounded-3xl,
+body.matsi-neo #page-contact .rounded-2xl,
+body.matsi-neo #page-product .rounded-2xl,
+body.matsi-neo #page-product .rounded-3xl,
+body.matsi-neo #page-designer .rounded-2xl,
+body.matsi-neo #page-cart .rounded-2xl {
+  border: 1px solid rgba(203, 213, 225, 0.78) !important;
+  box-shadow: 0 20px 46px -34px rgba(2, 6, 23, 0.34) !important;
+}
+
+body.matsi-neo #page-about .aspect-video,
+body.matsi-neo #page-contact .aspect-video,
+body.matsi-neo #page-designer .aspect-\[3\/4\],
+body.matsi-neo #page-product .aspect-\[3\/4\] {
+  background:
+    radial-gradient(100% 100% at 0% 0%, rgba(226, 232, 240, 0.65), transparent 72%),
+    linear-gradient(150deg, #ffffff 0%, #f8fafc 100%) !important;
+}
+
+body.matsi-neo #page-contact form input,
+body.matsi-neo #page-contact form textarea,
+body.matsi-neo #page-designer input,
+body.matsi-neo #page-designer textarea,
+body.matsi-neo #page-designer select,
+body.matsi-neo #page-cart input,
+body.matsi-neo #page-cart textarea {
+  background: rgba(255, 255, 255, 0.9) !important;
+  border: 1px solid rgba(148, 163, 184, 0.34) !important;
+  color: #0f172a !important;
+}
+
+body.matsi-neo #page-designer #designer-canvas-wrap,
+body.matsi-neo #page-designer .designer-stage {
+  border: 1px solid rgba(148, 163, 184, 0.52) !important;
+  box-shadow: 0 30px 50px -32px rgba(15, 23, 42, 0.45) !important;
+}
+
+body.matsi-neo #page-cart #checkout-form,
+body.matsi-neo #page-cart #cart-content > div,
+body.matsi-neo #page-product #product-detail > div {
+  background: rgba(255, 255, 255, 0.78) !important;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+body.matsi-neo #page-about .tracking-widest,
+body.matsi-neo #page-contact .tracking-widest,
+body.matsi-neo #page-designer .tracking-widest,
+body.matsi-neo #page-home .tracking-widest {
+  letter-spacing: 0.18em !important;
+  text-transform: uppercase;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  color: #64748b !important;
+}
