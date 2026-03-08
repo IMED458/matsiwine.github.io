@@ -675,6 +675,70 @@ select:focus {
   z-index: 4;
 }
 
+.about-values-grid .about-value-card {
+  background: #f3f5f9;
+  border: 1px solid #eaedf3;
+  border-radius: 42px;
+  padding: 44px 40px 36px;
+  min-height: 320px;
+  box-shadow: 0 20px 38px -30px rgba(24, 36, 55, 0.35);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.about-values-grid .about-value-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 24px 44px -30px rgba(24, 36, 55, 0.42);
+}
+
+.about-values-grid .about-value-icon {
+  width: 52px;
+  height: 52px;
+  color: #364764;
+  margin-bottom: 28px;
+}
+
+.about-values-grid .about-value-title {
+  font-family: "Noto Serif Georgian", "Cormorant Garamond", serif;
+  font-size: clamp(2rem, 2.1vw, 2.5rem);
+  line-height: 1.05;
+  font-weight: 800;
+  color: #0f1930;
+  margin: 0 0 18px;
+}
+
+.about-values-grid .about-value-text {
+  color: #69798f;
+  font-size: 1.05rem;
+  line-height: 1.5;
+  font-weight: 400;
+  max-width: 92%;
+  margin: 0;
+}
+
+@media (max-width: 900px) {
+  .about-values-grid .about-value-card {
+    min-height: 260px;
+    border-radius: 30px;
+    padding: 30px 24px 24px;
+  }
+
+  .about-values-grid .about-value-icon {
+    width: 42px;
+    height: 42px;
+    margin-bottom: 18px;
+  }
+
+  .about-values-grid .about-value-title {
+    font-size: 2rem;
+    margin-bottom: 10px;
+  }
+
+  .about-values-grid .about-value-text {
+    max-width: 100%;
+    font-size: 1rem;
+  }
+}
+
 .admin-editable-target {
   outline: 1px dashed rgba(88, 107, 136, 0.38);
   outline-offset: 2px;
