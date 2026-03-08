@@ -751,12 +751,12 @@
         : products.filter(p => p.type === currentFilter);
       
       grid.innerHTML = filtered.map(product => `
-        <article class="product-card zip-product-card cursor-pointer" onclick="viewProduct('${product.id}')">
-          <div class="zip-product-media">
-            <div class="zip-product-glow"></div>
+        <article class="product-card bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-500 border border-wine-100 cursor-pointer group" onclick="viewProduct('${product.id}')">
+          <div class="aspect-[3/4] overflow-hidden bg-cream-50 relative">
+            <div class="absolute inset-0 bg-gradient-to-br from-wine-100/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
             ${getProductVisualMarkup(product, 'card')}
-            <div class="zip-quick-actions">
-              <button onclick="event.stopPropagation(); addToCart('${product.id}', '${product.name} ${product.year}', ${product.price})" class="zip-quick-add-btn">
+            <div class="absolute bottom-4 left-4 right-4 translate-y-12 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 flex gap-2">
+              <button onclick="event.stopPropagation(); addToCart('${product.id}', '${product.name} ${product.year}', ${product.price})" class="flex-1 bg-wine-900 text-white py-3 rounded-xl flex items-center justify-center gap-2 text-sm font-medium hover:bg-wine-800 transition-colors">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
                 </svg>
@@ -764,7 +764,7 @@
               </button>
             </div>
           </div>
-          <div class="zip-product-body">
+          <div class="p-6">
             <div class="flex justify-between items-start gap-2 mb-2">
               <div>
                 <p class="text-wine-500 text-[10px] font-bold uppercase tracking-widest mb-1">${product.category}</p>
@@ -772,8 +772,8 @@
               </div>
               <span class="font-display text-xl font-bold text-wine-900">₾${product.price}</span>
             </div>
-            <p class="text-wine-600/70 text-sm mb-4 line-clamp-2">${product.grape || ''}${product.region ? ' • ' + product.region : ''}${product.year ? ' • ' + product.year : ''}</p>
-            <a href="#" onclick="event.preventDefault(); event.stopPropagation(); viewProduct('${product.id}')" class="zip-details-link">დეტალები →</a>
+            <p class="text-wine-600/60 text-sm mb-4 line-clamp-2 font-light">${product.grape || ''}${product.region ? ' • ' + product.region : ''}${product.year ? ' • ' + product.year : ''}</p>
+            <a href="#" onclick="event.preventDefault(); event.stopPropagation(); viewProduct('${product.id}')" class="inline-flex items-center gap-2 text-wine-900 text-xs font-bold uppercase tracking-widest group/link">დეტალები <svg class="w-3 h-3 transition-transform duration-300 group-hover/link:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg></a>
           </div>
         </article>
       `).join('');
