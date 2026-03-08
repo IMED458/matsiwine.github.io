@@ -1065,3 +1065,82 @@ select:focus {
   text-transform: uppercase;
   color: #1f3047;
 }
+
+/* Home/Navbar/Footer zip-style transfer (design only) */
+body.matsi-neo #main-nav {
+  background: rgba(255, 255, 255, 0.78) !important;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-bottom: 1px solid rgba(203, 213, 225, 0.7) !important;
+  box-shadow: 0 12px 28px -24px rgba(2, 6, 23, 0.45);
+}
+
+body.matsi-neo #main-nav .nav-link {
+  text-transform: uppercase;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  font-weight: 700;
+  color: rgba(15, 23, 42, 0.7) !important;
+}
+
+body.matsi-neo #main-nav .nav-link:hover {
+  color: #0f172a !important;
+}
+
+body.matsi-neo #page-home > div:first-child {
+  background:
+    radial-gradient(680px 360px at 90% 10%, rgba(148, 163, 184, 0.18), transparent 65%),
+    radial-gradient(600px 320px at 8% 82%, rgba(203, 213, 225, 0.22), transparent 60%),
+    linear-gradient(180deg, #f3f7fb 0%, #f8fafc 100%) !important;
+}
+
+body.matsi-neo #page-home #home-hero-kicker {
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.26em;
+  color: #4d5c74 !important;
+}
+
+body.matsi-neo #page-home #hero-subtitle {
+  color: rgba(15, 23, 42, 0.62) !important;
+  font-weight: 400;
+}
+
+body.matsi-neo #page-home #hero-title[data-hero-logo="1"] {
+  margin-bottom: 1.3rem;
+}
+
+body.matsi-neo #page-home #hero-title-logo {
+  width: clamp(270px, 42vw, 560px);
+  height: clamp(120px, 16vw, 190px);
+  object-fit: contain;
+  filter: drop-shadow(0 16px 26px rgba(15, 23, 42, 0.12));
+}
+
+body.matsi-neo #page-home .hero-bottle-wrap {
+  filter: drop-shadow(0 28px 34px rgba(2, 6, 23, 0.16));
+}
+
+body.matsi-neo .matsi-footer {
+  background: #020617 !important;
+  border: 1px solid rgba(148, 163, 184, 0.12);
+  box-shadow: 0 20px 40px -28px rgba(2, 6, 23, 0.65);
+}
+
+body.matsi-neo .matsi-footer .matsi-footer-title {
+  color: #94a3b8 !important;
+  text-transform: uppercase;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  font-weight: 800;
+}
+
+body.matsi-neo .matsi-footer .matsi-footer-lead,
+body.matsi-neo .matsi-footer .matsi-footer-links a,
+body.matsi-neo .matsi-footer .matsi-footer-links span {
+  color: rgba(226, 232, 240, 0.72) !important;
+}
+
+body.matsi-neo .matsi-footer .matsi-footer-links a:hover {
+  color: #fff !important;
+}
