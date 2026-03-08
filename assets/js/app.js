@@ -2090,6 +2090,24 @@ ${itemsText}`
       return Math.max(min, Math.min(max, value));
     }
 
+    function getContainedSize(containerWidth, containerHeight, imageWidth, imageHeight) {
+      if (!imageWidth || !imageHeight) {
+        return { width: containerWidth, height: containerHeight };
+      }
+      const imageRatio = imageWidth / imageHeight;
+      const containerRatio = containerWidth / containerHeight;
+      if (imageRatio > containerRatio) {
+        return {
+          width: containerWidth,
+          height: containerWidth / imageRatio
+        };
+      }
+      return {
+        width: containerHeight * imageRatio,
+        height: containerHeight
+      };
+    }
+
     function syncSelectedDesignerTextUi() {
       const layer = getSelectedTextLayer();
       if (!layer) {
@@ -2236,10 +2254,16 @@ ${itemsText}`
 
       if (designerRefs.photo && !designerRefs.photo.classList.contains('hidden')) {
         const img = designerRefs.photo;
-        const drawW = exportWidth * (designerState.photoScale / 100);
-        const drawH = exportHeight * (designerState.photoScale / 100);
-        const drawX = designerState.photoX * scale + (exportWidth - drawW) / 2;
-        const drawY = designerState.photoY * scale + (exportHeight - drawH) / 2;
+        const contained = getContainedSize(
+          exportWidth,
+          exportHeight,
+          img.naturalWidth || img.width,
+          img.naturalHeight || img.height
+        );
+        const drawW = contained.width * (designerState.photoScale / 100);
+        const drawH = contained.height * (designerState.photoScale / 100);
+        const drawX = (exportWidth - drawW) / 2 + (designerState.photoX * scale);
+        const drawY = (exportHeight - drawH) / 2 + (designerState.photoY * scale);
         ctx.drawImage(img, drawX, drawY, drawW, drawH);
       }
 
