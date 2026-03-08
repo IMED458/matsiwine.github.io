@@ -847,11 +847,12 @@ select:focus {
 .contact-ref .contact-title {
   margin: 0;
   font-family: "Noto Sans Georgian", "Manrope", sans-serif;
-  font-size: clamp(3.2rem, 6.2vw, 7rem);
+  font-size: clamp(3.1rem, 5.5vw, 6.2rem) !important;
   font-weight: 800;
   letter-spacing: -0.02em;
-  line-height: .98;
+  line-height: 1.06 !important;
   color: #020617;
+  text-wrap: balance;
 }
 
 .contact-ref .contact-title span {
@@ -860,15 +861,54 @@ select:focus {
 }
 
 .contact-ref .contact-main-card {
-  min-height: 292px;
+  min-height: 292px !important;
 }
 
 .contact-ref .contact-mini-card {
-  min-height: 220px;
+  min-height: 212px !important;
 }
 
 .contact-ref .contact-form-card label {
   letter-spacing: .09em;
+}
+
+.contact-ref .contact-main-title {
+  font-family: "Noto Sans Georgian", "Manrope", sans-serif;
+  font-size: clamp(2.1rem, 2.7vw, 2.8rem) !important;
+  font-weight: 800;
+  line-height: 1.05 !important;
+  color: #020617;
+  margin: 0 0 14px;
+}
+
+.contact-ref .contact-mini-title {
+  font-family: "Noto Sans Georgian", "Manrope", sans-serif;
+  font-size: clamp(1.5rem, 2vw, 2.05rem) !important;
+  font-weight: 800;
+  line-height: 1.1 !important;
+  color: #020617;
+  margin: 0 0 12px;
+}
+
+.contact-ref .contact-form-title {
+  font-family: "Noto Sans Georgian", "Manrope", sans-serif;
+  font-size: clamp(2.2rem, 3vw, 3.2rem) !important;
+  font-weight: 800;
+  line-height: 1.05 !important;
+  color: #020617;
+  margin: 0 0 24px;
+}
+
+@media (max-width: 980px) {
+  .contact-ref .contact-title {
+    font-size: clamp(2.2rem, 9vw, 3.8rem) !important;
+    line-height: 1.08 !important;
+  }
+
+  .contact-ref .contact-main-card,
+  .contact-ref .contact-mini-card {
+    min-height: 0 !important;
+  }
 }
 
 @media (max-width: 900px) {
