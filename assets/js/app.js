@@ -736,13 +736,7 @@
       currentFilter = filter;
       
       document.querySelectorAll('.filter-btn').forEach(btn => {
-        if (btn.dataset.filter === filter) {
-          btn.classList.remove('bg-cream-200', 'text-wine-700');
-          btn.classList.add('bg-wine-700', 'text-cream-50');
-        } else {
-          btn.classList.remove('bg-wine-700', 'text-cream-50');
-          btn.classList.add('bg-cream-200', 'text-wine-700');
-        }
+        btn.classList.toggle('active', btn.dataset.filter === filter);
       });
       
       renderProducts();
@@ -851,46 +845,46 @@
       if (!container) return;
       
       container.innerHTML = `
-        <div class="bg-gradient-to-br from-wine-100 to-cream-200 rounded-3xl p-12 flex items-center justify-center relative overflow-hidden">
-          <div class="glass-shimmer absolute inset-0"></div>
+        <div class="relative bg-cream-50 rounded-[40px] p-10 md:p-14 flex items-center justify-center overflow-hidden border border-wine-200 shadow-2xl">
+          <div class="absolute inset-0 bg-gradient-to-br from-wine-100/50 to-transparent opacity-80"></div>
           ${getProductVisualMarkup(product, 'detail')}
         </div>
         
-        <div class="space-y-6">
+        <div class="space-y-7">
           <div>
-            <p class="text-wine-500 font-medium tracking-wide text-sm mb-2">${product.category}</p>
-            <h1 class="font-display text-4xl md:text-5xl font-bold text-wine-900 mb-2">${product.name}</h1>
-            <p class="text-wine-600 text-xl">${product.year} • ${product.grape}</p>
+            <p class="text-wine-600 font-bold uppercase tracking-widest text-xs mb-3">${product.category}</p>
+            <h1 class="font-display text-4xl md:text-6xl font-bold text-wine-900 mb-3">${product.name}</h1>
+            <p class="text-wine-600 text-xl font-light">${product.year} • ${product.grape}</p>
           </div>
           
-          <p class="text-wine-600/80 text-lg leading-relaxed">${product.description}</p>
+          <p class="text-wine-600/80 text-lg leading-relaxed font-light">${product.description || ''}</p>
           
-          <div class="grid grid-cols-2 gap-4">
-            <div class="bg-cream-200 rounded-xl p-4">
-              <p class="text-wine-500 text-xs font-medium mb-1">არომატი</p>
-              <p class="text-wine-800 text-sm">${product.aroma}</p>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div class="bg-cream-50 rounded-2xl p-4 border border-wine-200">
+              <p class="text-wine-500 text-[10px] font-bold uppercase tracking-widest mb-1">არომატი</p>
+              <p class="text-wine-900 text-sm">${product.aroma || '-'}</p>
             </div>
-            <div class="bg-cream-200 rounded-xl p-4">
-              <p class="text-wine-500 text-xs font-medium mb-1">გემო</p>
-              <p class="text-wine-800 text-sm">${product.taste}</p>
+            <div class="bg-cream-50 rounded-2xl p-4 border border-wine-200">
+              <p class="text-wine-500 text-[10px] font-bold uppercase tracking-widest mb-1">გემო</p>
+              <p class="text-wine-900 text-sm">${product.taste || '-'}</p>
             </div>
-            <div class="bg-cream-200 rounded-xl p-4">
-              <p class="text-wine-500 text-xs font-medium mb-1">შეხამება</p>
-              <p class="text-wine-800 text-sm">${product.pairing}</p>
+            <div class="bg-cream-50 rounded-2xl p-4 border border-wine-200">
+              <p class="text-wine-500 text-[10px] font-bold uppercase tracking-widest mb-1">შეხამება</p>
+              <p class="text-wine-900 text-sm">${product.pairing || '-'}</p>
             </div>
-            <div class="bg-cream-200 rounded-xl p-4">
-              <p class="text-wine-500 text-xs font-medium mb-1">დეტალები</p>
-              <p class="text-wine-800 text-sm">${product.alcohol} • ${product.temperature}</p>
+            <div class="bg-cream-50 rounded-2xl p-4 border border-wine-200">
+              <p class="text-wine-500 text-[10px] font-bold uppercase tracking-widest mb-1">დეტალები</p>
+              <p class="text-wine-900 text-sm">${product.alcohol || '-'} • ${product.temperature || '-'}</p>
             </div>
           </div>
           
-          <div class="bg-white rounded-2xl p-6 shadow-lg">
+          <div class="bg-white rounded-[30px] p-6 shadow-xl border border-wine-200">
             <div class="flex items-center justify-between mb-4">
-              <span class="font-display text-4xl font-bold text-wine-800">₾${product.price}</span>
-              <p class="text-wine-500 text-sm">${product.region}</p>
+              <span class="font-display text-4xl font-bold text-wine-900">₾${product.price}</span>
+              <p class="text-wine-500 text-sm">${product.region || ''}</p>
             </div>
             <button onclick="addToCart('${product.id}', '${product.name} ${product.year}', ${product.price})" 
-                    class="btn-wine w-full py-4 bg-wine-700 text-cream-50 font-semibold rounded-xl hover:bg-wine-800 transition-all flex items-center justify-center gap-2">
+                    class="btn-wine w-full py-4 bg-wine-900 text-white font-semibold rounded-full transition-all flex items-center justify-center gap-2">
               <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
               </svg>
@@ -1086,15 +1080,15 @@
       if (cartItems.length === 0) {
         checkoutFormVisible = false;
         container.innerHTML = `
-          <div class="text-center py-16">
+          <div class="text-center py-20 bg-white rounded-[36px] border border-wine-200 shadow-xl">
             <div class="w-24 h-24 mx-auto mb-6 rounded-full bg-wine-100 flex items-center justify-center">
-              <svg class="w-12 h-12 text-wine-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg class="w-12 h-12 text-wine-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
               </svg>
             </div>
-            <h2 class="font-display text-2xl font-semibold text-wine-900 mb-2">კალათა ცარიელია</h2>
-            <p class="text-wine-600/70 mb-8">აღმოაჩინეთ ჩვენი კოლექცია და შეარჩიეთ საყვარელი ღვინო</p>
-            <button onclick="navigateTo('shop')" class="btn-wine px-8 py-4 bg-wine-700 text-cream-50 font-semibold rounded-full hover:bg-wine-800">
+            <h2 class="font-display text-3xl font-semibold text-wine-900 mb-2">კალათა ცარიელია</h2>
+            <p class="text-wine-600 mb-8">აღმოაჩინეთ ჩვენი კოლექცია და შეარჩიეთ საყვარელი ღვინო</p>
+            <button onclick="navigateTo('shop')" class="btn-wine px-8 py-4 bg-wine-900 text-white font-semibold rounded-full">
               პროდუქტებში გადასვლა
             </button>
           </div>
@@ -1106,13 +1100,13 @@
       
       const total = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
       const orderRows = cartItems.map((item) => `
-        <div class="py-2 border-b border-wine-200/70 text-sm">
+        <div class="py-2 border-b border-wine-200 text-sm">
           <div class="font-medium text-wine-900">${item.productName}</div>
           <div class="text-wine-600">₾${item.price} x ${item.quantity} = ₾${item.price * item.quantity}</div>
         </div>
       `).join('');
       const bankRows = BANK_ACCOUNTS.map((item, idx) => `
-        <div class="bg-cream-100 rounded-xl p-3 flex items-start justify-between gap-3">
+        <div class="bg-cream-50 rounded-2xl p-3 flex items-start justify-between gap-3 border border-wine-200">
           <div class="flex items-start gap-2">
             <span class="w-7 h-7 rounded-full bg-white border border-wine-200 flex items-center justify-center flex-shrink-0">${getBankIconMarkup(item.bank)}</span>
             <div>
@@ -1120,38 +1114,38 @@
             <p id="checkout-iban-${idx}" class="font-mono text-sm text-wine-900 break-all">${item.iban}</p>
             </div>
           </div>
-          <button type="button" onclick="copyCheckoutIban('${item.iban}')" class="px-3 py-1.5 rounded-lg bg-wine-700 text-cream-50 text-xs hover:bg-wine-800">კოპირება</button>
+          <button type="button" onclick="copyCheckoutIban('${item.iban}')" class="px-3 py-1.5 rounded-full bg-wine-900 text-white text-xs">კოპირება</button>
         </div>
       `).join('');
       
       container.innerHTML = `
         <div class="space-y-4 mb-8">
           ${cartItems.map(item => `
-            <div class="bg-white rounded-2xl p-4 md:p-6 shadow-lg flex items-center gap-4">
-              <div class="w-16 h-20 bg-wine-100 rounded-xl flex items-center justify-center flex-shrink-0">
+            <div class="bg-white rounded-[30px] p-4 md:p-6 shadow-xl border border-wine-200 flex items-center gap-4">
+              <div class="w-16 h-20 bg-wine-100 rounded-2xl flex items-center justify-center flex-shrink-0">
                 ${item.image_url ? `<img src="${item.image_url}" alt="${escapeHtml(item.productName)}" class="w-full h-full object-cover rounded-xl">` : `
                 <svg viewBox="0 0 80 200" class="w-8 h-16">
                   <path d="M25 60 Q25 50 30 45 L30 25 Q30 20 35 20 L45 20 Q50 20 50 25 L50 45 Q55 50 55 60 L55 180 Q55 190 40 190 Q25 190 25 180 Z" fill="#5a1f29"/>
                 </svg>`}
               </div>
               <div class="flex-grow min-w-0">
-                <h3 class="font-display text-lg font-semibold text-wine-900 truncate">${item.productName}</h3>
-                <p class="text-wine-600/70 text-sm">₾${item.price} თითოეული</p>
+                <h3 class="font-display text-2xl font-semibold text-wine-900 truncate">${item.productName}</h3>
+                <p class="text-wine-600 text-sm">₾${item.price} თითოეული</p>
               </div>
               <div class="flex items-center gap-3">
                 <button onclick="updateQuantity('${getCartItemKey(item)}', -1)" 
-                        class="w-8 h-8 rounded-full bg-wine-100 text-wine-700 flex items-center justify-center hover:bg-wine-200 transition-colors">
+                        class="w-8 h-8 rounded-full bg-wine-100 text-wine-700 flex items-center justify-center">
                   −
                 </button>
                 <span class="font-semibold text-wine-900 w-8 text-center">${item.quantity}</span>
                 <button onclick="updateQuantity('${getCartItemKey(item)}', 1)" 
-                        class="w-8 h-8 rounded-full bg-wine-100 text-wine-700 flex items-center justify-center hover:bg-wine-200 transition-colors">
+                        class="w-8 h-8 rounded-full bg-wine-100 text-wine-700 flex items-center justify-center">
                   +
                 </button>
               </div>
               <div class="text-right">
-                <p class="font-display text-xl font-bold text-wine-800">₾${item.price * item.quantity}</p>
-                <button onclick="removeFromCart('${getCartItemKey(item)}')" class="text-wine-400 hover:text-wine-600 text-sm transition-colors">
+                <p class="font-display text-xl font-bold text-wine-900">₾${item.price * item.quantity}</p>
+                <button onclick="removeFromCart('${getCartItemKey(item)}')" class="text-wine-500 hover:text-wine-700 text-sm transition-colors">
                   წაშლა
                 </button>
               </div>
@@ -1159,48 +1153,48 @@
           `).join('')}
         </div>
         
-        <div class="bg-wine-900 rounded-2xl p-6 md:p-8 text-cream-50">
+        <div class="bg-wine-900 rounded-[36px] p-6 md:p-8 text-white shadow-2xl">
           <div class="flex items-center justify-between mb-6">
-            <span class="text-cream-200">ჯამი:</span>
+            <span class="text-white/70">ჯამი:</span>
             <span class="font-display text-3xl font-bold">₾${total}</span>
           </div>
-          <button type="button" onclick="handleCheckout()" class="btn-wine w-full py-4 bg-cream-50 text-wine-800 font-semibold rounded-xl hover:bg-cream-100 transition-all">
+          <button type="button" onclick="handleCheckout()" class="btn-wine w-full py-4 bg-white text-wine-900 font-semibold rounded-full transition-all">
             შეკვეთის გაფორმება
           </button>
-          <p class="text-cream-200/60 text-xs text-center mt-4">მიტანა თბილისში უფასოა ₾100+ შეკვეთაზე</p>
+          <p class="text-white/60 text-xs text-center mt-4">მიტანა თბილისში უფასოა ₾100+ შეკვეთაზე</p>
         </div>
 
         ${checkoutFormVisible ? `
-        <div class="bg-white rounded-2xl p-6 md:p-8 shadow-lg">
+        <div class="bg-white rounded-[30px] p-6 md:p-8 shadow-xl border border-wine-200">
           <h2 class="font-display text-3xl text-wine-900 mb-3">შეკვეთის ფორმა</h2>
           <p class="text-sm text-wine-600 mb-4">შეავსე მონაცემები, ატვირთე ქვითარი და გაგზავნე შეკვეთა.</p>
           <div class="grid md:grid-cols-2 gap-6">
             <div>
               <h3 class="font-semibold text-wine-900 mb-2">შეკვეთილი პროდუქტები</h3>
-              <div class="bg-cream-50 rounded-xl p-3 mb-3">${orderRows}</div>
+              <div class="bg-cream-50 rounded-2xl p-3 mb-3 border border-wine-200">${orderRows}</div>
               <p class="font-semibold text-wine-900">სულ გადასახდელი: ₾<span id="checkout-total">${total}</span></p>
             </div>
           </div>
           <form id="checkout-form" class="grid md:grid-cols-2 gap-4 mt-6" onsubmit="submitCheckoutOrder(event)">
             <div>
               <label class="block text-sm text-wine-700 mb-1">სახელი</label>
-              <input required name="first_name" class="w-full px-3 py-2 rounded-lg border border-wine-200">
+              <input required name="first_name" class="w-full px-3 py-2 rounded-xl border border-wine-200">
             </div>
             <div>
               <label class="block text-sm text-wine-700 mb-1">გვარი</label>
-              <input required name="last_name" class="w-full px-3 py-2 rounded-lg border border-wine-200">
+              <input required name="last_name" class="w-full px-3 py-2 rounded-xl border border-wine-200">
             </div>
             <div>
               <label class="block text-sm text-wine-700 mb-1">ტელეფონი</label>
-              <input required name="phone" class="w-full px-3 py-2 rounded-lg border border-wine-200">
+              <input required name="phone" class="w-full px-3 py-2 rounded-xl border border-wine-200">
             </div>
             <div>
               <label class="block text-sm text-wine-700 mb-1">ელფოსტა</label>
-              <input required type="email" name="email" class="w-full px-3 py-2 rounded-lg border border-wine-200">
+              <input required type="email" name="email" class="w-full px-3 py-2 rounded-xl border border-wine-200">
             </div>
             <div class="md:col-span-2">
               <label class="block text-sm text-wine-700 mb-1">მისამართი (სად იგზავნება)</label>
-              <textarea required name="address" rows="2" class="w-full px-3 py-2 rounded-lg border border-wine-200"></textarea>
+              <textarea required name="address" rows="2" class="w-full px-3 py-2 rounded-xl border border-wine-200"></textarea>
             </div>
             <div class="md:col-span-2">
               <h3 class="font-semibold text-wine-900 mb-2">ბანკის ანგარიშები</h3>
@@ -1208,11 +1202,11 @@
             </div>
             <div class="md:col-span-2">
               <label class="block text-sm text-wine-700 mb-1">გადახდის ქვითარი</label>
-              <input required type="file" accept="image/*,application/pdf" name="receipt" class="w-full px-3 py-2 rounded-lg border border-wine-200 bg-cream-50">
+              <input required type="file" accept="image/*,application/pdf" name="receipt" class="w-full px-3 py-2 rounded-xl border border-wine-200 bg-cream-50">
             </div>
             <div class="md:col-span-2 flex gap-3">
-              <button type="submit" class="btn-wine px-6 py-3 bg-wine-700 text-cream-50 rounded-xl hover:bg-wine-800">შეკვეთის გაგზავნა</button>
-              <button type="button" onclick="toggleCheckoutForm(false)" class="px-6 py-3 rounded-xl border border-wine-200 text-wine-700 hover:bg-cream-100">დახურვა</button>
+              <button type="submit" class="btn-wine px-6 py-3 bg-wine-900 text-white rounded-full">შეკვეთის გაგზავნა</button>
+              <button type="button" onclick="toggleCheckoutForm(false)" class="px-6 py-3 rounded-full border border-wine-200 text-wine-700 hover:bg-cream-50">დახურვა</button>
             </div>
             <p id="checkout-status" class="md:col-span-2 text-sm text-wine-600"></p>
           </form>
