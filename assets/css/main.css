@@ -49,8 +49,8 @@ body.matsi-neo {
 #main-content span,
 #main-content button,
 #main-content label {
-  overflow-wrap: anywhere;
-  word-break: break-word;
+  overflow-wrap: normal;
+  word-break: normal;
 }
 
 .app-wrapper {
@@ -174,9 +174,34 @@ body.matsi-neo {
   transition: opacity 0.6s ease, transform 0.6s ease;
 }
 
+.reveal-left {
+  opacity: 0;
+  transform: translateX(-50px);
+  transition: opacity 0.65s ease, transform 0.65s ease;
+}
+
+.reveal-right {
+  opacity: 0;
+  transform: translateX(50px);
+  transition: opacity 0.65s ease, transform 0.65s ease;
+}
+
+.reveal-scale {
+  opacity: 0;
+  transform: translateY(20px) scale(0.96);
+  transition: opacity 0.65s ease, transform 0.65s ease;
+}
+
 .reveal.is-visible {
   opacity: 1;
   transform: translateY(0);
+}
+
+.reveal-left.is-visible,
+.reveal-right.is-visible,
+.reveal-scale.is-visible {
+  opacity: 1;
+  transform: translate(0, 0) scale(1);
 }
 
 .reveal-delay-1 {
@@ -605,7 +630,7 @@ button[class*="border-2"]:hover {
 
 /* Story section */
 .home-story-media {
-  padding-right: 3.8rem;
+  padding-right: 0;
 }
 
 .home-story-image-wrap {
@@ -618,14 +643,18 @@ button[class*="border-2"]:hover {
 
 .home-story-stat-card {
   position: absolute;
-  right: -2.4rem;
-  bottom: -2.8rem;
-  width: 260px;
+  right: -2.5rem;
+  bottom: -2.5rem;
+  width: 16rem;
+  height: 16rem;
   padding: 2rem;
   border-radius: 30px;
   background: var(--brand-950);
   color: #fff;
   box-shadow: var(--shadow-strong);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
 }
 
 .home-story-stat-card p {
@@ -639,13 +668,13 @@ button[class*="border-2"]:hover {
 .home-story-feature {
   display: flex;
   align-items: flex-start;
-  gap: 1.15rem;
+  gap: 1rem;
 }
 
 .home-story-feature-icon {
-  width: 64px;
-  height: 64px;
-  border-radius: 20px;
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
   background: #f1f5f9;
   display: inline-flex;
   align-items: center;
@@ -654,18 +683,18 @@ button[class*="border-2"]:hover {
 }
 
 .home-story-feature-icon svg {
-  width: 36px;
-  height: 36px;
+  width: 24px;
+  height: 24px;
   color: #334155;
-  stroke-width: 1.8;
+  stroke-width: 2;
 }
 
 .home-story-feature-title {
   margin: 0 0 0.35rem;
   color: var(--brand-950);
-  font-family: "Noto Sans Georgian", "Manrope", "Inter", sans-serif;
-  font-size: 2.6rem;
-  line-height: 1.05;
+  font-family: "Cormorant Garamond", "Noto Sans Georgian", serif;
+  font-size: 1.9rem;
+  line-height: 1.12;
   font-weight: 800;
   letter-spacing: -0.01em;
 }
@@ -673,16 +702,17 @@ button[class*="border-2"]:hover {
 .home-story-feature-text {
   margin: 0;
   color: rgba(51, 65, 85, 0.68);
-  font-size: 0.95rem;
+  font-size: 0.98rem;
   line-height: 1.35;
-  max-width: 220px;
+  max-width: 260px;
 }
 
 .home-story-btn {
-  min-width: 260px;
+  min-width: 0;
   justify-content: center;
-  border-color: rgba(148, 163, 184, 0.55) !important;
-  border-width: 2.5px !important;
+  border-color: rgba(148, 163, 184, 0.52) !important;
+  border-width: 2px !important;
+  padding: 0.95rem 2.4rem !important;
 }
 
 /* Shop filters */
@@ -1245,6 +1275,7 @@ button[class*="border-2"]:hover {
   .home-story-stat-card {
     position: static;
     width: 100%;
+    height: auto;
     margin-top: 1rem;
   }
 
@@ -1253,7 +1284,7 @@ button[class*="border-2"]:hover {
   }
 
   .home-story-feature-title {
-    font-size: 2.2rem;
+    font-size: 1.7rem;
   }
 }
 
@@ -1271,12 +1302,16 @@ button[class*="border-2"]:hover {
   }
 
   .home-story-feature-title {
-    font-size: 1.9rem;
+    font-size: 1.45rem;
   }
 
   .home-story-btn {
     width: 100%;
     min-width: 0;
+  }
+
+  .home-story-stat-card {
+    display: none;
   }
 
   #hero-title {

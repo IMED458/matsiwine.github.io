@@ -726,8 +726,9 @@
 
     function refreshMotionTargets(scope = document) {
       if (!scope) return;
+      applyDirectionalReveals(scope);
 
-      const revealItems = scope.querySelectorAll ? scope.querySelectorAll('.reveal, .product-card, .bg-white.rounded-2xl, .bg-white.rounded-3xl') : [];
+      const revealItems = scope.querySelectorAll ? scope.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale, .product-card, .bg-white.rounded-2xl, .bg-white.rounded-3xl') : [];
       revealItems.forEach((item) => {
         item.classList.add('reveal');
         if (prefersReducedMotion) {
@@ -745,6 +746,22 @@
       if (!prefersReducedMotion) {
         initCardTilt(scope);
       }
+    }
+
+    function applyDirectionalReveals(scope = document) {
+      if (!scope || !scope.querySelectorAll) return;
+
+      const splitGrids = scope.querySelectorAll('.grid.lg\\:grid-cols-2, .grid.md\\:grid-cols-2');
+      splitGrids.forEach((grid) => {
+        if (grid.id === 'products-grid') return;
+        const children = Array.from(grid.children || []).filter((child) => child && !child.classList.contains('hidden'));
+        if (children.length !== 2) return;
+        if (!children[0].classList.contains('reveal-right')) children[0].classList.add('reveal-left');
+        if (!children[1].classList.contains('reveal-left')) children[1].classList.add('reveal-right');
+      });
+
+      const scaleTargets = scope.querySelectorAll('#page-home .home-story-stat-card, #page-home .home-designer-cta, #page-about .about-value-card, #page-contact .bg-white.p-12, #page-cart .bg-wine-900, #page-product #product-detail > div:first-child');
+      scaleTargets.forEach((target) => target.classList.add('reveal-scale'));
     }
 
     function initHeroParallax() {
@@ -950,21 +967,33 @@
           <p class="text-lg text-wine-700/80 font-light leading-relaxed product-detail-description">${product.description}</p>
           
           <div class="grid sm:grid-cols-2 gap-6">
-            <div class="glass-card p-6 rounded-3xl">
-              <p class="text-xs font-bold uppercase tracking-widest text-wine-700/50 mb-1 product-detail-spec-title">არომატი</p>
-              <p class="text-sm text-wine-950 font-medium product-detail-spec-text">${product.aroma}</p>
+            <div class="glass-card p-6 rounded-3xl flex gap-4 items-start">
+              <svg class="w-6 h-6 text-wine-700 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.9" d="M12 2.7s7 6.3 7 11.1a7 7 0 0 1-14 0c0-4.8 7-11.1 7-11.1z"/></svg>
+              <div>
+                <p class="text-xs font-bold uppercase tracking-widest text-wine-700/50 mb-1 product-detail-spec-title">არომატი</p>
+                <p class="text-sm text-wine-950 font-medium product-detail-spec-text">${product.aroma}</p>
+              </div>
             </div>
-            <div class="glass-card p-6 rounded-3xl">
-              <p class="text-xs font-bold uppercase tracking-widest text-wine-700/50 mb-1 product-detail-spec-title">გემო</p>
-              <p class="text-sm text-wine-950 font-medium product-detail-spec-text">${product.taste}</p>
+            <div class="glass-card p-6 rounded-3xl flex gap-4 items-start">
+              <svg class="w-6 h-6 text-wine-700 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.9" d="M8 3h8M10 3v7a2 2 0 0 1-.6 1.4L7 13.8A4.5 4.5 0 1 0 13.4 20l2.4-2.4A2 2 0 0 0 16 16.2V3"/></svg>
+              <div>
+                <p class="text-xs font-bold uppercase tracking-widest text-wine-700/50 mb-1 product-detail-spec-title">გემო</p>
+                <p class="text-sm text-wine-950 font-medium product-detail-spec-text">${product.taste}</p>
+              </div>
             </div>
-            <div class="glass-card p-6 rounded-3xl">
-              <p class="text-xs font-bold uppercase tracking-widest text-wine-700/50 mb-1 product-detail-spec-title">შეხამება</p>
-              <p class="text-sm text-wine-950 font-medium product-detail-spec-text">${product.pairing}</p>
+            <div class="glass-card p-6 rounded-3xl flex gap-4 items-start">
+              <svg class="w-6 h-6 text-wine-700 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.9" d="M4 4h16M5 8h14M9 12v8M15 12v8M7 12h10"/></svg>
+              <div>
+                <p class="text-xs font-bold uppercase tracking-widest text-wine-700/50 mb-1 product-detail-spec-title">შეხამება</p>
+                <p class="text-sm text-wine-950 font-medium product-detail-spec-text">${product.pairing}</p>
+              </div>
             </div>
-            <div class="glass-card p-6 rounded-3xl">
-              <p class="text-xs font-bold uppercase tracking-widest text-wine-700/50 mb-1 product-detail-spec-title">დეტალები</p>
-              <p class="text-sm text-wine-950 font-medium product-detail-spec-text">${product.alcohol} • ${product.temperature}</p>
+            <div class="glass-card p-6 rounded-3xl flex gap-4 items-start">
+              <svg class="w-6 h-6 text-wine-700 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.9" d="M12 3v10m0 0a4 4 0 1 0 4 4m-4-4a4 4 0 1 1-4 4"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.9" d="M9 6h6"/></svg>
+              <div>
+                <p class="text-xs font-bold uppercase tracking-widest text-wine-700/50 mb-1 product-detail-spec-title">დეტალები</p>
+                <p class="text-sm text-wine-950 font-medium product-detail-spec-text">${product.alcohol} • ${product.temperature}</p>
+              </div>
             </div>
           </div>
           
@@ -975,6 +1004,7 @@
             </div>
             <button onclick="addToCart('${product.id}', '${product.name} ${product.year}', ${product.price}, { image_url: '${escapeHtml(product.image_url || '')}' })"
                     class="w-full sm:w-auto premium-button-primary py-5 px-12 inline-flex items-center justify-center gap-3">
+              ${getCartIconSvg('w-5 h-5')}
               კალათაში დამატება
             </button>
           </div>
