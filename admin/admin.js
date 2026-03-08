@@ -50,6 +50,10 @@ const defaultState = {
     hero_kicker: 'ქართული ღვინის ტრადიცია',
     hero_btn_primary: 'კოლექციის ნახვა',
     hero_btn_secondary: 'ჩვენი ისტორია',
+    hero_tag1_kicker: 'VINTAGE',
+    hero_tag1_title: '2019 Reserve',
+    hero_tag2_kicker: 'ORIGIN',
+    hero_tag2_title: 'Kakheti, Georgia',
     featured_kicker: 'გამორჩეული კოლექცია',
     featured_title: 'ჩვენი საუკეთესოები',
     featured_cta: 'სრული კატალოგი',
@@ -80,6 +84,9 @@ const defaultState = {
     story_btn: 'მეტის გაგება',
     story_image: '',
     story_image_path: '',
+    designer_cta_title: 'შექმენი შენი <br><span class="text-wine-300 italic">უნიკალური ეტიკეტი</span>',
+    designer_cta_text: 'გახადე საჩუქარი გამორჩეული. გამოიყენე ჩვენი ონლაინ სტუდია საკუთარი დიზაინის შესაქმნელად.',
+    designer_cta_btn: 'დაიწყე დიზაინი',
     stat1_value: '8000+',
     stat1_label: 'წლიანი ტრადიცია',
     stat1_image: '',
@@ -125,7 +132,13 @@ const defaultState = {
     about_value2_title: 'ტრადიცია',
     about_value2_text: '8000 წლიანი მემკვიდრეობის პატივისცემა',
     about_value3_title: 'ხარისხი',
-    about_value3_text: 'ყოველ ბოთლში — მხოლოდ საუკეთესო'
+    about_value3_text: 'ყოველ ბოთლში — მხოლოდ საუკეთესო',
+    about_value4_title: 'ექსპორტი',
+    about_value4_text: 'ქართული ღვინის პოპულარიზაცია მსოფლიოში',
+    about_value5_title: 'ავთენტურობა',
+    about_value5_text: 'უძველესი რეცეპტების დაცვა',
+    about_value6_title: 'მემკვიდრეობა',
+    about_value6_text: '8000 წლიანი ისტორიის გაგრძელება'
   },
   products: [
     {

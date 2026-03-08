@@ -34,6 +34,10 @@
       hero_kicker: 'ქართული ღვინის ტრადიცია',
       hero_btn_primary: 'კოლექციის ნახვა',
       hero_btn_secondary: 'ჩვენი ისტორია',
+      hero_tag1_kicker: 'VINTAGE',
+      hero_tag1_title: '2019 Reserve',
+      hero_tag2_kicker: 'ORIGIN',
+      hero_tag2_title: 'Kakheti, Georgia',
       featured_kicker: 'გამორჩეული კოლექცია',
       featured_title: 'ჩვენი საუკეთესოები',
       featured_cta: 'სრული კატალოგი',
@@ -59,6 +63,10 @@
       story_title: 'მიწიდან სუფრამდე',
       story_text: 'MATSI WINE — ეს არის ოჯახური მეღვინეობის თანამედროვე გაგრძელება. ჩვენ ვაერთიანებთ ქვევრის უძველეს ტრადიციას ევროპული მეღვინეობის თანამედროვე მიდგომებთან, რათა შევქმნათ ღვინო, რომელიც მოგვითხრობს ქართული მიწის ისტორიას.',
       story_btn: 'მეტის გაგება',
+      story_image: '',
+      designer_cta_title: 'შექმენი შენი <br><span class="text-wine-300 italic">უნიკალური ეტიკეტი</span>',
+      designer_cta_text: 'გახადე საჩუქარი გამორჩეული. გამოიყენე ჩვენი ონლაინ სტუდია საკუთარი დიზაინის შესაქმნელად.',
+      designer_cta_btn: 'დაიწყე დიზაინი',
       stat1_value: '8000+',
       stat1_label: 'წლიანი ტრადიცია',
       stat1_image: '',
@@ -97,7 +105,13 @@
       about_value2_title: 'ტრადიცია',
       about_value2_text: '8000 წლიანი მემკვიდრეობის პატივისცემა',
       about_value3_title: 'ხარისხი',
-      about_value3_text: 'ყოველ ბოთლში — მხოლოდ საუკეთესო'
+      about_value3_text: 'ყოველ ბოთლში — მხოლოდ საუკეთესო',
+      about_value4_title: 'ექსპორტი',
+      about_value4_text: 'ქართული ღვინის პოპულარიზაცია მსოფლიოში',
+      about_value5_title: 'ავთენტურობა',
+      about_value5_text: 'უძველესი რეცეპტების დაცვა',
+      about_value6_title: 'მემკვიდრეობა',
+      about_value6_text: '8000 წლიანი ისტორიის გაგრძელება'
     };
     
     let config = { ...defaultConfig };
@@ -460,6 +474,12 @@
       element.textContent = String(value);
     }
 
+    function setHtmlById(id, value) {
+      const element = document.getElementById(id);
+      if (!element || value === undefined || value === null) return;
+      element.innerHTML = String(value);
+    }
+
     function setFeaturedCardImage(cardNumber, imageUrl) {
       const imageElement = document.getElementById(`home-card${cardNumber}-image`);
       const svgElement = document.getElementById(`home-card${cardNumber}-svg`);
@@ -489,6 +509,17 @@
       }
     }
 
+    function setHomeStoryImage(imageUrl) {
+      const imageElement = document.getElementById('home-story-image');
+      if (!imageElement) return;
+      const value = String(imageUrl || '').trim();
+      if (value) {
+        imageElement.src = value;
+      } else {
+        imageElement.src = 'https://picsum.photos/seed/vineyard/1200/1500';
+      }
+    }
+
     function setAboutSectionImage(sectionNumber, imageUrl) {
       const imageElement = document.getElementById(`about-photo${sectionNumber}-image`);
       const fallbackElement = document.getElementById(`about-photo${sectionNumber}-fallback`);
@@ -509,6 +540,10 @@
       setTextById('home-hero-kicker', homeContent.hero_kicker);
       setTextById('home-hero-btn-primary', homeContent.hero_btn_primary);
       setTextById('home-hero-btn-secondary', homeContent.hero_btn_secondary);
+      setTextById('home-hero-tag1-kicker', homeContent.hero_tag1_kicker);
+      setTextById('home-hero-tag1-title', homeContent.hero_tag1_title);
+      setTextById('home-hero-tag2-kicker', homeContent.hero_tag2_kicker);
+      setTextById('home-hero-tag2-title', homeContent.hero_tag2_title);
       setTextById('home-featured-kicker', homeContent.featured_kicker);
       setTextById('home-featured-title', homeContent.featured_title);
       setTextById('home-featured-cta', homeContent.featured_cta);
@@ -538,6 +573,10 @@
       setTextById('home-story-title', homeContent.story_title);
       setTextById('home-story-text', homeContent.story_text);
       setTextById('home-story-btn', homeContent.story_btn);
+      setHomeStoryImage(homeContent.story_image);
+      setHtmlById('home-designer-cta-title', homeContent.designer_cta_title);
+      setTextById('home-designer-cta-text', homeContent.designer_cta_text);
+      setTextById('home-designer-cta-btn', homeContent.designer_cta_btn);
 
       setTextById('home-stat1-value', homeContent.stat1_value);
       setTextById('home-stat1-label', homeContent.stat1_label);
@@ -579,6 +618,12 @@
       setTextById('about-value2-text', aboutContent.about_value2_text);
       setTextById('about-value3-title', aboutContent.about_value3_title);
       setTextById('about-value3-text', aboutContent.about_value3_text);
+      setTextById('about-value4-title', aboutContent.about_value4_title);
+      setTextById('about-value4-text', aboutContent.about_value4_text);
+      setTextById('about-value5-title', aboutContent.about_value5_title);
+      setTextById('about-value5-text', aboutContent.about_value5_text);
+      setTextById('about-value6-title', aboutContent.about_value6_title);
+      setTextById('about-value6-text', aboutContent.about_value6_text);
     }
     
     // =====================================================
