@@ -59,6 +59,7 @@
       story_title: 'მიწიდან სუფრამდე',
       story_text: 'MATSI WINE — ეს არის ოჯახური მეღვინეობის თანამედროვე გაგრძელება. ჩვენ ვაერთიანებთ ქვევრის უძველეს ტრადიციას ევროპული მეღვინეობის თანამედროვე მიდგომებთან, რათა შევქმნათ ღვინო, რომელიც მოგვითხრობს ქართული მიწის ისტორიას.',
       story_btn: 'მეტის გაგება',
+      story_image: '',
       stat1_value: '8000+',
       stat1_label: 'წლიანი ტრადიცია',
       stat1_image: '',
@@ -489,6 +490,16 @@
       }
     }
 
+    function setHomeStoryImage(imageUrl) {
+      const imageElement = document.getElementById('home-story-image');
+      if (!imageElement) return;
+      if (imageUrl && String(imageUrl).trim()) {
+        imageElement.src = String(imageUrl).trim();
+      } else {
+        imageElement.src = 'https://picsum.photos/seed/vineyard/1200/1500';
+      }
+    }
+
     function setAboutSectionImage(sectionNumber, imageUrl) {
       const imageElement = document.getElementById(`about-photo${sectionNumber}-image`);
       const fallbackElement = document.getElementById(`about-photo${sectionNumber}-fallback`);
@@ -538,6 +549,7 @@
       setTextById('home-story-title', homeContent.story_title);
       setTextById('home-story-text', homeContent.story_text);
       setTextById('home-story-btn', homeContent.story_btn);
+      setHomeStoryImage(homeContent.story_image);
 
       setTextById('home-stat1-value', homeContent.stat1_value);
       setTextById('home-stat1-label', homeContent.stat1_label);

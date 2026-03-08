@@ -78,6 +78,8 @@ const defaultState = {
     story_title: 'მიწიდან სუფრამდე',
     story_text: 'MATSI WINE — ეს არის ოჯახური მეღვინეობის თანამედროვე გაგრძელება. ჩვენ ვაერთიანებთ ქვევრის უძველეს ტრადიციას ევროპული მეღვინეობის თანამედროვე მიდგომებთან, რათა შევქმნათ ღვინო, რომელიც მოგვითხრობს ქართული მიწის ისტორიას.',
     story_btn: 'მეტის გაგება',
+    story_image: '',
+    story_image_path: '',
     stat1_value: '8000+',
     stat1_label: 'წლიანი ტრადიცია',
     stat1_image: '',
@@ -164,6 +166,7 @@ const pendingHomeCardFiles = {
   card1: null,
   card2: null,
   card3: null,
+  story: null,
   stat1: null,
   stat2: null,
   stat3: null,
@@ -214,6 +217,7 @@ const productsListPanel = document.getElementById('products-list-panel');
 const homeCard1ImageFile = document.getElementById('home_card1_image_file');
 const homeCard2ImageFile = document.getElementById('home_card2_image_file');
 const homeCard3ImageFile = document.getElementById('home_card3_image_file');
+const homeStoryImageFile = document.getElementById('home_story_image_file');
 const homeStat1ImageFile = document.getElementById('home_stat1_image_file');
 const homeStat2ImageFile = document.getElementById('home_stat2_image_file');
 const homeStat3ImageFile = document.getElementById('home_stat3_image_file');
@@ -221,6 +225,7 @@ const homeStat4ImageFile = document.getElementById('home_stat4_image_file');
 const homeCard1ImagePreview = document.getElementById('home-card1-image-preview');
 const homeCard2ImagePreview = document.getElementById('home-card2-image-preview');
 const homeCard3ImagePreview = document.getElementById('home-card3-image-preview');
+const homeStoryImagePreview = document.getElementById('home-story-image-preview');
 const homeStat1ImagePreview = document.getElementById('home-stat1-image-preview');
 const homeStat2ImagePreview = document.getElementById('home-stat2-image-preview');
 const homeStat3ImagePreview = document.getElementById('home-stat3-image-preview');
@@ -648,6 +653,7 @@ function bindForms() {
         { id: 'card1', imageKey: 'card1_image', pathKey: 'card1_image_path', urlField: 'home_card1_image_url', folder: 'home/cards' },
         { id: 'card2', imageKey: 'card2_image', pathKey: 'card2_image_path', urlField: 'home_card2_image_url', folder: 'home/cards' },
         { id: 'card3', imageKey: 'card3_image', pathKey: 'card3_image_path', urlField: 'home_card3_image_url', folder: 'home/cards' },
+        { id: 'story', imageKey: 'story_image', pathKey: 'story_image_path', urlField: 'home_story_image_url', folder: 'home/story' },
         { id: 'stat1', imageKey: 'stat1_image', pathKey: 'stat1_image_path', urlField: 'home_stat1_image_url', folder: 'home/stats' },
         { id: 'stat2', imageKey: 'stat2_image', pathKey: 'stat2_image_path', urlField: 'home_stat2_image_url', folder: 'home/stats' },
         { id: 'stat3', imageKey: 'stat3_image', pathKey: 'stat3_image_path', urlField: 'home_stat3_image_url', folder: 'home/stats' },
@@ -803,6 +809,7 @@ function bindForms() {
     { input: homeCard1ImageFile, key: 'card1', preview: homeCard1ImagePreview },
     { input: homeCard2ImageFile, key: 'card2', preview: homeCard2ImagePreview },
     { input: homeCard3ImageFile, key: 'card3', preview: homeCard3ImagePreview },
+    { input: homeStoryImageFile, key: 'story', preview: homeStoryImagePreview },
     { input: homeStat1ImageFile, key: 'stat1', preview: homeStat1ImagePreview },
     { input: homeStat2ImageFile, key: 'stat2', preview: homeStat2ImagePreview },
     { input: homeStat3ImageFile, key: 'stat3', preview: homeStat3ImagePreview },
@@ -903,6 +910,7 @@ function fillHomeForm() {
     { field: 'home_card1_image_url', key: 'card1_image', preview: homeCard1ImagePreview },
     { field: 'home_card2_image_url', key: 'card2_image', preview: homeCard2ImagePreview },
     { field: 'home_card3_image_url', key: 'card3_image', preview: homeCard3ImagePreview },
+    { field: 'home_story_image_url', key: 'story_image', preview: homeStoryImagePreview },
     { field: 'home_stat1_image_url', key: 'stat1_image', preview: homeStat1ImagePreview },
     { field: 'home_stat2_image_url', key: 'stat2_image', preview: homeStat2ImagePreview },
     { field: 'home_stat3_image_url', key: 'stat3_image', preview: homeStat3ImagePreview },
