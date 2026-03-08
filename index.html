@@ -530,40 +530,84 @@
           <button type="button" class="designer-mode-btn" data-mode="text">TEXT</button>
           <button type="button" class="designer-mode-btn" data-mode="photo">PHOTO</button>
          </div>
-         <div class="designer-side-card">
-          <div class="designer-side-empty">
-           <div class="designer-side-icon">☰</div>
-           <p>აირჩიე ელემენტი რედაქტირებისთვის</p>
+         <div class="designer-side-card space-y-5">
+          <div id="designer-panel-select" class="designer-panel-block">
+           <div class="designer-side-empty">
+            <div class="designer-side-icon">☰</div>
+            <p>აირჩიე რეჟიმი და ელემენტი გადაათრიე ან შეცვალე</p>
+           </div>
           </div>
-          <div class="mt-4 grid grid-cols-1 gap-2">
-           <button id="designer-toggle-draw" type="button" class="designer-mini-btn">ხატვის რეჟიმი</button>
-           <span id="designer-draw-status" class="px-3 py-1 rounded-full bg-cream-200 text-wine-800 text-xs text-center">ხატვა გამორთულია</span>
+          <div id="designer-panel-photo" class="designer-panel-block hidden space-y-4">
+           <h3 class="designer-panel-title">ფოტოს მართვა</h3>
+           <label for="designer-upload" class="designer-upload-btn">ატვირთე ფოტო</label>
+           <input id="designer-upload" type="file" accept="image/*" class="hidden">
+           <div class="designer-control-row">
+            <label for="designer-photo-scale">ზომა</label>
+            <input id="designer-photo-scale" type="range" min="30" max="300" value="100">
+           </div>
+           <div class="designer-control-row">
+            <label for="designer-photo-x">ჰორიზონტალურად</label>
+            <input id="designer-photo-x" type="range" min="-1000" max="1000" value="0">
+           </div>
+           <div class="designer-control-row">
+            <label for="designer-photo-y">ვერტიკალურად</label>
+            <input id="designer-photo-y" type="range" min="-1000" max="1000" value="0">
+           </div>
+           <button id="designer-photo-center" type="button" class="designer-mini-btn">ცენტრში დაბრუნება</button>
           </div>
-          <div class="hidden">
-           <button id="designer-add-text" class="designer-mini-btn">ტექსტი</button>
-           <button id="designer-edit-text" class="designer-mini-btn">შეცვლა</button>
-           <button id="designer-delete-text" class="designer-mini-btn">წაშლა</button>
-           <button id="designer-lock-text" class="designer-mini-btn">Lock</button>
-           <button id="designer-unlock-text" class="designer-mini-btn">Unlock</button>
-           <input id="designer-upload" type="file" accept="image/*">
-           <select id="designer-mode">
-            <option value="select">select</option>
-            <option value="draw">draw</option>
-            <option value="erase">erase</option>
-           </select>
-           <input id="designer-color" type="color" value="#334155">
-           <input id="designer-size" type="range" min="1" max="30" value="6">
-           <input id="designer-photo-scale" type="range" min="50" max="200" value="100">
-           <input id="designer-photo-x" type="range" min="-100" max="100" value="0">
-           <input id="designer-photo-y" type="range" min="-100" max="100" value="0">
-           <input id="designer-text-color" type="color" value="#020617">
-           <input id="designer-text-size" type="range" min="12" max="72" value="28">
-           <button id="designer-front-text" type="button">front</button>
-           <button id="designer-back-text" type="button">back</button>
-           <button id="designer-undo" type="button">undo</button>
-           <button id="designer-redo" type="button">redo</button>
-           <button id="designer-clear-drawing" type="button">clear</button>
+          <div id="designer-panel-text" class="designer-panel-block hidden space-y-4">
+           <h3 class="designer-panel-title">ტექსტის მართვა</h3>
+           <div class="designer-control-row">
+            <label for="designer-text-input">ტექსტი</label>
+            <input id="designer-text-input" type="text" value="MATSI WINE" maxlength="80" class="designer-text-input">
+           </div>
+           <div class="designer-quick-grid">
+            <button id="designer-add-text" class="designer-mini-btn" type="button">დამატება</button>
+            <button id="designer-edit-text" class="designer-mini-btn" type="button">განახლება</button>
+            <button id="designer-delete-text" class="designer-mini-btn" type="button">წაშლა</button>
+            <button id="designer-lock-text" class="designer-mini-btn" type="button">დაბლოკვა</button>
+            <button id="designer-unlock-text" class="designer-mini-btn" type="button">განბლოკვა</button>
+            <button id="designer-front-text" type="button" class="designer-mini-btn">წინ</button>
+            <button id="designer-back-text" type="button" class="designer-mini-btn">უკან</button>
+           </div>
+           <div class="designer-control-row">
+            <label for="designer-text-color">ფერი</label>
+            <input id="designer-text-color" type="color" value="#020617">
+           </div>
+           <div class="designer-control-row">
+            <label for="designer-text-size">ზომა</label>
+            <input id="designer-text-size" type="range" min="12" max="120" value="28">
+           </div>
           </div>
+          <div id="designer-panel-draw" class="designer-panel-block space-y-4">
+           <h3 class="designer-panel-title">ხატვა</h3>
+           <div class="designer-quick-grid">
+            <button id="designer-mode-draw" type="button" class="designer-mini-btn designer-tool-btn">ფანქარი</button>
+            <button id="designer-mode-erase" type="button" class="designer-mini-btn designer-tool-btn">საშლელი</button>
+           </div>
+           <button id="designer-toggle-draw" type="button" class="designer-mini-btn">ხატვის ჩართვა</button>
+           <span id="designer-draw-status" class="designer-status-pill">ხატვა გამორთულია</span>
+           <div class="designer-control-row">
+            <label for="designer-color">ფანქრის ფერი</label>
+            <input id="designer-color" type="color" value="#334155">
+           </div>
+           <div class="designer-control-row">
+            <label for="designer-size">ფანქრის ზომა</label>
+            <input id="designer-size" type="range" min="1" max="40" value="6">
+           </div>
+           <div class="designer-quick-grid">
+            <button id="designer-undo" type="button" class="designer-mini-btn">Undo</button>
+            <button id="designer-redo" type="button" class="designer-mini-btn">Redo</button>
+            <button id="designer-clear-drawing" type="button" class="designer-mini-btn">გასუფთავება</button>
+           </div>
+          </div>
+          <select id="designer-mode" class="hidden">
+           <option value="select">select</option>
+           <option value="text">text</option>
+           <option value="photo">photo</option>
+           <option value="draw">draw</option>
+           <option value="erase">erase</option>
+          </select>
          </div>
          <button id="designer-add-to-cart" class="w-full premium-button-primary py-5 font-bold uppercase tracking-widest inline-flex items-center justify-center gap-3">🛒 კალათაში დამატება</button>
         </div>
