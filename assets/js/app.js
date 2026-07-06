@@ -3207,9 +3207,210 @@ ${itemsText}`
     }
     
     // =====================================================
+    // OUR WINES — Fantini-style pinned scroll showcase
+    // ტექსტები რედაქტირებადია ადმინის Edit Mode-იდან (h1/p/button ელემენტები);
+    // ფასების/სახელების შესაცვლელად იხ. showcaseWines მასივი ქვემოთ.
+    // ბოთლის სურათი: assets/images/showcase-bottle-{1,2,3}.png (იმავე სახელით გადააწერეთ)
+    // =====================================================
+
+    const showcaseWines = [
+      {
+        id: 'saperavi-without-kakheti',
+        cartName: 'Kakheti Without Wine',
+        price: 75,
+        menuTitle: 'Kakheti Without Wine',
+        titleLines: ['Kakheti', 'Without', 'Wine'],
+        region: 'Kakheti, Georgia',
+        description: 'Crafted from deep Saperavi grapes grown in the heart of Kakheti, this wine carries the warmth of Georgian soil, qvevri tradition, and the character of long, sun-filled vineyards.',
+        bottle: 'assets/images/showcase-bottle-1.png',
+        illustration: 'leaf-flower',
+        accent: '#9B3A35'
+      },
+      {
+        id: 'madloba-saperavi',
+        cartName: 'For always being by my side',
+        price: 80,
+        menuTitle: 'For always being by my side',
+        titleLines: ['For always being', 'by my side'],
+        region: 'Kakheti, Georgia',
+        description: 'A gentle word of gratitude in every glass — soft wildflower aromas, the amber light of late summer, and the quiet elegance of wines raised slowly beneath the Kakheti hills.',
+        bottle: 'assets/images/showcase-bottle-2.png',
+        illustration: 'wildflowers',
+        accent: '#7B405D'
+      },
+      {
+        id: 'qvevri-dreamers',
+        cartName: 'Qvevri Dreamers',
+        price: 90,
+        menuTitle: 'Qvevri Dreamers Saperavi',
+        titleLines: ['Qvevri', 'Dreamers'],
+        region: 'Kakheti, Georgia',
+        description: 'Fermented the old way, in buried qvevri beneath the marani, this Saperavi dreams in deep ruby — dense fruit, earthy spice, and the living memory of eight thousand vintages.',
+        bottle: 'assets/images/showcase-bottle-3.png',
+        illustration: 'qvevri',
+        accent: '#8A2E2E'
+      }
+    ];
+
+    const showcaseIllustrations = {
+      // ღვინო 1 — ვაზის ფოთოლი + ველური ვარდი + მზე (ყურძანი შეცვლილია)
+      'leaf-flower': '<svg viewBox="0 0 900 760" fill="none" preserveAspectRatio="xMidYMid meet">'
+        + '<g stroke="#C9A227" stroke-width="2.2" stroke-linecap="round" opacity="0.9">'
+        + '<circle cx="650" cy="180" r="60"/><circle cx="650" cy="180" r="44" stroke-dasharray="2 7"/>'
+        + '<g>' + Array.from({length:16}).map((_,i)=>{const a=i*Math.PI*2/16;const r1=74,r2=i%2?92:108;return '<line x1="'+(650+Math.cos(a)*r1).toFixed(1)+'" y1="'+(180+Math.sin(a)*r1).toFixed(1)+'" x2="'+(650+Math.cos(a)*r2).toFixed(1)+'" y2="'+(180+Math.sin(a)*r2).toFixed(1)+'"/>';}).join('') + '</g></g>'
+        + '<g stroke="#8E3B41" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" opacity="0.85">'
+        + '<path d="M150 560 C 260 470 320 470 380 380 C 430 300 420 240 470 200"/>'
+        + '<g transform="translate(300 330) rotate(20) scale(1.15)"><path d="M0 0 C -50 -20 -86 -64 -78 -120 C -46 -122 -20 -108 0 -86 C 8 -128 34 -156 76 -164 C 88 -118 76 -78 44 -52 C 78 -50 104 -30 112 4 C 70 22 30 16 0 0 Z"/><path d="M0 0 C 20 -44 42 -84 70 -122"/><path d="M22 -40 L 54 -44 M36 -68 L 66 -78 M12 -22 L 44 -14"/></g>'
+        + '<g transform="translate(250 520)">' + Array.from({length:5}).map((_,i)=>'<path transform="rotate('+(i*72)+')" d="M0 -16 C -40 -48 -36 -118 0 -138 C 36 -118 40 -48 0 -16"/>').join('') + '<circle r="15" stroke-dasharray="1.5 4"/></g>'
+        + '</g></svg>',
+      // ღვინო 2 — ველური ყვავილები + ფოთლები + ბორცვები (ლურჯი აქცენტი)
+      'wildflowers': '<svg viewBox="0 0 900 760" fill="none" preserveAspectRatio="xMidYMid meet">'
+        + '<g stroke="#C2A98B" stroke-width="1.7" stroke-linecap="round" opacity="0.55"><path d="M30 620 C 180 560 330 590 470 570 C 620 548 740 580 880 540"/><path d="M120 680 C 300 630 520 660 700 620 C 770 606 830 616 880 604"/></g>'
+        + '<g stroke="#7B688F" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" opacity="0.9"><g transform="translate(620 320)">' + Array.from({length:5}).map((_,i)=>'<path transform="rotate('+(i*72)+')" d="M0 -18 C -44 -52 -40 -128 0 -150 C 40 -128 44 -52 0 -18"/>').join('') + '<circle r="16" stroke-dasharray="1.5 4"/></g>'
+        + '<g transform="translate(724 470)"><path d="M0 0 C -22 -18 -20 -56 0 -68 C 20 -56 22 -18 0 0 Z"/><path d="M0 0 C -4 22 -2 40 4 58"/></g></g>'
+        + '<g stroke="#93A9C7" stroke-width="2" stroke-linecap="round" opacity="0.85"><g transform="translate(300 500)">' + Array.from({length:6}).map((_,i)=>'<ellipse transform="rotate('+(i*30)+')" rx="12" ry="46" cy="-52"/>').join('') + '<circle r="10"/><path d="M0 6 C -6 60 2 100 -6 150"/></g></g>'
+        + '<g stroke="#C48E88" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.85"><g transform="translate(250 300) rotate(-18)"><path d="M0 0 C -50 -20 -86 -64 -78 -120 C -46 -122 -20 -108 0 -86 C 8 -128 34 -156 76 -164 C 88 -118 76 -78 44 -52 C 78 -50 104 -30 112 4 C 70 22 30 16 0 0 Z"/><path d="M0 0 C 20 -44 42 -84 70 -122"/></g></g></svg>',
+      // ღვინო 3 — ქვევრი + მარნის თაღი + მტევანი + ვენახის რიგები (უცვლელი)
+      'qvevri': '<svg viewBox="0 0 900 760" fill="none" preserveAspectRatio="xMidYMid meet">'
+        + '<g transform="translate(115 0)" stroke="#B4694E" stroke-width="2.2" stroke-linecap="round" opacity="0.8"><path d="M420 640 L 420 300 C 420 170 700 170 700 300 L 700 640"/><path d="M452 640 L 452 310 C 452 205 668 205 668 310 L 668 640" stroke-dasharray="1.5 5"/><path d="M436 250 l -30 -14 M470 212 l -24 -22 M520 188 l -14 -28 M600 188 l 14 -28 M650 212 l 24 -22 M684 250 l 30 -14" stroke-width="1.8"/></g>'
+        + '<g transform="translate(115 0)" stroke="#7C2E35" stroke-width="2.6" stroke-linecap="round" opacity="0.9"><path d="M500 340 L 620 340 M508 340 C 496 352 492 366 494 382"/><path d="M612 340 C 624 352 628 366 626 382"/><path d="M494 382 C 452 430 448 520 486 590 C 512 636 542 662 560 700 C 578 662 608 636 634 590 C 672 520 668 430 626 382"/><path d="M478 452 C 520 466 600 466 642 452" stroke-width="1.8" stroke-dasharray="2 6"/><path d="M472 520 C 520 536 600 536 648 520" stroke-width="1.8" stroke-dasharray="2 6"/></g>'
+        + '<g stroke="#7C2E35" stroke-width="2.2" stroke-linecap="round" opacity="0.85">' + (function(){var b=[[0,0],[46,-8],[92,0],[23,36],[69,36],[-12,44],[104,46],[11,80],[57,78],[92,88],[34,120],[76,124],[55,162]];return '<g transform="translate(210 250) scale(0.9)">'+b.map(function(p){return '<circle cx="'+p[0]+'" cy="'+p[1]+'" r="24"/>';}).join('')+'<path d="M46 -30 C 42 -70 70 -95 60 -140"/></g>';})() + '</g>'
+        + '<g stroke="#B4694E" stroke-width="1.8" stroke-linecap="round" opacity="0.65"><path d="M60 700 C 140 640 220 600 330 576"/><path d="M120 716 C 200 660 280 624 380 602"/><path d="M200 728 C 270 684 340 652 430 630"/><path d="M96 668 l 0 -34 M170 622 l 0 -32 M256 586 l 0 -30 M212 676 l 0 -32 M290 638 l 0 -30" stroke-width="1.6"/></g></svg>'
+    };
+
+    let showcaseBottleEls = [];
+    let showcaseActive = -1;
+    let showcaseTicking = false;
+
+    function renderShowcase() {
+      const menuList = document.getElementById('mw-menu-list');
+      const stack = document.getElementById('mw-bottle-stack');
+      const panel = document.getElementById('mw-panel');
+      const illus = document.getElementById('mw-illus');
+      if (!menuList || !stack || !panel || !illus) return false;
+
+      menuList.innerHTML = showcaseWines.map((w, i) =>
+        '<li><button type="button" class="mw-menu-item' + (i === 0 ? ' is-active' : '') + '" data-i="' + i + '">' + escapeHtml(w.menuTitle) + '</button></li>'
+      ).join('');
+
+      stack.innerHTML = showcaseWines.map((w, i) =>
+        '<img class="mw-bottle" src="' + w.bottle + '" alt="' + escapeHtml(w.cartName) + '" draggable="false" style="opacity:' + (i === 0 ? 1 : 0) + '">'
+      ).join('');
+
+      panel.innerHTML = showcaseWines.map((w, i) =>
+        '<div class="mw-panel-item' + (i === 0 ? ' is-active' : '') + '" data-i="' + i + '">'
+        + '<h1 class="mw-title">' + w.titleLines.map(l => '<span class="mw-line"><span>' + escapeHtml(l) + '</span></span>').join('') + '</h1>'
+        + '<p class="mw-region">' + escapeHtml(w.region) + '</p>'
+        + '<p class="mw-desc">' + escapeHtml(w.description) + '</p>'
+        + '<button class="mw-cart-btn" type="button" data-i="' + i + '"><span>კალათაში დამატება</span></button>'
+        + '</div>'
+      ).join('');
+
+      illus.innerHTML = showcaseWines.map((w, i) =>
+        '<div class="mw-illus-item' + (i === 0 ? ' is-active' : '') + '" data-i="' + i + '">' + (showcaseIllustrations[w.illustration] || '') + '</div>'
+      ).join('');
+
+      showcaseBottleEls = Array.from(stack.querySelectorAll('.mw-bottle'));
+      return true;
+    }
+
+    function setShowcaseActive(idx) {
+      if (idx === showcaseActive) return;
+      showcaseActive = idx;
+      const wrap = document.getElementById('mw-showcase');
+      document.querySelectorAll('#mw-menu-list .mw-menu-item').forEach((el) => {
+        el.classList.toggle('is-active', Number(el.dataset.i) === idx);
+      });
+      document.querySelectorAll('#mw-panel .mw-panel-item').forEach((el) => {
+        el.classList.toggle('is-active', Number(el.dataset.i) === idx);
+      });
+      document.querySelectorAll('#mw-illus .mw-illus-item').forEach((el) => {
+        el.classList.toggle('is-active', Number(el.dataset.i) === idx);
+      });
+      if (wrap && showcaseWines[idx]) wrap.style.setProperty('--mw-accent', showcaseWines[idx].accent);
+    }
+
+    function updateShowcase() {
+      const wrap = document.getElementById('mw-showcase');
+      if (!wrap || !showcaseBottleEls.length) return;
+      const rect = wrap.getBoundingClientRect();
+      const vh = window.innerHeight;
+      const total = wrap.offsetHeight - vh;
+      if (total <= 0) return;
+      let p = (-rect.top) / total;
+      p = Math.max(0, Math.min(1, p));
+      const n = showcaseWines.length;
+      const seg = p * (n - 1);
+      const isDesktop = window.innerWidth > 900;
+
+      showcaseBottleEls.forEach((el, i) => {
+        const d = seg - i;
+        const op = Math.max(0, 1 - Math.abs(d));
+        el.style.opacity = op.toFixed(3);
+        if (isDesktop) {
+          const shift = Math.max(-1, Math.min(1, d)) * 60;
+          const sc = 1 - Math.min(Math.abs(d), 1) * 0.06;
+          el.style.transform = 'translateY(' + shift.toFixed(1) + 'px) scale(' + sc.toFixed(3) + ')';
+        } else {
+          el.style.transform = '';
+        }
+        el.style.zIndex = String(20 - Math.round(Math.abs(d) * 10));
+      });
+
+      setShowcaseActive(Math.round(seg));
+
+      const illus = document.getElementById('mw-illus');
+      const contour = wrap.querySelector('.mw-contour');
+      if (isDesktop) {
+        if (illus) illus.style.setProperty('--mw-par', ((p - 0.5) * 80).toFixed(1) + 'px');
+        if (contour) contour.style.transform = 'translateY(' + ((p - 0.5) * 30).toFixed(1) + 'px)';
+      } else {
+        if (illus) illus.style.setProperty('--mw-par', '0px');
+        if (contour) contour.style.transform = '';
+      }
+    }
+
+    function onShowcaseScroll() {
+      if (showcaseTicking) return;
+      showcaseTicking = true;
+      window.requestAnimationFrame(() => {
+        updateShowcase();
+        showcaseTicking = false;
+      });
+    }
+
+    function initShowcase() {
+      if (!renderShowcase()) return;
+      const wrap = document.getElementById('mw-showcase');
+
+      document.getElementById('mw-menu-list').addEventListener('click', (e) => {
+        const btn = e.target.closest('.mw-menu-item');
+        if (!btn) return;
+        const i = Number(btn.dataset.i);
+        const n = showcaseWines.length;
+        const total = wrap.offsetHeight - window.innerHeight;
+        const wrapTop = wrap.getBoundingClientRect().top + (window.scrollY || window.pageYOffset || 0);
+        const target = wrapTop + (n > 1 ? (i / (n - 1)) : 0) * total;
+        window.scrollTo({ top: Math.round(target) + 2, behavior: prefersReducedMotion ? 'auto' : 'smooth' });
+      });
+
+      document.getElementById('mw-panel').addEventListener('click', (e) => {
+        const btn = e.target.closest('.mw-cart-btn');
+        if (!btn) return;
+        const w = showcaseWines[Number(btn.dataset.i)] || showcaseWines[Math.max(0, showcaseActive)];
+        if (w) addToCart(w.id, w.cartName, w.price, { image_url: w.bottle });
+      });
+
+      window.addEventListener('scroll', onShowcaseScroll, { passive: true });
+      window.addEventListener('resize', onShowcaseScroll, { passive: true });
+      setShowcaseActive(0);
+      updateShowcase();
+    }
+
+    // =====================================================
     // INITIALIZATION
     // =====================================================
-    
+
     async function init() {
       loadAdminState().catch((error) => console.error(error));
 
@@ -3230,6 +3431,7 @@ ${itemsText}`
       applyLiquidButtons(document);
       initNavbarScroll();
       initMotionEnhancements();
+      initShowcase();
 
       const initialPage = getPageFromLocation();
       if (initialPage && initialPage !== currentPage) {
