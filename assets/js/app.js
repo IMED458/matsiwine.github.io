@@ -64,9 +64,9 @@
       story_text: 'MATSI WINE — ეს არის ოჯახური მეღვინეობის თანამედროვე გაგრძელება. ჩვენ ვაერთიანებთ ქვევრის უძველეს ტრადიციას ევროპული მეღვინეობის თანამედროვე მიდგომებთან, რათა შევქმნათ ღვინო, რომელიც მოგვითხრობს ქართული მიწის ისტორიას.',
       story_btn: 'მეტის გაგება',
       story_image: '',
-      designer_cta_title: 'შექმენი შენი <br><span class="text-wine-300 italic">უნიკალური ეტიკეტი</span>',
-      designer_cta_text: 'გახადე საჩუქარი გამორჩეული. გამოიყენე ჩვენი ონლაინ სტუდია საკუთარი დიზაინის შესაქმნელად.',
-      designer_cta_btn: 'დაიწყე დიზაინი',
+      designer_scene_title: 'ღვინო შენი <br>შთაგონებით',
+      designer_scene_text: 'ჩააქსოვე შენი ამბავი თითოეულ ბოთლში. ჩვენი მარტივი ინსტრუმენტით შექმენი სრულყოფილი საჩუქარი ან კოლექცია.',
+      designer_scene_btn: 'დაიწყე დიზაინი',
       stat1_value: '8000+',
       stat1_label: 'წლიანი ტრადიცია',
       stat1_image: '',
@@ -586,9 +586,9 @@
       setTextById('home-story-text', homeContent.story_text);
       setTextById('home-story-btn', homeContent.story_btn);
       setHomeStoryImage(homeContent.story_image);
-      setHtmlById('home-designer-cta-title', homeContent.designer_cta_title);
-      setTextById('home-designer-cta-text', homeContent.designer_cta_text);
-      setTextById('home-designer-cta-btn', homeContent.designer_cta_btn);
+      setHtmlById('home-designer-cta-title', homeContent.designer_scene_title);
+      setTextById('home-designer-cta-text', homeContent.designer_scene_text);
+      setTextById('home-designer-cta-btn', homeContent.designer_scene_btn);
 
       setTextById('home-stat1-value', homeContent.stat1_value);
       setTextById('home-stat1-label', homeContent.stat1_label);
