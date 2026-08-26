@@ -135,7 +135,7 @@
       cloudinary_cloud_name: 'dlth7j0i6',
       cloudinary_upload_preset: 'matsi_labels_unsigned',
       logo_url: 'matsiwine.png',
-      hero_bottle_url: 'bottle.png',
+      hero_bottle_url: 'assets/images/hero-bottle.png?v=20260826e',
       sections: {
         home: true,
         shop: true,
@@ -423,7 +423,13 @@
       const footerPhoneEl = document.getElementById('footer-contact-phone');
       const footerAddressEl = document.getElementById('footer-contact-address');
       const logo = siteMeta.logo_url || defaultSiteMeta.logo_url;
-      const bottleImage = siteMeta.hero_bottle_url || defaultSiteMeta.hero_bottle_url;
+      // ძველი შენახული მნიშვნელობა 'bottle.png' ჰეროს ახალ (მოჭრილ) ბოთლზე გადამისამართდეს,
+      // თორემ ოქროს ჩარჩოში არ ჯდება — იხ. hero-swirl-ის კოორდინატები.
+      const legacyBottlePaths = ['bottle.png', 'assets/images/bottle.png', './bottle.png', '/bottle.png'];
+      const storedBottle = (siteMeta.hero_bottle_url || '').trim();
+      const bottleImage = (!storedBottle || legacyBottlePaths.includes(storedBottle))
+        ? defaultSiteMeta.hero_bottle_url
+        : storedBottle;
       const contactEmail = siteMeta.contact_email || defaultSiteMeta.contact_email;
       const contactPhone = siteMeta.contact_phone || defaultSiteMeta.contact_phone;
       const contactAddress = siteMeta.contact_address || defaultSiteMeta.contact_address;

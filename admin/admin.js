@@ -39,7 +39,7 @@ const defaultState = {
     cloudinary_cloud_name: 'dlth7j0i6',
     cloudinary_upload_preset: 'matsi_labels_unsigned',
     logo_url: 'matsiwine.png',
-    hero_bottle_url: 'bottle.png',
+    hero_bottle_url: 'assets/images/hero-bottle.png?v=20260826e',
     logo_path: '',
     hero_bottle_path: '',
     sections: {

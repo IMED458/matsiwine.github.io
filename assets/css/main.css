@@ -2008,7 +2008,7 @@ img, svg, video { max-width: 100%; }
     padding-bottom: 3.5rem;
   }
   .home-hero .grid.lg\:grid-cols-2 {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     gap: 1.25rem;
   }
   .home-hero-visual {
@@ -2027,17 +2027,19 @@ img, svg, video { max-width: 100%; }
   /* ღილაკები — თანაბარი სიგანე, ორ სვეტად */
   .home-hero .flex.flex-wrap.gap-5 {
     display: grid !important;
-    grid-template-columns: 1fr 1fr;
-    gap: 0.6rem !important;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 0.55rem !important;
+    width: 100%;
     max-width: 380px;
     margin-inline: auto;
   }
   .home-hero .flex.flex-wrap.gap-5 > button { width: 100%; }
   .home-hero .flex.flex-wrap.gap-5 > button {
-    font-size: 0.78rem !important;
-    letter-spacing: 0.06em !important;
-    padding-left: 0.5rem !important;
-    padding-right: 0.5rem !important;
+    font-size: 0.76rem !important;
+    letter-spacing: 0.04em !important;
+    padding-left: 0.35rem !important;
+    padding-right: 0.35rem !important;
+    min-width: 0;
     white-space: nowrap;
   }
   .premium-button-primary,

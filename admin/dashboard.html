@@ -11,7 +11,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Georgian:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="./admin.css">
+  <link rel="stylesheet" href="./admin.css?v=20260826e">
   <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
@@ -92,7 +92,7 @@
           <div><label for="text_color">Text ფერი</label><input id="text_color" name="text_color" type="color"></div>
           <div class="full section-title">ლოგო და ბოთლი</div>
           <div><label for="logo_upload">ლოგო (matsiwine.png)</label><input id="logo_upload" name="logo_upload" type="file" accept="image/*"></div>
-          <div><label for="bottle_upload">ბოთლი (bottle.png)</label><input id="bottle_upload" name="bottle_upload" type="file" accept="image/*"></div>
+          <div><label for="bottle_upload">ჰეროს ბოთლი</label><input id="bottle_upload" name="bottle_upload" type="file" accept="image/*"><span class="hint">PNG გამჭვირვალე ფონით, <b>ზედმეტი ცარიელი ველების გარეშე</b> — მთავარ გვერდზე ოქროს ჩარჩოში ზუსტად რომ ჩაჯდეს.</span></div>
           <div><label for="logo_url_text">ლოგოს URL (ალტერნატივა)</label><input id="logo_url_text" name="logo_url_text" type="url" placeholder="https://..."></div>
           <div><label for="hero_bottle_url_text">ბოთლის URL (ალტერნატივა)</label><input id="hero_bottle_url_text" name="hero_bottle_url_text" type="url" placeholder="https://..."></div>
           <img id="logo-preview" class="image-preview hidden" alt="Logo preview">
@@ -351,6 +351,6 @@
     </section>
   </main>
 
-  <script src="./admin.js"></script>
+  <script src="./admin.js?v=20260826e"></script>
 </body>
 </html>
