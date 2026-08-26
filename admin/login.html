@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow, noarchive">
   <title>MATSI Admin Login</title>
   <link rel="icon" type="image/png" href="../matsiwine.png?v=20260305b">
   <link rel="shortcut icon" type="image/png" href="../matsiwine.png?v=20260305b">
@@ -30,7 +31,7 @@
   <section class="container auth-wrap">
     <div class="card" style="max-width:520px; margin:0 auto;">
       <h2>ადმინ ავტორიზაცია</h2>
-      <p class="small">შედი Google-ით ან Email/Password-ით.</p>
+      <p class="small">წვდომა მხოლოდ ავტორიზებულ ადმინებს აქვს. შედი Google-ით ან Email/Password-ით.</p>
       <div class="actions">
         <button id="google-login" class="primary" type="button">Sign in with Google</button>
       </div>
@@ -39,7 +40,6 @@
         <div><label for="auth-password">Password</label><input id="auth-password" type="password" required></div>
         <div class="actions">
           <button class="primary" type="submit">Login</button>
-          <button id="signup-btn" class="ghost" type="button">Sign up</button>
         </div>
         <p id="auth-msg" class="small"></p>
       </form>
@@ -57,8 +57,14 @@
       measurementId: 'G-2KY01LMQQZ'
     };
 
+    // ადმინების allowlist — მხოლოდ ეს ელფოსტები შედიან პანელში.
+    // რეალურ დაცვას Firestore rules უზრუნველყოფს (იხ. firestore.rules რეპოს ფესვში).
+    const ADMIN_EMAILS = ['gimedashvili7@gmail.com', 'matsiwine@gmail.com'];
+    const isAdminUser = (user) => !!user && ADMIN_EMAILS.includes(String(user.email || '').trim().toLowerCase());
+
     if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
+    auth.setPersistence(firebase.auth.Auth.Persistence.SESSION).catch(() => {});
     const msg = document.getElementById('auth-msg');
 
     function setMsg(text) { msg.textContent = text || ''; }
@@ -77,8 +83,14 @@
       return map[error?.code] || error?.message || 'ავტორიზაციის შეცდომა';
     }
 
-    auth.onAuthStateChanged((user) => {
-      if (user) redirectDashboard();
+    auth.onAuthStateChanged(async (user) => {
+      if (!user) return;
+      if (!isAdminUser(user)) {
+        setMsg('ამ ანგარიშს ადმინ პანელზე წვდომა არ აქვს.');
+        try { await auth.signOut(); } catch { /* noop */ }
+        return;
+      }
+      redirectDashboard();
     });
 
     document.getElementById('google-login').addEventListener('click', async () => {
@@ -102,20 +114,6 @@
       }
     });
 
-    document.getElementById('signup-btn').addEventListener('click', async () => {
-      const email = document.getElementById('auth-email').value.trim();
-      const password = document.getElementById('auth-password').value;
-      if (!email || !password) {
-        setMsg('შეიყვანე email და password');
-        return;
-      }
-      try {
-        setMsg('რეგისტრაცია...');
-        await auth.createUserWithEmailAndPassword(email, password);
-      } catch (error) {
-        setMsg(mapAuthError(error));
-      }
-    });
   </script>
 </body>
 </html>

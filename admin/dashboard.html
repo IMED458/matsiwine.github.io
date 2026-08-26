@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow, noarchive">
   <title>MATSI Admin Dashboard</title>
   <link rel="icon" type="image/png" href="../matsiwine.png?v=20260305b">
   <link rel="shortcut icon" type="image/png" href="../matsiwine.png?v=20260305b">
@@ -46,7 +47,6 @@
         <div><label for="auth-password">Password</label><input id="auth-password" type="password" required></div>
         <div class="actions">
           <button class="primary" type="submit">Login</button>
-          <button id="signup-btn" class="ghost" type="button">Sign up</button>
         </div>
         <p id="auth-msg" class="small"></p>
       </form>
@@ -58,6 +58,7 @@
       <div class="tabs">
         <button class="tab active" data-tab="settings" type="button">1. ბრენდი</button>
         <button class="tab" data-tab="home" type="button">2. მთავარი</button>
+        <button class="tab" data-tab="showcase" type="button">ღვინოების ბლოკი</button>
         <button class="tab" data-tab="about" type="button">3. About</button>
         <button class="tab" data-tab="sections" type="button">4. გვერდები</button>
         <button class="tab" data-tab="products" type="button">5. პროდუქტები</button>
@@ -182,6 +183,49 @@
         </form>
       </section>
 
+
+      <section id="tab-showcase" class="tab-panel hidden">
+        <h2>მთავარი გვერდის ღვინოების ბლოკი („ჩვენი ღვინოები")</h2>
+        <p class="hint">აქედან იცვლება მთავარ გვერდზე სქროლვადი სამი ბოთლი — ფოტო, ტექსტები და ფასი.<br>
+        ფოტო საუკეთესოდ გამოიყურება გამჭვირვალე ფონით (PNG/WebP), მინიმუმ 1000×1400 პიქსელი.</p>
+        <form id="showcase-form" class="grid">
+          <div class="full section-title">ღვინო 1 — Kakheti Without Wine</div>
+          <div><label for="sc1_menuTitle">მენიუს სახელი</label><input id="sc1_menuTitle" name="sc1_menuTitle"></div>
+          <div><label for="sc1_cartName">კალათის სახელი</label><input id="sc1_cartName" name="sc1_cartName"></div>
+          <div><label for="sc1_titleLines">დიდი სათაური (ყოველი ხაზი ახალ სტრიქონზე)</label><textarea id="sc1_titleLines" name="sc1_titleLines" rows="3"></textarea></div>
+          <div><label for="sc1_region">რეგიონი</label><input id="sc1_region" name="sc1_region"></div>
+          <div><label for="sc1_description">აღწერა</label><textarea id="sc1_description" name="sc1_description" rows="4"></textarea></div>
+          <div><label for="sc1_price">ფასი (₾)</label><input id="sc1_price" name="sc1_price" type="number" min="0" step="1"></div>
+          <div><label for="sc1_accent">აქცენტის ფერი</label><input id="sc1_accent" name="sc1_accent" type="color"></div>
+          <div><label for="sc1_bottle_file">ბოთლის ფოტო (ატვირთვა)</label><input id="sc1_bottle_file" name="sc1_bottle_file" type="file" accept="image/*"></div>
+          <div><label for="sc1_bottle_url">ბოთლის ფოტოს URL (ალტერნატივა)</label><input id="sc1_bottle_url" name="sc1_bottle_url" placeholder="https://... ან assets/images/showcase-bottle-1.webp"></div>
+          <img id="sc1-bottle-preview" class="image-preview hidden" alt="ღვინო 1 preview">
+          <div class="full section-title">ღვინო 2 — For always being by my side</div>
+          <div><label for="sc2_menuTitle">მენიუს სახელი</label><input id="sc2_menuTitle" name="sc2_menuTitle"></div>
+          <div><label for="sc2_cartName">კალათის სახელი</label><input id="sc2_cartName" name="sc2_cartName"></div>
+          <div><label for="sc2_titleLines">დიდი სათაური (ყოველი ხაზი ახალ სტრიქონზე)</label><textarea id="sc2_titleLines" name="sc2_titleLines" rows="3"></textarea></div>
+          <div><label for="sc2_region">რეგიონი</label><input id="sc2_region" name="sc2_region"></div>
+          <div><label for="sc2_description">აღწერა</label><textarea id="sc2_description" name="sc2_description" rows="4"></textarea></div>
+          <div><label for="sc2_price">ფასი (₾)</label><input id="sc2_price" name="sc2_price" type="number" min="0" step="1"></div>
+          <div><label for="sc2_accent">აქცენტის ფერი</label><input id="sc2_accent" name="sc2_accent" type="color"></div>
+          <div><label for="sc2_bottle_file">ბოთლის ფოტო (ატვირთვა)</label><input id="sc2_bottle_file" name="sc2_bottle_file" type="file" accept="image/*"></div>
+          <div><label for="sc2_bottle_url">ბოთლის ფოტოს URL (ალტერნატივა)</label><input id="sc2_bottle_url" name="sc2_bottle_url" placeholder="https://... ან assets/images/showcase-bottle-2.webp"></div>
+          <img id="sc2-bottle-preview" class="image-preview hidden" alt="ღვინო 2 preview">
+          <div class="full section-title">ღვინო 3 — Qvevri Dreamers</div>
+          <div><label for="sc3_menuTitle">მენიუს სახელი</label><input id="sc3_menuTitle" name="sc3_menuTitle"></div>
+          <div><label for="sc3_cartName">კალათის სახელი</label><input id="sc3_cartName" name="sc3_cartName"></div>
+          <div><label for="sc3_titleLines">დიდი სათაური (ყოველი ხაზი ახალ სტრიქონზე)</label><textarea id="sc3_titleLines" name="sc3_titleLines" rows="3"></textarea></div>
+          <div><label for="sc3_region">რეგიონი</label><input id="sc3_region" name="sc3_region"></div>
+          <div><label for="sc3_description">აღწერა</label><textarea id="sc3_description" name="sc3_description" rows="4"></textarea></div>
+          <div><label for="sc3_price">ფასი (₾)</label><input id="sc3_price" name="sc3_price" type="number" min="0" step="1"></div>
+          <div><label for="sc3_accent">აქცენტის ფერი</label><input id="sc3_accent" name="sc3_accent" type="color"></div>
+          <div><label for="sc3_bottle_file">ბოთლის ფოტო (ატვირთვა)</label><input id="sc3_bottle_file" name="sc3_bottle_file" type="file" accept="image/*"></div>
+          <div><label for="sc3_bottle_url">ბოთლის ფოტოს URL (ალტერნატივა)</label><input id="sc3_bottle_url" name="sc3_bottle_url" placeholder="https://... ან assets/images/showcase-bottle-3.webp"></div>
+          <img id="sc3-bottle-preview" class="image-preview hidden" alt="ღვინო 3 preview">
+          <button class="primary" type="submit">შენახვა</button>
+          <p id="showcase-msg" class="small"></p>
+        </form>
+      </section>
       <section id="tab-about" class="tab-panel hidden">
         <h2>About გვერდის სრული რედაქტირება</h2>
         <p class="hint">„ჩვენი ისტორია“, „ქვევრის ტრადიცია“ და სხვა About ტექსტები იცვლება აქ.</p>

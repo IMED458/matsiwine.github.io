@@ -1,29 +1,33 @@
 :root {
-  --brand-50: #f8fafc;
-  --brand-100: #f1f5f9;
-  --brand-200: #e2e8f0;
-  --brand-300: #cbd5e1;
-  --brand-400: #94a3b8;
-  --brand-500: #64748b;
-  --brand-600: #475569;
-  --brand-700: #334155;
-  --brand-800: #1e293b;
-  --brand-900: #0f172a;
-  --brand-950: #020617;
-  --accent-50: #fafafa;
-  --accent-100: #f4f4f5;
-  --accent-200: #e4e4e7;
-  --accent-300: #d4d4d8;
-  --accent-400: #a1a1aa;
-  --accent-500: #71717a;
-  --accent-600: #52525b;
-  --accent-700: #3f3f46;
-  --accent-800: #27272a;
-  --accent-900: #18181b;
-  --accent-950: #09090b;
+  /* MATSI — თბილი კრემისფერი / ღრმა ლურჯი მელანი / ოქრო (2026 რედიზაინი) */
+  --brand-50: #fbf8f2;
+  --brand-100: #f6f1e7;
+  --brand-200: #ece4d5;
+  --brand-300: #dbcdb4;
+  --brand-400: #a79680;
+  --brand-500: #7d6e5c;
+  --brand-600: #5e5142;
+  --brand-700: #2a3549;
+  --brand-800: #1b2739;
+  --brand-900: #121c2b;
+  --brand-950: #0d1626;
+  --accent-50: #fdfaf3;
+  --accent-100: #f8f0dd;
+  --accent-200: #efdfba;
+  --accent-300: #e3ca92;
+  --accent-400: #d2b06a;
+  --accent-500: #c19a4e;
+  --accent-600: #a37f3c;
+  --accent-700: #7f6130;
+  --accent-800: #5c4624;
+  --accent-900: #3c2e18;
+  --accent-950: #221a0d;
+  --gold: #c6a15b;
+  --gold-soft: #e0c88f;
+  --burgundy: #7c2e35;
   --white: #ffffff;
-  --shadow-soft: 0 22px 45px -28px rgba(2, 6, 23, 0.25);
-  --shadow-strong: 0 45px 90px -35px rgba(2, 6, 23, 0.35);
+  --shadow-soft: 0 22px 45px -28px rgba(45, 32, 18, 0.28);
+  --shadow-strong: 0 45px 90px -35px rgba(45, 32, 18, 0.38);
   --radius-xl: 40px;
   --radius-2xl: 60px;
 }
@@ -332,7 +336,10 @@ button[class*="border-2"]:hover {
 }
 
 .home-hero-bg {
-  background: linear-gradient(180deg, rgba(226, 232, 240, 0.55), transparent 55%, #f8fafc 100%);
+  background:
+    radial-gradient(120% 80% at 12% 8%, rgba(214, 195, 160, 0.28), transparent 60%),
+    radial-gradient(90% 70% at 92% 82%, rgba(198, 161, 91, 0.16), transparent 62%),
+    linear-gradient(180deg, #f7f2e8 0%, #fbf8f2 55%, #fbf8f2 100%);
 }
 
 .home-blob {
@@ -349,13 +356,13 @@ button[class*="border-2"]:hover {
 .home-blob-one {
   top: 5%;
   right: -12%;
-  background: rgba(148, 163, 184, 0.22);
+  background: rgba(198, 161, 91, 0.16);
 }
 
 .home-blob-two {
   left: -8%;
   bottom: 2%;
-  background: rgba(203, 213, 225, 0.28);
+  background: rgba(160, 140, 105, 0.14);
 }
 
 #page-home #home-hero-kicker {
@@ -1758,4 +1765,220 @@ button[class*="border-2"]:hover {
   .mw-title .mw-line > span,
   .mw-region, .mw-desc { transition: opacity 0.3s ease; transform: none; }
   .mw-title .mw-line > span { transform: none; }
+}
+
+
+/* ============================================================
+   HERO — 2026 რედიზაინი (თბილი კრემი + ოქროს ხვეული + ვაზი)
+   ============================================================ */
+.home-hero-vines {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  color: rgba(150, 126, 88, 0.20);
+  overflow: hidden;
+}
+.home-hero-vines svg { width: 100%; height: 100%; display: block; }
+
+#hero-title .hero-title-second {
+  font-style: normal;
+  color: var(--brand-950) !important;
+  display: inline-block;
+}
+
+.nav-vine {
+  position: absolute;
+  left: 50%;
+  bottom: -6px;
+  width: 92px;
+  transform: translateX(-50%);
+  opacity: 0.75;
+  pointer-events: none;
+}
+.nav-vine svg { width: 100%; height: auto; display: block; overflow: visible; }
+
+.hero-swirl {
+  position: absolute;
+  inset: -6% -4% auto -4%;
+  width: 108%;
+  height: auto;
+  aspect-ratio: 600 / 620;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0.9;
+}
+.hero-swirl-line path {
+  fill: none;
+  stroke-width: 1.3;
+  opacity: 0.75;
+  stroke-dasharray: var(--swirl-len, 3000);
+  stroke-dashoffset: var(--swirl-len, 3000);
+  animation: swirlDraw 2.6s cubic-bezier(0.22, 1, 0.36, 1) 0.25s forwards;
+}
+.hero-swirl-line path:nth-child(2) { animation-delay: 0.5s; }
+.hero-swirl-line path:nth-child(3) { animation-delay: 0.75s; }
+@keyframes swirlDraw { to { stroke-dashoffset: 0; } }
+
+.hero-swirl-dust circle {
+  opacity: 0;
+  animation: dustIn 1.1s ease-out forwards;
+}
+.hero-swirl-dust circle:nth-child(3n) { animation-delay: 1.5s; }
+.hero-swirl-dust circle:nth-child(3n+1) { animation-delay: 1.75s; }
+.hero-swirl-dust circle:nth-child(3n+2) { animation-delay: 2s; }
+@keyframes dustIn { from { opacity: 0; transform: scale(0.4); } to { opacity: 0.55; transform: scale(1); } }
+
+.hero-swirl-grapes {
+  opacity: 0;
+  animation: dustIn 1s ease-out 2.1s forwards;
+  transform-origin: 490px 540px;
+}
+
+/* ბოთლი კრემისფერ ფონზე — რბილი, თბილი ჩრდილი */
+.hero-bottle-image {
+  filter: drop-shadow(0 34px 42px rgba(70, 50, 26, 0.22));
+}
+
+/* მოქაფის მიხედვით მცურავი ტეგები არ ჩანს */
+.home-floating-tag { display: none !important; }
+
+/* SCROLL ინდიკატორი */
+.home-scroll-indicator span { color: var(--brand-500) !important; }
+.home-scroll-indicator div { background: linear-gradient(180deg, var(--gold), transparent) !important; }
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-swirl-line path,
+  .hero-swirl-dust circle,
+  .hero-swirl-grapes { animation: none !important; stroke-dashoffset: 0 !important; opacity: 0.55; }
+}
+
+
+/* ============================================================
+   მობილური დახვეწა — 2026
+   ============================================================ */
+
+/* ჰორიზონტალური გადაჭიმვის დაზღვევა.
+   მნიშვნელოვანი: html/body-ზე overflow-ის დაყენება ტეხს გვერდის სქროლს და
+   showcase-ის position:sticky-ს — ამიტომ შეზღუდვა მხოლოდ სექციებზეა. */
+#page-home, #page-shop, #page-product, #page-about, #page-contact, #page-designer, #page-cart,
+footer { overflow-x: clip; }
+img, svg, video { max-width: 100%; }
+
+@media (max-width: 900px) {
+  .nav-vine { display: none; }
+}
+
+@media (max-width: 1024px) {
+  .home-hero .grid.lg\:grid-cols-2 { gap: 2rem; }
+}
+
+@media (max-width: 768px) {
+  /* ჰერო — ვერტიკალური წყობა, ბოთლი ტექსტის ქვემოთ */
+  .home-hero {
+    min-height: 100svh;
+    padding-top: 4.5rem;
+    padding-bottom: 3.5rem;
+  }
+  .home-hero .grid.lg\:grid-cols-2 {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+  .home-hero-visual {
+    min-height: 0;
+    order: 2;
+    width: 100%;
+  }
+  .hero-bottle-wrap {
+    width: min(280px, 70vw);
+    height: min(340px, 38svh);
+  }
+  .hero-bottle-image { height: 100%; }
+  .hero-swirl {
+    inset: -12% -18% auto -18%;
+    width: 136%;
+    opacity: 0.8;
+  }
+  .home-hero-vines { opacity: 0.7; }
+  #hero-title {
+    font-size: clamp(2.7rem, 14.5vw, 4.2rem) !important;
+    margin-bottom: 0.85rem !important;
+  }
+  #home-hero-kicker { margin-bottom: 1rem !important; font-size: 0.66rem !important; }
+  #hero-subtitle { margin-bottom: 1.35rem !important; font-size: 0.95rem !important; }
+  /* ღილაკები — თანაბარი სიგანე, ორ სვეტად */
+  .home-hero .flex.flex-wrap.gap-5 {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.6rem !important;
+    max-width: 380px;
+    margin-inline: auto;
+  }
+  .home-hero .flex.flex-wrap.gap-5 > button { width: 100%; }
+  .home-hero .flex.flex-wrap.gap-5 > button {
+    font-size: 0.78rem !important;
+    letter-spacing: 0.06em !important;
+    padding-left: 0.5rem !important;
+    padding-right: 0.5rem !important;
+    white-space: nowrap;
+  }
+  .premium-button-primary,
+  .premium-button-outline {
+    padding-top: 1rem !important;
+    padding-bottom: 1rem !important;
+    min-height: 48px;
+  }
+  .home-scroll-indicator { display: none; }
+  .home-blob { display: none; }
+}
+
+/* ---- Our wines showcase — მობილური ---- */
+@media (max-width: 900px) {
+  #mw-showcase { height: 320svh; }
+  .mw-stage {
+    height: 100svh;
+    padding: 76px 22px 118px;
+  }
+  .mw-panel { margin-top: 22px; }
+  .mw-cart-btn { margin-top: 20px; }
+  .mw-bottle-wrap {
+    height: min(46vh, 46svh);
+    max-width: 78vw;
+  }
+  .mw-bottle {
+    filter: drop-shadow(0 24px 30px rgba(70, 50, 26, 0.22));
+  }
+  .mw-menu-item {
+    min-height: 42px;
+    display: flex;
+    align-items: center;
+    padding: 4px 0;
+  }
+  .mw-cart-btn { min-height: 48px; }
+  .mw-title { line-height: 0.98; }
+}
+
+@media (max-width: 480px) {
+  .mw-menu-item { font-size: 10.5px; letter-spacing: 0.04em; }
+  .mw-title { font-size: clamp(34px, 10.5vw, 48px); }
+  .mw-desc { font-size: 13.5px; }
+  .mw-bottle-wrap { height: min(42vh, 42svh); }
+}
+
+/* ---- საერთო მობილური ერგონომიკა ---- */
+@media (max-width: 768px) {
+  #mobile-menu a {
+    min-height: 48px;
+    display: flex;
+    align-items: center;
+  }
+  #mobile-menu-btn { min-width: 44px; min-height: 44px; }
+  nav#main-nav button { min-height: 44px; }
+  .matsi-footer-grid { gap: 1.75rem; }
+  .product-card { touch-action: manipulation; }
+}
+
+/* iOS-ზე მასშტაბირების თავიდან აცილება ფორმებში */
+@media (max-width: 768px) {
+  input, select, textarea { font-size: 16px !important; }
 }

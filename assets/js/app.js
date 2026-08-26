@@ -4,7 +4,7 @@
     
     const defaultConfig = {
       hero_title: 'MATSI WINE',
-      hero_subtitle: '8000 წლიანი მეღვინეობის ისტორია თანამედროვე ინტერპრეტაციაში — ყოველ ბოთლში ქართული მიწის სული',
+      hero_subtitle: 'შენი ისტორია, შენსავე ეტიკეტზე',
       about_title: 'ჩვენი ისტორია',
       background_color: '#722f37',
       surface_color: '#fdf9f3',
@@ -34,10 +34,10 @@
       hero_kicker: 'ქართული ღვინის ხელოვნება',
       hero_btn_primary: 'კოლექციის ნახვა',
       hero_btn_secondary: 'ჩვენი ისტორია',
-      hero_tag1_kicker: 'VINTAGE',
-      hero_tag1_title: '2019 Reserve',
-      hero_tag2_kicker: 'ORIGIN',
-      hero_tag2_title: 'Kakheti, Georgia',
+      hero_tag1_kicker: 'მოსავალი',
+      hero_tag1_title: '2019 რეზერვი',
+      hero_tag2_kicker: 'წარმოშობა',
+      hero_tag2_title: 'კახეთი, საქართველო',
       featured_kicker: 'გამორჩეული კოლექცია',
       featured_title: 'ჩვენი საუკეთესოები',
       featured_cta: 'სრული კატალოგი',
@@ -116,6 +116,7 @@
     
     let config = { ...defaultConfig };
     let homeContent = { ...defaultHomeContent };
+    let showcaseContent = [];
     let aboutContent = { ...defaultAboutContent };
     let cartItems = [];
     let currentPage = 'home';
@@ -648,6 +649,51 @@
       return null;
     }
 
+    // SEO — თითოეულ გვერდს საკუთარი title/description და canonical
+    const PAGE_SEO = {
+      home: {
+        title: 'MATSI WINE — ქართული ღვინო კახეთიდან | პერსონალური ეტიკეტი',
+        description: 'MATSI WINE — ქართული ღვინო კახეთიდან. ქვევრის ტრადიციით დაყენებული საფერავი, მწვანე და რქაწითელი. შექმენი უნიკალური ეტიკეტი და შეუკვეთე ონლაინ.'
+      },
+      shop: {
+        title: 'ღვინის კოლექცია — MATSI WINE',
+        description: 'MATSI WINE-ის ღვინის სრული კოლექცია: საფერავი, მწვანე ქვევრი, კინძმარაული, რქაწითელი და როზე. შეუკვეთე ონლაინ მიწოდებით.'
+      },
+      product: {
+        title: 'ღვინო — MATSI WINE',
+        description: 'MATSI WINE-ის ღვინის დეტალური აღწერა, არომატი, გემო და შეხამების რეკომენდაციები.'
+      },
+      about: {
+        title: 'ჩვენს შესახებ — MATSI WINE',
+        description: 'MATSI WINE — ოჯახური მეღვინეობა კახეთში. ქვევრის ტრადიცია, ვენახები ალაზნის ველზე და სამი თაობის ცოდნა.'
+      },
+      designer: {
+        title: 'შექმენი შენი ეტიკეტი — MATSI WINE',
+        description: 'ონლაინ სტუდია პერსონალური ღვინის ეტიკეტისთვის — დაამატე ტექსტი და ფოტო, შექმენი უნიკალური საჩუქარი.'
+      },
+      contact: {
+        title: 'კონტაქტი — MATSI WINE',
+        description: 'დაგვიკავშირდი MATSI WINE-ს: ტელეფონი, ელფოსტა და მისამართი კახეთში.'
+      },
+      cart: {
+        title: 'კალათა — MATSI WINE',
+        description: 'შენი შეკვეთის კალათა — MATSI WINE.'
+      }
+    };
+
+    function applyPageSeo(page) {
+      const meta = PAGE_SEO[page] || PAGE_SEO.home;
+      document.title = meta.title;
+      const descEl = document.querySelector('meta[name="description"]');
+      if (descEl) descEl.setAttribute('content', meta.description);
+      const ogTitle = document.querySelector('meta[property="og:title"]');
+      if (ogTitle) ogTitle.setAttribute('content', meta.title);
+      const ogDesc = document.querySelector('meta[property="og:description"]');
+      if (ogDesc) ogDesc.setAttribute('content', meta.description);
+      const canonical = document.querySelector('link[rel="canonical"]');
+      if (canonical) canonical.setAttribute('href', 'https://matsiwine.ge/' + (page && page !== 'home' ? '#' + page : ''));
+    }
+
     function navigateTo(page, data = null, updateHash = true) {
       if (siteMeta.sections && Object.prototype.hasOwnProperty.call(siteMeta.sections, page) && !siteMeta.sections[page]) {
         showToast('ეს სექცია დროებით გამორთულია ადმინიდან', 'info');
@@ -680,7 +726,8 @@
         });
 
         currentPage = page;
-        
+        applyPageSeo(page);
+
         window.scrollTo({ top: 0, behavior: 'smooth' });
         
         if (page === 'shop') {
@@ -2477,6 +2524,9 @@ ${itemsText}`
       if (payload.homeContent && typeof payload.homeContent === 'object') {
         homeContent = { ...defaultHomeContent, ...payload.homeContent };
       }
+      if (Array.isArray(payload.showcase)) {
+        showcaseContent = payload.showcase;
+      }
       if (payload.aboutContent && typeof payload.aboutContent === 'object') {
         aboutContent = { ...defaultAboutContent, ...payload.aboutContent };
       }
@@ -2486,6 +2536,7 @@ ${itemsText}`
       applyConfig();
       applySiteMeta();
       applyHomeContent();
+      applyShowcaseContent();
       applyAboutContent();
       applySectionVisibility();
       renderProducts();
@@ -2499,6 +2550,7 @@ ${itemsText}`
           config,
           siteMeta,
           homeContent,
+          showcase: showcaseContent,
           aboutContent,
           products,
           contentEdits: payload.contentEdits || collectAdminContentEdits(),
@@ -2616,6 +2668,8 @@ ${itemsText}`
         if (el.closest('#toast-container')) return false;
         if (el.id && (el.id.startsWith('admin-') || el.id.startsWith('designer-'))) return false;
         if (el.closest('#page-designer .space-y-4')) return false;
+        // დეკორატიული ელემენტები არ ითვლება — თორემ ae-* ინდექსები აირევა
+        if (el.classList.contains('nav-vine')) return false;
         if (!el.dataset.adminEditableId) {
           el.dataset.adminEditableId = `ae-${index}`;
         }
@@ -3006,11 +3060,13 @@ ${itemsText}`
       config = { ...defaultConfigSnapshot };
       siteMeta = JSON.parse(JSON.stringify(defaultSiteMeta));
       homeContent = { ...defaultHomeContent };
+      showcaseContent = [];
       aboutContent = { ...defaultAboutContent };
       products = JSON.parse(JSON.stringify(initialProducts));
       applyConfig();
       applySiteMeta();
       applyHomeContent();
+      applyShowcaseContent();
       applyAboutContent();
       applySectionVisibility();
       renderProducts();
@@ -3024,6 +3080,7 @@ ${itemsText}`
         config,
         siteMeta,
         homeContent,
+        showcase: showcaseContent,
         products,
         contentEdits: collectAdminContentEdits()
       };
@@ -3213,16 +3270,17 @@ ${itemsText}`
     // ბოთლის სურათი: assets/images/showcase-bottle-{1,2,3}.png (იმავე სახელით გადააწერეთ)
     // =====================================================
 
-    const showcaseWines = [
+    const defaultShowcaseWines = [
       {
         id: 'saperavi-without-kakheti',
         cartName: 'Kakheti Without Wine',
         price: 75,
         menuTitle: 'Kakheti Without Wine',
         titleLines: ['Kakheti', 'Without', 'Wine'],
-        region: 'Kakheti, Georgia',
-        description: 'Crafted from deep Saperavi grapes grown in the heart of Kakheti, this wine carries the warmth of Georgian soil, qvevri tradition, and the character of long, sun-filled vineyards.',
-        bottle: 'assets/images/showcase-bottle-1.png',
+        region: 'კახეთი, საქართველო',
+        description: 'კახეთის გულში მოწეული ღრმა საფერავისგან დაყენებული ღვინო, რომელსაც ქართული მიწის სითბო, ქვევრის ტრადიცია და მზით სავსე ვენახების ხასიათი ატარებს.',
+        bottle: 'assets/images/showcase-bottle-1.webp',
+        bottleFallback: 'assets/images/showcase-bottle-1.png',
         illustration: 'leaf-flower',
         accent: '#9B3A35'
       },
@@ -3232,9 +3290,10 @@ ${itemsText}`
         price: 80,
         menuTitle: 'For always being by my side',
         titleLines: ['For always being', 'by my side'],
-        region: 'Kakheti, Georgia',
-        description: 'A gentle word of gratitude in every glass — soft wildflower aromas, the amber light of late summer, and the quiet elegance of wines raised slowly beneath the Kakheti hills.',
-        bottle: 'assets/images/showcase-bottle-2.png',
+        region: 'კახეთი, საქართველო',
+        description: 'მადლობის ნაზი სიტყვა ყოველ ჭიქაში — ველური ყვავილების სურნელი, გვიანი ზაფხულის ქარვისფერი შუქი და კახეთის გორაკებზე ნელა მომწიფებული ღვინის წყნარი ელეგანტურობა.',
+        bottle: 'assets/images/showcase-bottle-2.webp',
+        bottleFallback: 'assets/images/showcase-bottle-2.png',
         illustration: 'wildflowers',
         accent: '#7B405D'
       },
@@ -3242,15 +3301,18 @@ ${itemsText}`
         id: 'qvevri-dreamers',
         cartName: 'Qvevri Dreamers',
         price: 90,
-        menuTitle: 'Qvevri Dreamers Saperavi',
+        menuTitle: 'Qvevri Dreamers',
         titleLines: ['Qvevri', 'Dreamers'],
-        region: 'Kakheti, Georgia',
-        description: 'Fermented the old way, in buried qvevri beneath the marani, this Saperavi dreams in deep ruby — dense fruit, earthy spice, and the living memory of eight thousand vintages.',
-        bottle: 'assets/images/showcase-bottle-3.png',
+        region: 'კახეთი, საქართველო',
+        description: 'ძველებურად, მარანში ჩაფლულ ქვევრში დადუღებული საფერავი ღრმა ლალისფერში ოცნებობს — მკვრივი ხილი, მიწიერი სანელებლები და რვაათასწლიანი მოსავლის ცოცხალი მეხსიერება.',
+        bottle: 'assets/images/showcase-bottle-3.webp',
+        bottleFallback: 'assets/images/showcase-bottle-3.png',
         illustration: 'qvevri',
         accent: '#8A2E2E'
       }
     ];
+
+    let showcaseWines = JSON.parse(JSON.stringify(defaultShowcaseWines));
 
     const showcaseIllustrations = {
       // ღვინო 1 — ვაზის ფოთოლი + ველური ვარდი + მზე (ყურძანი შეცვლილია)
@@ -3293,9 +3355,10 @@ ${itemsText}`
         '<li><button type="button" class="mw-menu-item' + (i === 0 ? ' is-active' : '') + '" data-i="' + i + '">' + escapeHtml(w.menuTitle) + '</button></li>'
       ).join('');
 
-      stack.innerHTML = showcaseWines.map((w, i) =>
-        '<img class="mw-bottle" src="' + w.bottle + '" alt="' + escapeHtml(w.cartName) + '" draggable="false" style="opacity:' + (i === 0 ? 1 : 0) + '">'
-      ).join('');
+      stack.innerHTML = showcaseWines.map((w, i) => {
+        const fb = w.bottleFallback ? ' onerror="if(!this.dataset.fb){this.dataset.fb=1;this.src=\'' + escapeHtml(w.bottleFallback) + '\';}"' : '';
+        return '<img class="mw-bottle" src="' + escapeHtml(w.bottle) + '" alt="' + escapeHtml(w.cartName) + '" width="1086" height="1448" draggable="false" decoding="async" loading="' + (i === 0 ? 'eager' : 'lazy') + '"' + fb + ' style="opacity:' + (i === 0 ? 1 : 0) + '">';
+      }).join('');
 
       panel.innerHTML = showcaseWines.map((w, i) =>
         '<div class="mw-panel-item' + (i === 0 ? ' is-active' : '') + '" data-i="' + i + '">'
@@ -3312,6 +3375,38 @@ ${itemsText}`
 
       showcaseBottleEls = Array.from(stack.querySelectorAll('.mw-bottle'));
       return true;
+    }
+
+    // ადმინიდან მოსული მონაცემების შერწყმა showcase-ის ღვინოებზე
+    function applyShowcaseContent() {
+      const incoming = Array.isArray(showcaseContent) ? showcaseContent : [];
+      showcaseWines = defaultShowcaseWines.map((base, i) => {
+        const over = incoming[i] && typeof incoming[i] === 'object' ? incoming[i] : {};
+        const merged = { ...base };
+        ['cartName', 'menuTitle', 'region', 'description', 'accent'].forEach((k) => {
+          if (typeof over[k] === 'string' && over[k].trim()) merged[k] = over[k].trim();
+        });
+        if (over.price !== undefined && over.price !== null && String(over.price).trim() !== '' && !Number.isNaN(Number(over.price))) {
+          merged.price = Number(over.price);
+        }
+        if (typeof over.titleLines === 'string' && over.titleLines.trim()) {
+          merged.titleLines = over.titleLines.split('\n').map((l) => l.trim()).filter(Boolean);
+        } else if (Array.isArray(over.titleLines) && over.titleLines.length) {
+          merged.titleLines = over.titleLines.slice();
+        }
+        if (typeof over.bottle === 'string' && over.bottle.trim()) {
+          merged.bottle = over.bottle.trim();
+          merged.bottleFallback = '';
+        }
+        return merged;
+      });
+      if (document.getElementById('mw-bottle-stack')) {
+        const keep = showcaseActive;
+        renderShowcase();
+        showcaseActive = -1;
+        setShowcaseActive(Math.max(0, keep));
+        updateShowcase();
+      }
     }
 
     function setShowcaseActive(idx) {
@@ -3352,7 +3447,10 @@ ${itemsText}`
           const sc = 1 - Math.min(Math.abs(d), 1) * 0.06;
           el.style.transform = 'translateY(' + shift.toFixed(1) + 'px) scale(' + sc.toFixed(3) + ')';
         } else {
-          el.style.transform = '';
+          // მობილურზე — ჰორიზონტალური „ქარუსელი" + ოდნავი მასშტაბი
+          const dx = Math.max(-1, Math.min(1, d)) * 34;
+          const sc = 1 - Math.min(Math.abs(d), 1) * 0.09;
+          el.style.transform = 'translateX(' + dx.toFixed(1) + 'px) scale(' + sc.toFixed(3) + ')';
         }
         el.style.zIndex = String(20 - Math.round(Math.abs(d) * 10));
       });
@@ -3374,9 +3472,22 @@ ${itemsText}`
       if (showcaseTicking) return;
       showcaseTicking = true;
       window.requestAnimationFrame(() => {
-        updateShowcase();
-        showcaseTicking = false;
+        try {
+          updateShowcase();
+        } finally {
+          showcaseTicking = false;
+        }
       });
+    }
+
+    function scrollShowcaseTo(i) {
+      const wrap = document.getElementById('mw-showcase');
+      if (!wrap) return;
+      const n = showcaseWines.length;
+      const total = wrap.offsetHeight - window.innerHeight;
+      const wrapTop = wrap.getBoundingClientRect().top + (window.scrollY || window.pageYOffset || 0);
+      const target = wrapTop + (n > 1 ? (i / (n - 1)) : 0) * total;
+      window.scrollTo({ top: Math.round(target) + 2, behavior: prefersReducedMotion ? 'auto' : 'smooth' });
     }
 
     function initShowcase() {
@@ -3386,12 +3497,7 @@ ${itemsText}`
       document.getElementById('mw-menu-list').addEventListener('click', (e) => {
         const btn = e.target.closest('.mw-menu-item');
         if (!btn) return;
-        const i = Number(btn.dataset.i);
-        const n = showcaseWines.length;
-        const total = wrap.offsetHeight - window.innerHeight;
-        const wrapTop = wrap.getBoundingClientRect().top + (window.scrollY || window.pageYOffset || 0);
-        const target = wrapTop + (n > 1 ? (i / (n - 1)) : 0) * total;
-        window.scrollTo({ top: Math.round(target) + 2, behavior: prefersReducedMotion ? 'auto' : 'smooth' });
+        scrollShowcaseTo(Number(btn.dataset.i));
       });
 
       document.getElementById('mw-panel').addEventListener('click', (e) => {
@@ -3401,8 +3507,39 @@ ${itemsText}`
         if (w) addToCart(w.id, w.cartName, w.price, { image_url: w.bottle });
       });
 
+      // მობილურზე გადაფურცვლა (swipe) ღვინოებს შორის
+      const stageEl = wrap.querySelector('.mw-stage');
+      if (stageEl) {
+        let touchX = 0;
+        let touchY = 0;
+        let touchT = 0;
+        stageEl.addEventListener('touchstart', (e) => {
+          if (!e.touches || e.touches.length !== 1) return;
+          touchX = e.touches[0].clientX;
+          touchY = e.touches[0].clientY;
+          touchT = Date.now();
+        }, { passive: true });
+        stageEl.addEventListener('touchend', (e) => {
+          if (!e.changedTouches || e.changedTouches.length !== 1) return;
+          const dx = e.changedTouches[0].clientX - touchX;
+          const dy = e.changedTouches[0].clientY - touchY;
+          if (Date.now() - touchT > 700) return;
+          if (Math.abs(dx) < 55 || Math.abs(dx) < Math.abs(dy) * 1.4) return;
+          const n = showcaseWines.length;
+          const next = Math.max(0, Math.min(n - 1, Math.max(0, showcaseActive) + (dx < 0 ? 1 : -1)));
+          scrollShowcaseTo(next);
+        }, { passive: true });
+      }
+
       window.addEventListener('scroll', onShowcaseScroll, { passive: true });
       window.addEventListener('resize', onShowcaseScroll, { passive: true });
+      window.addEventListener('orientationchange', () => setTimeout(onShowcaseScroll, 250), { passive: true });
+      // ჩაკეტილი ტაბიდან დაბრუნებისას rAF გაჩერებულია — ვასწორებთ მდგომარეობას
+      document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState !== 'visible') return;
+        showcaseTicking = false;
+        updateShowcase();
+      });
       setShowcaseActive(0);
       updateShowcase();
     }

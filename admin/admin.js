@@ -9,13 +9,18 @@ const FIREBASE_CONFIG = {
   measurementId: 'G-2KY01LMQQZ'
 };
 
+// ადმინების allowlist — მხოლოდ ეს ელფოსტები მართავენ საიტს.
+// რეალური დაცვა Firestore rules-შია (firestore.rules რეპოს ფესვში) — კლიენტის შემოწმება მხოლოდ UX-ია.
+const ADMIN_EMAILS = ['gimedashvili7@gmail.com', 'matsiwine@gmail.com'];
+const isAdminUser = (user) => !!user && ADMIN_EMAILS.includes(String(user.email || '').trim().toLowerCase());
+
 const SITE_DOC_PATH = { collection: 'site', doc: 'main' };
 const STORAGE_ROOT = 'matsi-assets';
 
 const defaultState = {
   config: {
     hero_title: 'MATSI WINE',
-    hero_subtitle: '8000 წლიანი მეღვინეობის ისტორია თანამედროვე ინტერპრეტაციაში — ყოველ ბოთლში ქართული მიწის სული',
+    hero_subtitle: 'შენი ისტორია, შენსავე ეტიკეტზე',
     about_title: 'ჩვენი ისტორია',
     background_color: '#722f37',
     surface_color: '#fdf9f3',
@@ -46,14 +51,49 @@ const defaultState = {
       cart: true
     }
   },
+  showcase: [
+    {
+      menuTitle: 'Kakheti Without Wine',
+      cartName: 'Kakheti Without Wine',
+      titleLines: 'Kakheti\nWithout\nWine',
+      region: 'კახეთი, საქართველო',
+      description: 'კახეთის გულში მოწეული ღრმა საფერავისგან დაყენებული ღვინო, რომელსაც ქართული მიწის სითბო, ქვევრის ტრადიცია და მზით სავსე ვენახების ხასიათი ატარებს.',
+      price: 75,
+      accent: '#9B3A35',
+      bottle: '',
+      bottle_path: ''
+    },
+    {
+      menuTitle: 'For always being by my side',
+      cartName: 'For always being by my side',
+      titleLines: 'For always being\nby my side',
+      region: 'კახეთი, საქართველო',
+      description: 'მადლობის ნაზი სიტყვა ყოველ ჭიქაში — ველური ყვავილების სურნელი, გვიანი ზაფხულის ქარვისფერი შუქი და კახეთის გორაკებზე ნელა მომწიფებული ღვინის წყნარი ელეგანტურობა.',
+      price: 80,
+      accent: '#7B405D',
+      bottle: '',
+      bottle_path: ''
+    },
+    {
+      menuTitle: 'Qvevri Dreamers',
+      cartName: 'Qvevri Dreamers',
+      titleLines: 'Qvevri\nDreamers',
+      region: 'კახეთი, საქართველო',
+      description: 'ძველებურად, მარანში ჩაფლულ ქვევრში დადუღებული საფერავი ღრმა ლალისფერში ოცნებობს — მკვრივი ხილი, მიწიერი სანელებლები და რვაათასწლიანი მოსავლის ცოცხალი მეხსიერება.',
+      price: 90,
+      accent: '#8A2E2E',
+      bottle: '',
+      bottle_path: ''
+    }
+  ],
   homeContent: {
     hero_kicker: 'ქართული ღვინის ტრადიცია',
     hero_btn_primary: 'კოლექციის ნახვა',
     hero_btn_secondary: 'ჩვენი ისტორია',
-    hero_tag1_kicker: 'VINTAGE',
-    hero_tag1_title: '2019 Reserve',
-    hero_tag2_kicker: 'ORIGIN',
-    hero_tag2_title: 'Kakheti, Georgia',
+    hero_tag1_kicker: 'მოსავალი',
+    hero_tag1_title: '2019 რეზერვი',
+    hero_tag2_kicker: 'წარმოშობა',
+    hero_tag2_title: 'კახეთი, საქართველო',
     featured_kicker: 'გამორჩეული კოლექცია',
     featured_title: 'ჩვენი საუკეთესოები',
     featured_cta: 'სრული კატალოგი',
@@ -185,6 +225,7 @@ const pendingHomeCardFiles = {
   stat3: null,
   stat4: null
 };
+const pendingShowcaseFiles = { 0: null, 1: null, 2: null };
 const pendingAboutPhotoFiles = {
   photo1: null,
   photo2: null,
@@ -196,6 +237,7 @@ const tabs = Array.from(document.querySelectorAll('.tab'));
 const panels = {
   settings: document.getElementById('tab-settings'),
   home: document.getElementById('tab-home'),
+  showcase: document.getElementById('tab-showcase'),
   about: document.getElementById('tab-about'),
   sections: document.getElementById('tab-sections'),
   products: document.getElementById('tab-products'),
@@ -213,6 +255,8 @@ const sectionsForm = document.getElementById('sections-form');
 const sectionsMsg = document.getElementById('sections-msg');
 const homeForm = document.getElementById('home-form');
 const homeMsg = document.getElementById('home-msg');
+const showcaseForm = document.getElementById('showcase-form');
+const showcaseMsg = document.getElementById('showcase-msg');
 const aboutForm = document.getElementById('about-form');
 const aboutMsg = document.getElementById('about-msg');
 const productsForm = document.getElementById('products-form');
@@ -315,7 +359,6 @@ function initFirebase() {
 function bindAuth() {
   const googleBtn = document.getElementById('google-login');
   const emailForm = document.getElementById('email-login-form');
-  const signupBtn = document.getElementById('signup-btn');
 
   googleBtn?.addEventListener('click', async () => {
     try {
@@ -342,23 +385,6 @@ function bindAuth() {
     }
   });
 
-  signupBtn?.addEventListener('click', async () => {
-    const email = document.getElementById('auth-email').value.trim();
-    const password = document.getElementById('auth-password').value;
-    if (!email || !password) {
-      setAuthMessage('შეიყვანე email და password');
-      return;
-    }
-
-    try {
-      setAuthMessage('რეგისტრაცია...');
-      await auth.createUserWithEmailAndPassword(email, password);
-      setAuthMessage('მომხმარებელი შექმნილია');
-    } catch (error) {
-      setAuthMessage(mapAuthError(error));
-    }
-  });
-
   logoutBtn?.addEventListener('click', async () => {
     try {
       await auth.signOut();
@@ -372,10 +398,13 @@ function onAuth() {
   if (!auth) return;
 
   auth.onAuthStateChanged(async (user) => {
-    if (!user) {
+    if (!user || !isAdminUser(user)) {
       if (unsubscribeState) {
         unsubscribeState();
         unsubscribeState = null;
+      }
+      if (user && !isAdminUser(user)) {
+        try { await auth.signOut(); } catch { /* noop */ }
       }
       window.location.href = './login.html';
       return;
@@ -399,6 +428,7 @@ function initAdminUi() {
   bindForms();
   fillSettingsForm();
   fillHomeForm();
+  fillShowcaseForm();
   fillAboutForm();
   fillSectionsForm();
   renderProductsList();
@@ -438,6 +468,11 @@ function normalizeState(input) {
   }
   if (!merged.siteMeta.cloudinary_upload_preset || !String(merged.siteMeta.cloudinary_upload_preset).trim()) {
     merged.siteMeta.cloudinary_upload_preset = defaultState.siteMeta.cloudinary_upload_preset;
+  }
+  if (!Array.isArray(merged.showcase) || merged.showcase.length !== 3) {
+    const base = structuredClone(defaultState.showcase);
+    const incoming = Array.isArray(merged.showcase) ? merged.showcase : [];
+    merged.showcase = base.map((item, i) => ({ ...item, ...(incoming[i] || {}) }));
   }
   if (!Array.isArray(merged.products)) {
     merged.products = structuredClone(defaultState.products);
@@ -494,6 +529,7 @@ async function saveState(message = 'შენახულია') {
   sectionsMsg.textContent = message;
   productsMsg.textContent = message;
   homeMsg.textContent = message;
+  if (showcaseMsg) showcaseMsg.textContent = message;
   if (aboutMsg) aboutMsg.textContent = message;
   setSaveStatus(`✅ ${message} (${nowText})`);
   refreshRawEditor();
@@ -697,6 +733,61 @@ function bindForms() {
       homeMsg.textContent = error.message;
     }
   });
+
+  if (showcaseForm) {
+    [0, 1, 2].forEach((i) => {
+      const fileInput = document.getElementById(`sc${i + 1}_bottle_file`);
+      const preview = document.getElementById(`sc${i + 1}-bottle-preview`);
+      fileInput?.addEventListener('change', (event) => {
+        const file = event.target.files?.[0];
+        if (!file) return;
+        pendingShowcaseFiles[i] = file;
+        if (preview) setPreview(preview, URL.createObjectURL(file));
+      });
+    });
+
+    showcaseForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const fd = new FormData(showcaseForm);
+      if (!Array.isArray(state.showcase) || state.showcase.length !== 3) {
+        state.showcase = structuredClone(defaultState.showcase);
+      }
+
+      try {
+        for (let i = 0; i < 3; i += 1) {
+          const n = i + 1;
+          const wine = state.showcase[i];
+          ['menuTitle', 'cartName', 'titleLines', 'region', 'description', 'accent'].forEach((key) => {
+            const value = fd.get(`sc${n}_${key}`);
+            if (value !== null) wine[key] = value.toString();
+          });
+          const priceValue = (fd.get(`sc${n}_price`) || '').toString().trim();
+          if (priceValue !== '' && !Number.isNaN(Number(priceValue))) wine.price = Number(priceValue);
+
+          const manualUrl = (fd.get(`sc${n}_bottle_url`) || '').toString().trim();
+          if (manualUrl && manualUrl !== wine.bottle) {
+            if (wine.bottle_path) await safeDeleteFile(wine.bottle_path);
+            wine.bottle = manualUrl;
+            wine.bottle_path = '';
+          }
+
+          const pendingFile = pendingShowcaseFiles[i];
+          if (pendingFile) {
+            if (wine.bottle_path) await safeDeleteFile(wine.bottle_path);
+            const uploaded = await uploadFile(pendingFile, 'home/showcase');
+            wine.bottle = uploaded.url;
+            wine.bottle_path = uploaded.path;
+            pendingShowcaseFiles[i] = null;
+          }
+        }
+
+        await saveState('ღვინოების ბლოკი შენახულია');
+        fillShowcaseForm();
+      } catch (error) {
+        if (showcaseMsg) showcaseMsg.textContent = error.message;
+      }
+    });
+  }
 
   if (aboutForm) {
     aboutForm.addEventListener('submit', async (e) => {
@@ -909,6 +1000,33 @@ function fillSettingsForm() {
   } else {
     bottlePreview.classList.add('hidden');
   }
+}
+
+function fillShowcaseForm() {
+  if (!showcaseForm) return;
+  const list = Array.isArray(state.showcase) && state.showcase.length === 3
+    ? state.showcase
+    : structuredClone(defaultState.showcase);
+
+  list.forEach((wine, i) => {
+    const n = i + 1;
+    const fallback = defaultState.showcase[i];
+    ['menuTitle', 'cartName', 'titleLines', 'region', 'description', 'accent'].forEach((key) => {
+      const input = showcaseForm.elements.namedItem(`sc${n}_${key}`);
+      if (input) input.value = wine[key] ?? fallback[key] ?? '';
+    });
+    const priceInput = showcaseForm.elements.namedItem(`sc${n}_price`);
+    if (priceInput) priceInput.value = wine.price ?? fallback.price ?? '';
+
+    const urlInput = showcaseForm.elements.namedItem(`sc${n}_bottle_url`);
+    const bottleUrl = wine.bottle || '';
+    if (urlInput) urlInput.value = bottleUrl;
+    const preview = document.getElementById(`sc${n}-bottle-preview`);
+    if (preview) {
+      const shown = bottleUrl || `../assets/images/showcase-bottle-${n}.webp`;
+      setPreview(preview, shown);
+    }
+  });
 }
 
 function fillHomeForm() {

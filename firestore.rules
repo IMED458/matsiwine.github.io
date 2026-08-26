@@ -1,0 +1,32 @@
+rules_version = '2';
+
+// MATSI WINE — Firestore უსაფრთხოების წესები
+// განთავსება: Firebase Console → Firestore Database → Rules → Publish
+// (ან: firebase deploy --only firestore:rules)
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ადმინების ერთადერთი წყარო — ელფოსტების allowlist
+    function isAdmin() {
+      return request.auth != null
+        && request.auth.token.email != null
+        && request.auth.token.email.lower() in [
+             'gimedashvili7@gmail.com',
+             'matsiwine@gmail.com'
+           ];
+    }
+
+    // საიტის კონტენტი: კითხვა ყველას (მათ შორის ანონიმურ ვიზიტორს),
+    // ჩაწერა — მხოლოდ ადმინს.
+    match /site/{docId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // ყველა დანარჩენი — დაკეტილი.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

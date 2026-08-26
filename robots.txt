@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /apps-script/
+
+Sitemap: https://matsiwine.ge/sitemap.xml
