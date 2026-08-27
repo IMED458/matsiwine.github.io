@@ -1,0 +1,152 @@
+/* MATSI WINE — სადესანტო გვერდები (სტატიკური, Tailwind-ის გარეშე) */
+:root {
+  --cream: #fbf8f2;
+  --cream-2: #f6f1e7;
+  --line: #ece4d5;
+  --ink: #0d1626;
+  --ink-2: #2a3549;
+  --body: #5e5142;
+  --muted: #7d6e5c;
+  --gold: #c6a15b;
+  --burgundy: #7c2e35;
+  --serif: "Cormorant Garamond", "Noto Sans Georgian", Georgia, serif;
+  --sans: "Noto Sans Georgian", "Manrope", system-ui, -apple-system, sans-serif;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--cream);
+  color: var(--body);
+  font-family: var(--sans);
+  font-size: 16px;
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+}
+img { max-width: 100%; height: auto; display: block; }
+a { color: var(--burgundy); text-decoration: none; }
+a:hover { text-decoration: underline; }
+.lp-wrap { width: min(1120px, 100% - 40px); margin-inline: auto; }
+
+/* ---- nav ---- */
+.lp-nav {
+  position: sticky; top: 0; z-index: 20;
+  background: rgba(251, 248, 242, 0.92);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--line);
+}
+.lp-nav-in { display: flex; align-items: center; justify-content: space-between; gap: 20px; min-height: 72px; }
+.lp-logo img { width: 118px; height: auto; }
+.lp-links { display: flex; flex-wrap: wrap; gap: 22px; }
+.lp-links a {
+  color: var(--ink-2); font-size: 14px; font-weight: 500;
+  text-decoration: none; white-space: nowrap;
+}
+.lp-links a:hover { color: var(--burgundy); }
+
+/* ---- breadcrumb ---- */
+.lp-crumb { padding: 18px 0 0; font-size: 13px; color: var(--muted); }
+.lp-crumb a { color: var(--muted); }
+.lp-crumb span[aria-hidden] { margin: 0 6px; }
+
+/* ---- hero ---- */
+.lp-hero { padding: 40px 0 56px; }
+.lp-kicker {
+  margin: 0 0 14px; font-size: 12px; font-weight: 600;
+  letter-spacing: 0.22em; text-transform: uppercase; color: var(--gold);
+}
+.lp-hero h1 {
+  font-family: var(--serif);
+  font-size: clamp(2.1rem, 5.4vw, 3.6rem);
+  line-height: 1.08;
+  font-weight: 700;
+  color: var(--ink);
+  margin: 0 0 20px;
+}
+.lp-lead { font-size: clamp(1rem, 1.9vw, 1.18rem); max-width: 62ch; margin: 0 0 28px; }
+.lp-cta { display: flex; flex-wrap: wrap; gap: 12px; }
+.lp-btn {
+  display: inline-block; padding: 15px 30px; border-radius: 999px;
+  font-size: 14px; font-weight: 600; letter-spacing: 0.04em;
+  text-decoration: none; transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.lp-btn:hover { text-decoration: none; transform: translateY(-2px); }
+.lp-btn-primary { background: var(--ink); color: var(--cream); box-shadow: 0 12px 28px -14px rgba(13, 22, 38, 0.7); }
+.lp-btn-ghost { border: 1px solid var(--line); color: var(--ink-2); background: transparent; }
+
+/* ---- sections ---- */
+.lp-sec { padding: 46px 0; border-top: 1px solid var(--line); }
+.lp-sec h2 {
+  font-family: var(--serif);
+  font-size: clamp(1.6rem, 3.4vw, 2.3rem);
+  line-height: 1.2; font-weight: 700; color: var(--ink);
+  margin: 0 0 22px;
+}
+.lp-sec h3 { font-size: 1.02rem; font-weight: 600; color: var(--ink-2); margin: 0 0 8px; }
+.lp-sec p { margin: 0 0 14px; max-width: 74ch; }
+
+.lp-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); gap: 18px; }
+.lp-card {
+  background: var(--cream-2); border: 1px solid var(--line);
+  border-radius: 18px; padding: 22px;
+}
+.lp-card p { margin: 0; font-size: 15px; }
+
+.lp-steps { counter-reset: st; list-style: none; margin: 0; padding: 0; display: grid; gap: 18px; }
+.lp-steps li {
+  counter-increment: st;
+  position: relative; padding-left: 54px;
+}
+.lp-steps li::before {
+  content: counter(st);
+  position: absolute; left: 0; top: 0;
+  width: 38px; height: 38px; border-radius: 999px;
+  display: grid; place-items: center;
+  background: var(--cream-2); border: 1px solid var(--gold);
+  color: var(--burgundy); font-family: var(--serif); font-size: 18px; font-weight: 700;
+}
+.lp-steps p { margin: 0; font-size: 15px; }
+
+/* ---- faq ---- */
+.lp-faq details {
+  border-bottom: 1px solid var(--line); padding: 16px 0;
+}
+.lp-faq summary {
+  cursor: pointer; font-weight: 600; color: var(--ink-2);
+  font-size: 1rem; list-style: none;
+}
+.lp-faq summary::-webkit-details-marker { display: none; }
+.lp-faq summary::after { content: "+"; float: right; color: var(--gold); font-size: 20px; line-height: 1; }
+.lp-faq details[open] summary::after { content: "–"; }
+.lp-faq details p { margin: 12px 0 0; font-size: 15px; }
+
+/* ---- final CTA ---- */
+.lp-final { padding: 56px 0 64px; border-top: 1px solid var(--line); text-align: center; }
+.lp-final h2 {
+  font-family: var(--serif); font-size: clamp(1.7rem, 3.6vw, 2.4rem);
+  color: var(--ink); margin: 0 0 14px; font-weight: 700;
+}
+.lp-final p { max-width: 60ch; margin: 0 auto 26px; }
+
+/* ---- footer ---- */
+.lp-foot { background: var(--cream-2); border-top: 1px solid var(--line); padding: 44px 0 18px; }
+.lp-foot-in { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr)); gap: 28px; }
+.lp-foot img { width: 112px; height: auto; }
+.lp-foot h3 { font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); margin: 0 0 12px; }
+.lp-foot p { margin: 0 0 8px; font-size: 14.5px; }
+.lp-foot a { color: var(--ink-2); }
+.lp-copy { border-top: 1px solid var(--line); margin-top: 30px; padding-top: 16px; }
+.lp-copy p { font-size: 13px; color: var(--muted); margin: 0; }
+
+@media (max-width: 720px) {
+  .lp-nav-in { flex-direction: column; align-items: flex-start; padding: 12px 0; min-height: 0; }
+  .lp-links { gap: 14px; }
+  .lp-links a { font-size: 13px; }
+  .lp-hero { padding: 26px 0 40px; }
+  .lp-sec { padding: 36px 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .lp-btn { transition: none; }
+  .lp-btn:hover { transform: none; }
+}
